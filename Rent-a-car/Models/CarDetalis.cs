@@ -19,7 +19,7 @@ namespace Rent_a_Car.Models
         public bool isAvailable { get; set; }
 
         public virtual Car Car { get; set; }
-        public virtual Company Company2 { get; set; }
+        public virtual Company Company { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RentCar> RentCars { get; set; }
     }
