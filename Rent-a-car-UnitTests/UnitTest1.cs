@@ -8,6 +8,8 @@ namespace Rent_a_car_UnitTests
         [TestMethod]
         public void TestMethod1()
         {
+            Assert.Equals(0, 1);
+
         }
     }
 }
