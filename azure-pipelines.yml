@@ -37,4 +37,4 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'test'
-    projects: 'Rent-a-car-UnitTests/'
+    projects: '*UnitTests/*.csproj'
