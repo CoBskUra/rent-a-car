@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,6 +8,7 @@ namespace Rent_a_Car.Models
 {
     public partial class ReturnFile
     {
+        [Key]
         public int RentCarID { get; set; }
         public System.DateTime ReturnDate { get; set; }
         public string CarConditon { get; set; }
