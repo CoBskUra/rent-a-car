@@ -1,0 +1,59 @@
+﻿@model IEnumerable<Rent_a_Car.Models.CarDetalis>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Dostępne auta</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Auto
+            </th>
+            <th>
+                Data produkcji
+            </th>
+            <th>
+                Opis
+            </th>
+            <th>
+                Dostępność
+            </th>
+            <th>
+                Firma
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Car.Brand) @Html.DisplayFor(modelItem => item.Car.Model)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.YearOfProduction.Year)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.isAvailable)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Company.Name)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.CarDetalisID">Edytuj</a> |
+                <a asp-action="Details" asp-route-id="@item.CarDetalisID">Szczegóły</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<div>
+    <a asp-controller="Cars" asp-action="Index">Powrót</a>
+</div>

@@ -1,0 +1,59 @@
+﻿@model IEnumerable<Rent_a_Car.Models.Car>
+
+@{
+    ViewData["Title"] = "Lista samochodów";
+}
+
+<h1>Wszystkie oferowane auta</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ShowSearchResult">
+            <div class="form-group">
+                <label for="Brand" class="control-label">Firma</label>
+                <input name="Brand" class="form-control" />
+                <label for="Model" class="control-label">Model</label>
+                <input name="Model" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Search" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+               Firma
+            </th>
+            <th>
+                Model
+            </th>
+            <th>
+                Konie mechaniczne
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Brand)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Model)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HorsePower)
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.CarID">Zobacz dostępne auta</a> |
+                <a asp-action="Edit" asp-route-id="@item.CarID">Edytuj</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

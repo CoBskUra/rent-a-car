@@ -15,7 +15,7 @@ namespace Rent_a_Car.Models
         public int CarDetalisID { get; set; }
         public bool isReturn { get; set; }
 
-        public virtual CarDetali CarDetali { get; set; }
+        public virtual CarDetalis CarDetalis { get; set; }
         public virtual Customer Customer { get; set; }
         public virtual ReturnFile ReturnFile { get; set; }
     }

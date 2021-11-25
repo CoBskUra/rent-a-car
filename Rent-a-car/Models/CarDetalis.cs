@@ -2,10 +2,10 @@
 
 namespace Rent_a_Car.Models
 {
-    public class CarDetali
+    public class CarDetalis
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public CarDetali()
+        public CarDetalis()
         {
             this.RentCars = new HashSet<RentCar>();
         }
