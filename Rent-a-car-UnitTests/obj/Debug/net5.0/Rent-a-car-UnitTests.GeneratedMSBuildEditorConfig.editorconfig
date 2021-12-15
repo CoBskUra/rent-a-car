@@ -7,4 +7,4 @@ build_property.PublishSingleFile =
 build_property.IncludeAllContentForSelfExtract = 
 build_property._SupportedPlatformList = Android,iOS,Linux,macOS,Windows
 build_property.RootNamespace = Rent_a_car_UnitTests
-build_property.ProjectDir = D:\Projekty\Semestr 5\.Net\Repozytoria\dev-ops\dev\dev\Rent-a-car-UnitTests\
+build_property.ProjectDir = C:\Users\48695\source\repos\Tworzenie aplikacji .NET\Rent-a-car-UnitTests\
