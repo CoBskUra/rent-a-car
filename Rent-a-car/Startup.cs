@@ -1,10 +1,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NETCore.MailKit.Extensions;
+using NETCore.MailKit.Infrastructure.Internal;
 using Rent_a_Car.Data;
+using Rent_a_Car.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,14 +28,40 @@ namespace Rent_a_Car
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
+            /*services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
-            );
-            services.AddAuthentication("CookieAuth").AddCookie("CookieAuth", config =>
+            );*/ // poki nie ma bazy
+
+            services.AddDbContext<AppDbContext>(config =>
+            {
+                 config.UseInMemoryDatabase("Memory");
+            });
+
+            /*services.AddAuthentication("CookieAuth").AddCookie("CookieAuth", config =>
             {
                 config.Cookie.Name = "Grandmas.Cookie";
                 config.LoginPath = "/Home/Authenticate";
+            });*/
+
+            // registers the services
+            services.AddIdentity<IdentityUser, IdentityRole>(config =>
+            {
+                config.Password.RequiredLength = 4;
+                config.Password.RequireDigit = false;
+                config.Password.RequireNonAlphanumeric = false;
+                config.Password.RequireUppercase = false;
+                config.SignIn.RequireConfirmedAccount = true;
+            }).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
+
+            services.ConfigureApplicationCookie(config =>
+            {
+                config.Cookie.Name = "Identity.Cookie";
+                config.LoginPath = "/Home/Login";
             });
+
+            var mailKitOptions = Configuration.GetSection("Email").Get<MailKitOptions>();
+            services.AddMailKit(config => config.UseMailKit(mailKitOptions));
+
             services.AddControllersWithViews();
         }
 

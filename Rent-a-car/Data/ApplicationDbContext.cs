@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Rent_a_Car.Models;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Rent_a_Car.Data
 {
-    public class ApplicationDbContext:DbContext
+    public class ApplicationDbContext:  DbContext // IdentityDbContext?
     {
         public ApplicationDbContext( DbContextOptions<ApplicationDbContext> options):base(options)
         {
