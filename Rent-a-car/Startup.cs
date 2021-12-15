@@ -27,6 +27,11 @@ namespace Rent_a_Car
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
             );
+            services.AddAuthentication("CookieAuth").AddCookie("CookieAuth", config =>
+            {
+                config.Cookie.Name = "Grandmas.Cookie";
+                config.LoginPath = "/Home/Authenticate";
+            });
             services.AddControllersWithViews();
         }
 
@@ -45,6 +50,10 @@ namespace Rent_a_Car
 
             app.UseRouting();
 
+            // who are you?
+            app.UseAuthentication();
+
+            // are you allowed? - uses what we got in Authentication
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
