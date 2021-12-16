@@ -21,6 +21,11 @@ namespace Rent_a_Car.Controllers
             _context = context;
         }
 
-
+        [HttpGet]
+        public IEnumerable<Car> Get()
+        {
+            var rng = new Random();
+            return _context.Car.ToList();
+        }
     }
 }
