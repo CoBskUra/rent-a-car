@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-
+using System.ComponentModel.DataAnnotations.Schema;
 namespace Rent_a_Car.Models
 {
     public class Customer
@@ -21,6 +21,8 @@ namespace Rent_a_Car.Models
         public string Email { get; set; }
         public System.DateTime BirtheDate { get; set; }
         public string City { get; set; }
+
+        [Column(TypeName = "decimal(18,4)")]
         public decimal Poste_Code { get; set; }
         public System.DateTime BecoamingDriverDate { get; set; }
         public string Login { get; set; }
