@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Rent_a_Car.Models
 {
@@ -13,6 +14,7 @@ namespace Rent_a_Car.Models
         public int CarDetalisID { get; set; }
         public int CarID { get; set; }
         public int CompanyID { get; set; }
+        [Column(TypeName = "decimal(18,4)")]
         public decimal Price { get; set; }
         public System.DateTime YearOfProduction { get; set; }
         public string Description { get; set; }

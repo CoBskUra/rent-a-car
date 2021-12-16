@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "1h5q7PFUv6oESasbqiU8kQ5qJ+QTxUJyBkNrE+qWFrrLT07rMbBwyarGYecvmPlO7A1cbAOoZ5Qnm8uRpDVvUw==",
+  "dgSpecHash": "ojVYyCq5pIonVWsfzsM2gzlLlv3bluHDJuAMs5yHL4aM6z7dSn3fwQp4vtHitr4bkzx62IAjoFRm1SIgtcwDjQ==",
   "success": true,
-  "projectFilePath": "D:\\Projekty\\Semestr 5\\.Net\\Repozytoria\\dev-ops\\dev\\dev\\Rent-a-car-UnitTests\\Rent-a-car-UnitTests.csproj",
+  "projectFilePath": "C:\\Users\\patry\\Source\\Repos\\Tworzenie aplikacji .NET\\Rent-a-car-UnitTests\\Rent-a-car-UnitTests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\patry\\.nuget\\packages\\coverlet.collector\\3.0.2\\coverlet.collector.3.0.2.nupkg.sha512",
     "C:\\Users\\patry\\.nuget\\packages\\microsoft.codecoverage\\16.9.4\\microsoft.codecoverage.16.9.4.nupkg.sha512",

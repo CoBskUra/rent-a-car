@@ -17,6 +17,7 @@ namespace Rent_a_Car.Controllers
         public CarsController(ApplicationDbContext context)
         {
             _context = context;
+            Data.DatabaseFiller.FillDataIfEmpty(context);
         }
 
         // GET: Cars
