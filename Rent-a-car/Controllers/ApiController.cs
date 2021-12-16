@@ -12,7 +12,7 @@ namespace Rent_a_Car.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ApiController : Controller
+    public class ApiController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
@@ -22,10 +22,13 @@ namespace Rent_a_Car.Controllers
         }
 
         [HttpGet]
+        [Route("Cars")]
         public IEnumerable<Car> Get()
         {
             var rng = new Random();
             return _context.Car.ToList();
         }
+
+
     }
 }
