@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using NETCore.MailKit.Core;
+//using NETCore.MailKit.Core;
 using Rent_a_Car.Models;
 using System;
 using System.Collections.Generic;
@@ -19,15 +19,15 @@ namespace Rent_a_Car.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly IEmailService _emailService;
+        //private readonly IEmailService _emailService;
 
-        public HomeController(ILogger<HomeController> logger, UserManager<IdentityUser> userManager, 
-            SignInManager<IdentityUser> signInManager, IEmailService emailService)
+        public HomeController(UserManager<IdentityUser> userManager, ILogger<HomeController> logger, 
+            SignInManager<IdentityUser> signInManager)//, IEmailService emailService)
         {
             _logger = logger;
             _userManager = userManager; // it manages user information
             _signInManager = signInManager;
-            _emailService = emailService;
+            //_emailService = emailService;
         }
 
         public IActionResult Index()
@@ -46,38 +46,13 @@ namespace Rent_a_Car.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        [Authorize]
-        public IActionResult Secret()
+        /*[Authorize]
+        public IActionResult Secret() // nie dodawać do _Layout!
         {
             return View();
-        }
-
-        /*public IActionResult Authenticate()
-        {
-            // building up identity
-            var grandmaClaims = new List<Claim>()
-            {
-                new Claim(ClaimTypes.Name, "Bob"),
-                new Claim(ClaimTypes.Email, "bob@mail.com"),
-                new Claim("Grandma.Says", "very nice boi")
-            };
-            var licenseClaims = new List<Claim>()
-            {
-                new Claim(ClaimTypes.Name, "Bob"),
-                new Claim("DrivingLicense", "A+")
-            };
-
-            var grandmaIdentity = new ClaimsIdentity(grandmaClaims, "Grandma Identity");
-            var licenseIdentity = new ClaimsIdentity(licenseClaims, "Government");
-
-            var userPrincipal = new ClaimsPrincipal(new[] { grandmaIdentity, licenseIdentity });
-
-            HttpContext.SignInAsync(userPrincipal);
-
-            return RedirectToAction("Index");
         }*/
 
-        public IActionResult Login()
+        /*public IActionResult Login()
         {
             return View();
         }
@@ -88,14 +63,12 @@ namespace Rent_a_Car.Controllers
             var user = _userManager.FindByNameAsync(username);
             if (user != null)
             {
-                // sign in
                 var signInResult = await _signInManager.PasswordSignInAsync(username, password, false, false);
                 if (signInResult.Succeeded)
                 {
                     return RedirectToAction("Index");
                 }
             }
-            
 
             return RedirectToAction("Index");
         }
@@ -117,18 +90,12 @@ namespace Rent_a_Car.Controllers
 
             if (result.Succeeded)
             {
-                // sign in user here
-                //var signInResult = await _signInManager.PasswordSignInAsync(username, password, false, false);
-                //if (signInResult.Succeeded)
-                //{
-                    // generation of email token
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var link = Url.Action(nameof(VerifyEmail), "Home", new { userId = user.Id, code }, Request.Scheme, Request.Host.ToString());
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                var link = Url.Action(nameof(VerifyEmail), "Home", new { userId = user.Id, code }, Request.Scheme, Request.Host.ToString());
 
-                    await _emailService.SendAsync("test@test.com", "email verify", $"<a href=\"{link}\">Verify</a>", true);
+                await _emailService.SendAsync("test@test.com", "email verify", $"<a href=\"{link}\">Verify</a>", true);
 
-                    return RedirectToAction("EmailVerification");
-                //}
+                return RedirectToAction("EmailVerification");
             }
 
             return RedirectToAction("Index");
@@ -152,6 +119,6 @@ namespace Rent_a_Car.Controllers
                 return View();
 
             return BadRequest();
-        }
+        }*/
     }
 }
