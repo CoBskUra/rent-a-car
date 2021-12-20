@@ -9,7 +9,8 @@ namespace Rent_a_Car.Models
     public partial class ReturnFile
     {
         [Key]
-        public int RentCarID { get; set; }
+        public int ReturnFileID { get; set; }
+        public int RentedCarID { get; set; }
         public System.DateTime ReturnDate { get; set; }
         public string CarConditon { get; set; }
         public int OdometerReading { get; set; }
@@ -18,6 +19,5 @@ namespace Rent_a_Car.Models
         public Nullable<int> EmployerID { get; set; }
 
         public virtual Employer Employer { get; set; }
-        public virtual RentCar RentCar { get; set; }
     }
 }
