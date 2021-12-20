@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-
+using System.ComponentModel.DataAnnotations.Schema;
 namespace Rent_a_Car.Models
 {
     public class Customer
@@ -12,7 +12,7 @@ namespace Rent_a_Car.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Customer()
         {
-            this.RentCars = new HashSet<RentCar>();
+            this.RentCars = new HashSet<RentCarEvent>();
         }
 
         public int CustomerID { get; set; }
@@ -21,6 +21,8 @@ namespace Rent_a_Car.Models
         public string Email { get; set; }
         public System.DateTime BirtheDate { get; set; }
         public string City { get; set; }
+
+        [Column(TypeName = "decimal(18,4)")]
         public decimal Poste_Code { get; set; }
         public System.DateTime BecoamingDriverDate { get; set; }
         public string Login { get; set; }
@@ -29,6 +31,6 @@ namespace Rent_a_Car.Models
         public int NumberOfOverallRentedCar { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<RentCar> RentCars { get; set; }
+        public virtual ICollection<RentCarEvent> RentCars { get; set; }
     }
 }

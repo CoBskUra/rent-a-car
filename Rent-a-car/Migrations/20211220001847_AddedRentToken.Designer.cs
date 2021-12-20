@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Rent_a_Car.Data;
 
 namespace Rent_a_Car.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211220001847_AddedRentToken")]
+    partial class AddedRentToken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,7 +159,7 @@ namespace Rent_a_Car.Migrations
 
             modelBuilder.Entity("Rent_a_Car.Models.RentCarEvent", b =>
                 {
-                    b.Property<string>("RentCarEventID")
+                    b.Property<string>("RentCarID")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("CarDetailsID")
@@ -178,7 +180,7 @@ namespace Rent_a_Car.Migrations
                     b.Property<DateTime>("SubmitDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("RentCarEventID");
+                    b.HasKey("RentCarID");
 
                     b.HasIndex("CarDetailsID");
 

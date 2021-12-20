@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Rent_a_Car.Models.CarDetalis>
+﻿@model IEnumerable<Rent_a_Car.Models.CarDetails>
 
 @{
     ViewData["Title"] = "Index";
@@ -40,14 +40,14 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.isAvailable)
+                @Html.DisplayFor(modelItem => item.IsAvailable)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Company.Name)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.CarDetalisID">Edytuj</a> |
-                <a asp-action="Details" asp-route-id="@item.CarDetalisID">Szczegóły</a>
+                <a asp-action="Edit" asp-route-id="@item.CarDetailsID">Edytuj</a> |
+                <a asp-action="Details" asp-route-id="@item.CarDetailsID">Szczegóły</a>
             </td>
         </tr>
 }

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Rent_a_Car.Migrations
 {
-    public partial class addTablesToDb : Migration
+    public partial class AddedRentToken : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -47,7 +47,7 @@ namespace Rent_a_Car.Migrations
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BirtheDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     City = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Poste_Code = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Poste_Code = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
                     BecoamingDriverDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Login = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -74,29 +74,29 @@ namespace Rent_a_Car.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CarDetalis",
+                name: "CarDetails",
                 columns: table => new
                 {
-                    CarDetalisID = table.Column<int>(type: "int", nullable: false)
+                    CarDetailsID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CarID = table.Column<int>(type: "int", nullable: false),
                     CompanyID = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
                     YearOfProduction = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    isAvailable = table.Column<bool>(type: "bit", nullable: false)
+                    IsAvailable = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CarDetalis", x => x.CarDetalisID);
+                    table.PrimaryKey("PK_CarDetails", x => x.CarDetailsID);
                     table.ForeignKey(
-                        name: "FK_CarDetalis_Car_CarID",
+                        name: "FK_CarDetails_Car_CarID",
                         column: x => x.CarID,
                         principalTable: "Car",
                         principalColumn: "CarID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CarDetalis_Company_CompanyID",
+                        name: "FK_CarDetails_Company_CompanyID",
                         column: x => x.CompanyID,
                         principalTable: "Company",
                         principalColumn: "CompanyID",
@@ -104,39 +104,12 @@ namespace Rent_a_Car.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RentCar",
-                columns: table => new
-                {
-                    RentCarID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    SubmitDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ExeptedReturnDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CustomerID = table.Column<int>(type: "int", nullable: false),
-                    CarDetalisID = table.Column<int>(type: "int", nullable: false),
-                    isReturn = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RentCar", x => x.RentCarID);
-                    table.ForeignKey(
-                        name: "FK_RentCar_CarDetalis_CarDetalisID",
-                        column: x => x.CarDetalisID,
-                        principalTable: "CarDetalis",
-                        principalColumn: "CarDetalisID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_RentCar_Customer_CustomerID",
-                        column: x => x.CustomerID,
-                        principalTable: "Customer",
-                        principalColumn: "CustomerID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ReturnFile",
                 columns: table => new
                 {
-                    RentCarID = table.Column<int>(type: "int", nullable: false),
+                    ReturnFileID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RentedCarID = table.Column<int>(type: "int", nullable: false),
                     ReturnDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CarConditon = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OdometerReading = table.Column<int>(type: "int", nullable: false),
@@ -146,40 +119,74 @@ namespace Rent_a_Car.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ReturnFile", x => x.RentCarID);
+                    table.PrimaryKey("PK_ReturnFile", x => x.ReturnFileID);
                     table.ForeignKey(
                         name: "FK_ReturnFile_Employer_EmployerID",
                         column: x => x.EmployerID,
                         principalTable: "Employer",
                         principalColumn: "EmployerID",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RentCar",
+                columns: table => new
+                {
+                    RentCarID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    SubmitDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    MaximumReturnDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CustomerID = table.Column<int>(type: "int", nullable: false),
+                    CarDetailsID = table.Column<int>(type: "int", nullable: false),
+                    IsReturned = table.Column<bool>(type: "bit", nullable: false),
+                    ReturnFileID = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RentCar", x => x.RentCarID);
                     table.ForeignKey(
-                        name: "FK_ReturnFile_RentCar_RentCarID",
-                        column: x => x.RentCarID,
-                        principalTable: "RentCar",
-                        principalColumn: "RentCarID",
+                        name: "FK_RentCar_CarDetails_CarDetailsID",
+                        column: x => x.CarDetailsID,
+                        principalTable: "CarDetails",
+                        principalColumn: "CarDetailsID",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RentCar_Customer_CustomerID",
+                        column: x => x.CustomerID,
+                        principalTable: "Customer",
+                        principalColumn: "CustomerID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RentCar_ReturnFile_ReturnFileID",
+                        column: x => x.ReturnFileID,
+                        principalTable: "ReturnFile",
+                        principalColumn: "ReturnFileID",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CarDetalis_CarID",
-                table: "CarDetalis",
+                name: "IX_CarDetails_CarID",
+                table: "CarDetails",
                 column: "CarID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CarDetalis_CompanyID",
-                table: "CarDetalis",
+                name: "IX_CarDetails_CompanyID",
+                table: "CarDetails",
                 column: "CompanyID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RentCar_CarDetalisID",
+                name: "IX_RentCar_CarDetailsID",
                 table: "RentCar",
-                column: "CarDetalisID");
+                column: "CarDetailsID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RentCar_CustomerID",
                 table: "RentCar",
                 column: "CustomerID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RentCar_ReturnFileID",
+                table: "RentCar",
+                column: "ReturnFileID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ReturnFile_EmployerID",
@@ -190,25 +197,25 @@ namespace Rent_a_Car.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ReturnFile");
-
-            migrationBuilder.DropTable(
-                name: "Employer");
-
-            migrationBuilder.DropTable(
                 name: "RentCar");
 
             migrationBuilder.DropTable(
-                name: "CarDetalis");
+                name: "CarDetails");
 
             migrationBuilder.DropTable(
                 name: "Customer");
+
+            migrationBuilder.DropTable(
+                name: "ReturnFile");
 
             migrationBuilder.DropTable(
                 name: "Car");
 
             migrationBuilder.DropTable(
                 name: "Company");
+
+            migrationBuilder.DropTable(
+                name: "Employer");
         }
     }
 }
