@@ -10,8 +10,8 @@ using Rent_a_Car.Data;
 namespace Rent_a_Car.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211215192807_test_migration")]
-    partial class test_migration
+    [Migration("20211220001847_AddedRentToken")]
+    partial class AddedRentToken
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -42,12 +42,12 @@ namespace Rent_a_Car.Migrations
                     b.ToTable("Car");
                 });
 
-            modelBuilder.Entity("Rent_a_Car.Models.CarDetalis", b =>
+            modelBuilder.Entity("Rent_a_Car.Models.CarDetails", b =>
                 {
-                    b.Property<decimal>("CarDetalisID")
+                    b.Property<int>("CarDetailsID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(18,4)")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("CarID")
                         .HasColumnType("int");
@@ -58,22 +58,22 @@ namespace Rent_a_Car.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
+
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18,4)");
 
                     b.Property<DateTime>("YearOfProduction")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("isAvailable")
-                        .HasColumnType("bit");
-
-                    b.HasKey("CarDetalisID");
+                    b.HasKey("CarDetailsID");
 
                     b.HasIndex("CarID");
 
                     b.HasIndex("CompanyID");
 
-                    b.ToTable("CarDetalis");
+                    b.ToTable("CarDetails");
                 });
 
             modelBuilder.Entity("Rent_a_Car.Models.Company", b =>
@@ -157,41 +157,46 @@ namespace Rent_a_Car.Migrations
                     b.ToTable("Employer");
                 });
 
-            modelBuilder.Entity("Rent_a_Car.Models.RentCar", b =>
+            modelBuilder.Entity("Rent_a_Car.Models.RentCarEvent", b =>
                 {
-                    b.Property<int>("RentCarID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("RentCarID")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<decimal>("CarDetalisID")
-                        .HasColumnType("decimal(18,4)");
+                    b.Property<int>("CarDetailsID")
+                        .HasColumnType("int");
 
                     b.Property<int>("CustomerID")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("ExeptedReturnDate")
+                    b.Property<bool>("IsReturned")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("MaximumReturnDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("ReturnFileID")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("SubmitDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("isReturn")
-                        .HasColumnType("bit");
-
                     b.HasKey("RentCarID");
 
-                    b.HasIndex("CarDetalisID");
+                    b.HasIndex("CarDetailsID");
 
                     b.HasIndex("CustomerID");
+
+                    b.HasIndex("ReturnFileID");
 
                     b.ToTable("RentCar");
                 });
 
             modelBuilder.Entity("Rent_a_Car.Models.ReturnFile", b =>
                 {
-                    b.Property<int>("RentCarID")
-                        .HasColumnType("int");
+                    b.Property<int>("ReturnFileID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CarConditon")
                         .HasColumnType("nvarchar(max)");
@@ -205,29 +210,32 @@ namespace Rent_a_Car.Migrations
                     b.Property<byte[]>("Photo")
                         .HasColumnType("varbinary(max)");
 
+                    b.Property<int>("RentedCarID")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("ReturnDate")
                         .HasColumnType("datetime2");
 
                     b.Property<byte[]>("ReturnProocol")
                         .HasColumnType("varbinary(max)");
 
-                    b.HasKey("RentCarID");
+                    b.HasKey("ReturnFileID");
 
                     b.HasIndex("EmployerID");
 
                     b.ToTable("ReturnFile");
                 });
 
-            modelBuilder.Entity("Rent_a_Car.Models.CarDetalis", b =>
+            modelBuilder.Entity("Rent_a_Car.Models.CarDetails", b =>
                 {
                     b.HasOne("Rent_a_Car.Models.Car", "Car")
-                        .WithMany("CarDetalis")
+                        .WithMany("CarDetails")
                         .HasForeignKey("CarID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Rent_a_Car.Models.Company", "Company")
-                        .WithMany("CarDetalis")
+                        .WithMany("CarDetails")
                         .HasForeignKey("CompanyID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -237,11 +245,11 @@ namespace Rent_a_Car.Migrations
                     b.Navigation("Company");
                 });
 
-            modelBuilder.Entity("Rent_a_Car.Models.RentCar", b =>
+            modelBuilder.Entity("Rent_a_Car.Models.RentCarEvent", b =>
                 {
-                    b.HasOne("Rent_a_Car.Models.CarDetalis", "CarDetalis")
+                    b.HasOne("Rent_a_Car.Models.CarDetails", "CarDetails")
                         .WithMany("RentCars")
-                        .HasForeignKey("CarDetalisID")
+                        .HasForeignKey("CarDetailsID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -251,9 +259,15 @@ namespace Rent_a_Car.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CarDetalis");
+                    b.HasOne("Rent_a_Car.Models.ReturnFile", "ReturnFile")
+                        .WithMany()
+                        .HasForeignKey("ReturnFileID");
+
+                    b.Navigation("CarDetails");
 
                     b.Navigation("Customer");
+
+                    b.Navigation("ReturnFile");
                 });
 
             modelBuilder.Entity("Rent_a_Car.Models.ReturnFile", b =>
@@ -262,30 +276,22 @@ namespace Rent_a_Car.Migrations
                         .WithMany("ReturnFiles")
                         .HasForeignKey("EmployerID");
 
-                    b.HasOne("Rent_a_Car.Models.RentCar", "RentCar")
-                        .WithOne("ReturnFile")
-                        .HasForeignKey("Rent_a_Car.Models.ReturnFile", "RentCarID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Employer");
-
-                    b.Navigation("RentCar");
                 });
 
             modelBuilder.Entity("Rent_a_Car.Models.Car", b =>
                 {
-                    b.Navigation("CarDetalis");
+                    b.Navigation("CarDetails");
                 });
 
-            modelBuilder.Entity("Rent_a_Car.Models.CarDetalis", b =>
+            modelBuilder.Entity("Rent_a_Car.Models.CarDetails", b =>
                 {
                     b.Navigation("RentCars");
                 });
 
             modelBuilder.Entity("Rent_a_Car.Models.Company", b =>
                 {
-                    b.Navigation("CarDetalis");
+                    b.Navigation("CarDetails");
                 });
 
             modelBuilder.Entity("Rent_a_Car.Models.Customer", b =>
@@ -296,11 +302,6 @@ namespace Rent_a_Car.Migrations
             modelBuilder.Entity("Rent_a_Car.Models.Employer", b =>
                 {
                     b.Navigation("ReturnFiles");
-                });
-
-            modelBuilder.Entity("Rent_a_Car.Models.RentCar", b =>
-                {
-                    b.Navigation("ReturnFile");
                 });
 #pragma warning restore 612, 618
         }
