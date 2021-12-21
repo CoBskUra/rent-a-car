@@ -1,21 +1,11 @@
 # Introduction 
 To jest projekt na przedmiot Tworzenie aplikacji webowych z wykorzystaniem .NET Framework na MiNi PW.
 
+Aplikacja jest stroną internetową upraszczającą wypożyczanie samochodów. Klient na naszej stronie może wyszukiwać i filtrować dostępne samochody. Każdy model może być dostępny u różnych wypożyczalni, z którymi jesteśmy połączeni. Klient może poprosić o podanie ceny klikając przycisk "Check price", a następnie wypożyczyć go klikając "Rent me". Klient musi mieć założone konto w naszym systemie. Na swoim profilu może zobaczyć historię swoich wypożyczeń.
+Pracownik wypożyczalni również musi mieć założone konto w naszym systemie. Pracownik może dodawać nowe samochody. Ma również dostęp do listy obecnie wypożyczonych aut i ma opcję zwrócenia ich. Zwrócenie auta wymaga uzupełnienia formularza o stanie zwróconego auta oraz wysłania dwóch dokumentów (zdjęcie auta w formacie jpg i protokół zwrotu w formacie pdf), a następnie powoduje wysłanie maila z informacją do klienta.
+
 # Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
-5.  Pomódl sie
+Obecna wersja aplikacji zawiera połączenie z bazą danych, możliwość przeglądania i filtrowania listy dostępnych samochodów oraz rejestrowanie i logowanie użytkownika, bez rozróżnienia na klienta i pracownika.
 
 # Build and Test
-TODO: Describe and show how to build your code and run the tests. 
-
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
-
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+By uruchomić nasz projekt należy ściągnąć wszystkie dostępne pliki i skompilować je w środowisku Visual Studio.

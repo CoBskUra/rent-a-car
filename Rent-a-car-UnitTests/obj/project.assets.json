@@ -6114,23 +6114,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\patry\\.nuget\\packages\\": {},
+    "C:\\Users\\48695\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Projekty\\Semestr 5\\.Net\\Repozytoria\\dev-ops\\dev\\dev\\Rent-a-car-UnitTests\\Rent-a-car-UnitTests.csproj",
+      "projectUniqueName": "C:\\Users\\48695\\source\\repos\\Tworzenie aplikacji .NET\\Rent-a-car-UnitTests\\Rent-a-car-UnitTests.csproj",
       "projectName": "Rent-a-car-UnitTests",
-      "projectPath": "D:\\Projekty\\Semestr 5\\.Net\\Repozytoria\\dev-ops\\dev\\dev\\Rent-a-car-UnitTests\\Rent-a-car-UnitTests.csproj",
-      "packagesPath": "C:\\Users\\patry\\.nuget\\packages\\",
-      "outputPath": "D:\\Projekty\\Semestr 5\\.Net\\Repozytoria\\dev-ops\\dev\\dev\\Rent-a-car-UnitTests\\obj\\",
+      "projectPath": "C:\\Users\\48695\\source\\repos\\Tworzenie aplikacji .NET\\Rent-a-car-UnitTests\\Rent-a-car-UnitTests.csproj",
+      "packagesPath": "C:\\Users\\48695\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\48695\\source\\repos\\Tworzenie aplikacji .NET\\Rent-a-car-UnitTests\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\patry\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\48695\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -6189,7 +6189,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.402\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.404\\RuntimeIdentifierGraph.json"
       }
     }
   }
