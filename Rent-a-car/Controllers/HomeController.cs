@@ -46,11 +46,11 @@ namespace Rent_a_Car.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        /*[Authorize]
+        [Authorize]
         public IActionResult Secret() // nie dodawać do _Layout!
         {
             return View();
-        }*/
+        }
 
         /*public IActionResult Login()
         {

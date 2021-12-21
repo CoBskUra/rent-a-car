@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Rent_a_Car.Data;
 using Rent_a_Car.Models;
 using Rent_a_Car.ApiClasses;
-
+using Microsoft.AspNetCore.Authorization;
 namespace Rent_a_Car.Controllers
 {
     [ApiController]
@@ -22,6 +22,9 @@ namespace Rent_a_Car.Controllers
             _context = context;
         }
 
+        /// <summary>
+        /// Zwraca listę wszystkich marek samochodów
+        /// </summary>
         [HttpGet]
         [Route("CarModels")]
         public IEnumerable<Car> Get()
@@ -29,6 +32,15 @@ namespace Rent_a_Car.Controllers
             return _context.Car.ToList();
         }
 
+        /// <summary>
+        /// Zwraca listę wszystkich dostępnych samochodów o danym modelu
+        /// </summary>
+        /// <remarks>
+        /// Numer modelu należy pobrać z /Api/CarModels
+        /// </remarks>
+        /// <returns>Szczegóły dotyczące pojedynczych samochodów i dane wymagane do wypożyczenia</returns>
+        /// <response code="200">Zwraca listę samochodów w danym modelu</response>
+        /// <response code="404">Jeśli dany numer modelu jest nieprawidłowy</response>  
         [HttpGet]
         [Route("Car/{carModelID}")]
         public ActionResult Get([FromRoute] int carModelID)
@@ -42,9 +54,27 @@ namespace Rent_a_Car.Controllers
                 return NotFound();
             }
         }
+        /// <summary>
+        /// Wypożyczenie samochodu
+        /// </summary>
+        /// <remarks>
+        /// Żeby wypożyczyć samochód wymagane jest bycie zalogowanym - osobą wypożyczającą jest osoba zalogowana
+        /// Przykładowe zapytanie
+        ///
+        ///     POST
+        ///     {
+        ///        "carDetailsID": 1,
+        ///        "expectedReturnDate": "2022-01-22",
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns>Dane dotyczące wypożyczenia - w tym token wypożyczenia</returns>
+        /// <response code="400">Jeśli samochód już jest wypożyczony</response>  
+        /// <response code="404">Jeśli nie ma takiego ID samochodu</response>
         [HttpPost]
-        [Route("Rent/{carDetailsID}")]
-        public ActionResult Rent(int carDetailsID)
+        [Authorize]
+        [Route("Rent")]
+        public ActionResult Rent([FromForm] int carDetailsID, [FromForm] DateTime expectedReturnDate)
         {
             var carToRent = _context.CarDetails.SingleOrDefault(c => c.CarDetailsID == carDetailsID);
             if (carToRent == null)
@@ -55,7 +85,7 @@ namespace Rent_a_Car.Controllers
             {
                 return BadRequest();
             }
-            var rentedCarData = RentController.RentACar(_context, carDetailsID, 1);
+            var rentedCarData = RentController.RentACar(_context, carDetailsID, 1, expectedReturnDate);
             if (rentedCarData == null) return NotFound();
 
             var result = new JsonResult(rentedCarData);
@@ -63,11 +93,44 @@ namespace Rent_a_Car.Controllers
             return result;
         }
 
+        /// <summary>
+        /// Zwrot wypożyczonego samochodu
+        /// </summary>
+        /// <remarks>
+        /// Należy być zalogowanym.
+        /// </remarks>
+        /// <response code="200">Zwrot został wykonany prawidłowo</response>
+        /// <response code="400">Zwrot się nie powiódł</response>  
         [HttpPost]
+        [Authorize]
         [Route("Return/{rentalID}")]
-        public ActionResult ReturnCar([FromRoute] int rentalID)
+        public ActionResult ReturnCar([FromRoute] string rentalID)
         {
-            return NotFound();
+            if (ReturnController.ReturnACar(_context, rentalID))
+            {
+                return StatusCode(200);
+            }
+            else
+            {
+                return StatusCode(400);
+            }
+        }
+
+        /// <summary>
+        /// Pobierz samochody które masz wypożyczone
+        /// </summary>
+        /// <remarks>
+        /// Trzeba być zalogowanym
+        /// </remarks>
+        /// <returns>Listę wypożyczonych samochodów, oraz tokeny wymagane do ich zwrotu</returns>
+        /// <response code="200">Jeżeli jest się autoryzowanym</response> 
+        [HttpGet]
+        [Authorize]
+        [Route("GetRentedCars")]
+        public ActionResult CheckRentedCar()
+        {
+            int ClientID = 1;
+            return new JsonResult(_context.RentCar.Where(r => r.CustomerID == ClientID && r.IsReturned == false).Select((c)=> new {carDetailsID = c.CarDetailsID , rentToken = c.RentCarEventID}));
         }
 
     }

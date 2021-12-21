@@ -10,13 +10,13 @@ namespace Rent_a_Car.ApiClasses
 {
     public class RentController
     {
-        public static RentApiData RentACar(ApplicationDbContext context, int carDetailsID, int customerID)
+        public static RentApiData RentACar(ApplicationDbContext context, int carDetailsID, int customerID, DateTime expectedTime)
         {
             RentCarEvent rentEvent = new();
             rentEvent.CustomerID = customerID;
             rentEvent.CarDetailsID = carDetailsID;
             rentEvent.RentCarEventID = Guid.NewGuid().ToString();
-
+            rentEvent.MaximumReturnDate = expectedTime;
 
             RentApiData result = RentApiData.FromRentEvent(rentEvent);
             //try
