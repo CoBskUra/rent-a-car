@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Rent_a_Car.Models
 {
-    [Index(nameof(RentCarEvent.Customer))]
+    [Index(nameof(RentCarEvent.CustomerID))]
     [Index(nameof(RentCarEvent.CarDetailsID))]
     public partial class RentCarEvent
     {

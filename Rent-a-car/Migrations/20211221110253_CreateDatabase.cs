@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Rent_a_Car.Migrations
 {
-    public partial class After_auth : Migration
+    public partial class CreateDatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -52,8 +52,8 @@ namespace Rent_a_Car.Migrations
                 {
                     CarID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Brand = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Model = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Brand = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Model = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     HorsePower = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -88,7 +88,7 @@ namespace Rent_a_Car.Migrations
                     City = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Poste_Code = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
                     BecoamingDriverDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Login = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Login = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     NumberOfRentedCar = table.Column<int>(type: "int", nullable: false),
                     NumberOfOverallRentedCar = table.Column<int>(type: "int", nullable: false)
@@ -252,8 +252,7 @@ namespace Rent_a_Car.Migrations
                 name: "ReturnFile",
                 columns: table => new
                 {
-                    ReturnFileID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ReturnFileID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     RentedCarID = table.Column<int>(type: "int", nullable: false),
                     ReturnDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CarConditon = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -283,7 +282,7 @@ namespace Rent_a_Car.Migrations
                     CustomerID = table.Column<int>(type: "int", nullable: false),
                     CarDetailsID = table.Column<int>(type: "int", nullable: false),
                     IsReturned = table.Column<bool>(type: "bit", nullable: false),
-                    ReturnFileID = table.Column<int>(type: "int", nullable: true)
+                    ReturnFileID = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -348,14 +347,32 @@ namespace Rent_a_Car.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Car_Brand",
+                table: "Car",
+                column: "Brand");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Car_Model",
+                table: "Car",
+                column: "Model");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CarDetails_CarID",
                 table: "CarDetails",
-                column: "CarID");
+                column: "CarID",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_CarDetails_CompanyID",
                 table: "CarDetails",
                 column: "CompanyID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Customer_Login",
+                table: "Customer",
+                column: "Login",
+                unique: true,
+                filter: "[Login] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RentCar_CarDetailsID",

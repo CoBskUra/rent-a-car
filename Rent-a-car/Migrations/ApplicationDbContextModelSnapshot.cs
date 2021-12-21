@@ -223,15 +223,19 @@ namespace Rent_a_Car.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Brand")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("HorsePower")
                         .HasColumnType("int");
 
                     b.Property<string>("Model")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("CarID");
+
+                    b.HasIndex("Brand");
+
+                    b.HasIndex("Model");
 
                     b.ToTable("Car");
                 });
@@ -263,7 +267,8 @@ namespace Rent_a_Car.Migrations
 
                     b.HasKey("CarDetailsID");
 
-                    b.HasIndex("CarID");
+                    b.HasIndex("CarID")
+                        .IsUnique();
 
                     b.HasIndex("CompanyID");
 
@@ -308,7 +313,7 @@ namespace Rent_a_Car.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Login")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -329,6 +334,10 @@ namespace Rent_a_Car.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CustomerID");
+
+                    b.HasIndex("Login")
+                        .IsUnique()
+                        .HasFilter("[Login] IS NOT NULL");
 
                     b.ToTable("Customer");
                 });
@@ -368,8 +377,8 @@ namespace Rent_a_Car.Migrations
                     b.Property<DateTime>("MaximumReturnDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ReturnFileID")
-                        .HasColumnType("int");
+                    b.Property<string>("ReturnFileID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("SubmitDate")
                         .HasColumnType("datetime2");
@@ -387,10 +396,8 @@ namespace Rent_a_Car.Migrations
 
             modelBuilder.Entity("Rent_a_Car.Models.ReturnFile", b =>
                 {
-                    b.Property<int>("ReturnFileID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("ReturnFileID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CarConditon")
                         .HasColumnType("nvarchar(max)");
