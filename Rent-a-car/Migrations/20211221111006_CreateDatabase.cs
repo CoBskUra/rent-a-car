@@ -86,7 +86,7 @@ namespace Rent_a_Car.Migrations
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BirtheDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     City = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Poste_Code = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    Poste_Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BecoamingDriverDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Login = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),

@@ -327,8 +327,8 @@ namespace Rent_a_Car.Migrations
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Poste_Code")
-                        .HasColumnType("decimal(18,4)");
+                    b.Property<string>("Poste_Code")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Surname")
                         .HasColumnType("nvarchar(max)");

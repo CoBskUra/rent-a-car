@@ -25,8 +25,7 @@ namespace Rent_a_Car.Models
         public System.DateTime BirtheDate { get; set; }
         public string City { get; set; }
 
-        [Column(TypeName = "decimal(18,4)")]
-        public decimal Poste_Code { get; set; }
+        public string Poste_Code { get; set; }
         public System.DateTime BecoamingDriverDate { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
