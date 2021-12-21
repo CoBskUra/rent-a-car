@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Rent_a_Car.Models
 {
+
+    [Index(nameof(CarDetails.CarID), IsUnique = true)]
+    [Index(nameof(CarDetails.CompanyID))]
     public class CarDetails
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -10,7 +14,6 @@ namespace Rent_a_Car.Models
         {
             this.RentCars = new HashSet<RentCarEvent>();
         }
-
         public int CarDetailsID { get; set; }
         public int CarID { get; set; }
         public int CompanyID { get; set; }

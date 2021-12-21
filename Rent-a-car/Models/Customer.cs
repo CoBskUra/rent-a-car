@@ -4,8 +4,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+
 namespace Rent_a_Car.Models
 {
+    [Index(nameof(Customer.Login), IsUnique = true)]
     public class Customer
     {
 

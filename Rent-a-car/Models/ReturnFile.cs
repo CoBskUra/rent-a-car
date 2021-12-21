@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -6,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace Rent_a_Car.Models
 {
+    [Index(nameof(ReturnFile.EmployerID))]
     public partial class ReturnFile
     {
         [Key]
-        public int ReturnFileID { get; set; }
+        public string ReturnFileID { get; set; }
         public int RentedCarID { get; set; }
         public System.DateTime ReturnDate { get; set; }
         public string CarConditon { get; set; }
