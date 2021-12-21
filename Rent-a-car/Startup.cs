@@ -17,29 +17,28 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
+using System.Reflection;
+using System.IO;
 
 namespace Rent_a_Car
 {
     public class Startup
     {
-        /*public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration)
         {
-            //Configuration = configuration;
-        }*/
+            _Configuration = configuration;
+        }
 
-        //public IConfiguration Configuration { get; }
+        public IConfiguration _Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            /*services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
-            );*/ // poki nie ma bazy
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(_Configuration.GetConnectionString("DefaultConnection"))
+            );
 
-            services.AddDbContext<AppDbContext>(config =>
-            {
-                config.UseInMemoryDatabase("Memory");
-            });
+
 
             // registers the services
             // identityUser is default, we will have Customer/Employer
@@ -50,7 +49,7 @@ namespace Rent_a_Car
                 config.Password.RequireNonAlphanumeric = false;
                 config.Password.RequireUppercase = false;
                 config.SignIn.RequireConfirmedAccount = true;
-            }).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
+            }).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
             services.ConfigureApplicationCookie(config =>
             {
@@ -83,26 +82,26 @@ namespace Rent_a_Car
                 });
 
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement()
-      {
-        {
-          new OpenApiSecurityScheme
-          {
-            Reference = new OpenApiReference
-              {
-                Type = ReferenceType.SecurityScheme,
-                Id = "Bearer"
-              },
-              Scheme = "oauth2",
-              Name = "Bearer",
-              In = ParameterLocation.Header,
+                {
+                  {
+                    new OpenApiSecurityScheme
+                    {
+                      Reference = new OpenApiReference
+                        {
+                          Type = ReferenceType.SecurityScheme,
+                          Id = "Bearer"
+                        },
+                        Scheme = "oauth2",
+                        Name = "Bearer",
+                        In = ParameterLocation.Header,
 
-            },
-            new List<string>()
-          }
-        });
-                //var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                //c.IncludeXmlComments(xmlPath);
+                      },
+                      new List<string>()
+                    }
+                  });
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
             });
 
 
@@ -139,8 +138,8 @@ namespace Rent_a_Car
             app.UseStaticFiles();
             app.UseRouting();
 
-            //app.UseAuthentication();
-            //app.UseAuthorization();
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseIdentityServer();
 
             /*app.UseEndpoints(endpoints =>

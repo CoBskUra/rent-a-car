@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Rent_a_Car.Data
 {
-    public class ApplicationDbContext:  DbContext // IdentityDbContext?
+    public class ApplicationDbContext: IdentityDbContext // IdentityDbContext?
     {
         public ApplicationDbContext( DbContextOptions<ApplicationDbContext> options):base(options)
         {
