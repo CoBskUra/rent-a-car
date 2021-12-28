@@ -15,13 +15,13 @@ namespace Rent_a_Car.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ApiController : ControllerBase
+    public class CarApiController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
 
-        public ApiController(ApplicationDbContext context,
+        public CarApiController(ApplicationDbContext context,
             SignInManager<IdentityUser> signInManager, 
             UserManager<IdentityUser> userManager)
         {
