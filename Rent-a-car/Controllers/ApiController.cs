@@ -9,6 +9,8 @@ using Rent_a_Car.Data;
 using Rent_a_Car.Models;
 using Rent_a_Car.ApiClasses;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+
 namespace Rent_a_Car.Controllers
 {
     [ApiController]
@@ -16,11 +18,49 @@ namespace Rent_a_Car.Controllers
     public class ApiController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
 
-        public ApiController(ApplicationDbContext context)
+        public ApiController(ApplicationDbContext context,
+            SignInManager<IdentityUser> signInManager, 
+            UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
+
+        /// <summary>
+        /// Loguje sie do api
+        /// </summary>
+        /// <remarks>
+        /// Logowanie do API
+        /// </remarks>
+        /// <returns>Status zalogowania</returns>
+        /// <response code="200">Udane logowanie</response>
+        /// <response code="400">Użytkownik jest już zalogowany</response>
+        /// <response code="401">Nieudane logowanie</response>  
+        /// <response code="403">Konto bez uprawnień</response>
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("Login")]
+        public async Task<IActionResult> Login([FromForm]string email, [FromForm] string password)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return StatusCode(400);
+            }
+            else
+            {
+                var result = await _signInManager.PasswordSignInAsync(email, password, false, lockoutOnFailure: false);
+                if (result.Succeeded)
+                {
+                    return StatusCode(200);
+                }
+            }
+            return StatusCode(401);
+        }
+        
 
         /// <summary>
         /// Zwraca listę wszystkich marek samochodów
