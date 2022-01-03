@@ -1,12 +1,15 @@
 import React,{Component} from 'react';
 import {Table} from 'react-bootstrap';
 
+import {Button,ButtonToolbar} from 'react-bootstrap';
+import {EditCar} from './EditCar';
+
 
 export class Cars extends Component{
 
     constructor(props){
         super(props);
-        this.state={cars:[]}
+        this.state={cars:[], editModalShow:false}
     }
 
     refreshList(){
@@ -29,7 +32,8 @@ export class Cars extends Component{
     }
 
     render(){
-        const {cars}=this.state;
+        const {cars, carid, carbrand, carmodel, carhorsePower}=this.state;
+        let editModalClose=()=>this.setState({editModalShow:false});
         return(
             <div >
                 <Table className="mt-4" striped bordered hover size="sm">
@@ -49,7 +53,30 @@ export class Cars extends Component{
                                 <td>{car.brand}</td>
                                 <td>{car.model}</td>
                                 <td>{car.horsePower}</td>
-                                <td>edit</td>
+                                <td> 
+                                    <ButtonToolbar>
+                                        <Button className="mr-2" variant="info"
+                                        onClick={()=>this.setState(
+                                            {
+                                                editModalShow:true,
+                                                carid:car.carID,
+                                                carbrand:car.brand,
+                                                carmodel:car.model,
+                                                carhorsePower:car.horsePower
+                                            })}>
+                                                Edytuj
+                                            </Button>
+
+                                            <EditCar show={this.state.editModalShow}
+                                            onHide={editModalClose}
+                                            carid={carid}
+                                            carbrand={carbrand}
+                                            carmodel={carmodel}
+                                            carhorsePower={carhorsePower}
+                                            
+                                            />
+                                    </ButtonToolbar>
+                                </td>
 
                             </tr>)}
                     </tbody>

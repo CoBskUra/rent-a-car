@@ -21,11 +21,11 @@ namespace Rent_a_Car.Controllers
         }
 
         // GET: Cars
-        public JsonResult Index(string sortOrder)
+        public async Task<JsonResult> Index(string sortOrder)
         {
             var dbContext = _context.Car.OrderBy(c => c.Brand).ThenBy(c => c.Model);
 
-            return new JsonResult(dbContext);
+            return  new JsonResult(dbContext);
         }
 
         //// GET: Cars/Details/5
@@ -62,45 +62,46 @@ namespace Rent_a_Car.Controllers
         //    return View(car);
         //}
 
-        //// POST: Cars/Edit/5
-        //// To protect from overposting attacks, enable the specific properties you want to bind to.
-        //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int id, [Bind("CarID,Brand,Model,HorsePower")] Car car)
-        //{
-        //    if (id != car.CarID)
-        //    {
-        //        return NotFound();
-        //    }
+        // POST: Cars/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        public async Task<JsonResult> Edit(Car jsoncar)
+        {
+            return new JsonResult(jsoncar);
+            Car car = Newtonsoft.Json.JsonConvert.DeserializeObject<Car>("rgrt");
+            if (!CarExists(car.CarID))
+            {
+                return new JsonResult($"Nie znaleziono auta które chcesz zmienić {car.CarID} {car.HorsePower}");
+            }
 
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            _context.Update(car);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!CarExists(car.CarID))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(car);
-        //}
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(car);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!CarExists(car.CarID))
+                    {
+                        return new JsonResult("Nie znaleziono auta które chcesz zmienić");
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return new JsonResult("Pomyślnie edytowano");
+            }
+            return new JsonResult("Wprowadzono niepoprany format danych");
+        }
 
-        //private bool CarExists(int id)
-        //{
-        //    return _context.Car.Any(e => e.CarID == id);
-        //}
+        private bool CarExists(int id)
+        {
+            return _context.Car.Any(e => e.CarID == id);
+        }
 
         //// GET: Cars/ShowSearchResult
         //public async Task<IActionResult> ShowSearchResult(String Brand, String Model)
