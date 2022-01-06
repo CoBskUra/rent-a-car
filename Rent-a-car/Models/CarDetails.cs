@@ -7,6 +7,7 @@ namespace Rent_a_Car.Models
 
     [Index(nameof(CarDetails.CarID), IsUnique = true)]
     [Index(nameof(CarDetails.CompanyID))]
+    [Index(nameof(CarDetails.CompanyID), nameof(CarDetails.CarID), IsUnique = true)]
     public class CarDetails
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
