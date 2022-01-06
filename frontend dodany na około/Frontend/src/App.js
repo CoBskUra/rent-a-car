@@ -4,6 +4,7 @@ import './App.css';
 
 import {Home} from './Home';
 import {Cars} from './Cars';
+import {CarDetalis} from './CarDetalis';
 import {Navigation} from './Navigation';
 
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
@@ -20,7 +21,7 @@ function App() {
 
      <Switch>
        <Route path='/' component={Home} exact/>
-       <Route path='/' component={Cars} />
+       <Route path='/' component={CarDetalis}/>
      </Switch>
     </div>
     </BrowserRouter>

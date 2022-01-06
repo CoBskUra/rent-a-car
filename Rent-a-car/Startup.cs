@@ -19,6 +19,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
 using System.IO;
+using Newtonsoft.Json.Serialization;
 
 namespace Rent_a_Car
 {
@@ -41,6 +42,14 @@ namespace Rent_a_Car
                 c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod()
                  .AllowAnyHeader());
             });
+
+            //JSON Serializer
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft
+                .Json.ReferenceLoopHandling.Ignore)
+                .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver
+                = new DefaultContractResolver());
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(_Configuration.GetConnectionString("DefaultConnection"))

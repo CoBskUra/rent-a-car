@@ -1,5 +1,6 @@
 import React,{Component} from 'react';
 import {Modal,Button, Row, Col, Form} from 'react-bootstrap';
+import NumberFormat from 'react-number-format';
 
 export class EditCar extends Component{
     constructor(props){
@@ -17,9 +18,9 @@ export class EditCar extends Component{
             },
             body:JSON.stringify({
                 CarID:event.target.CarID.value,
-                brand:event.target.Brand.value,
-                model:event.target.Model.value,
-                horsePower:event.target.HorsePower.value
+                Brand:event.target.Brand.value,
+                Model:event.target.Model.value,
+                HorsePower:event.target.HorsePower.value
             })
         })
         .then(res=>res.json())
@@ -60,21 +61,21 @@ centered
 
                     <Form.Group controlId="Brand">
                         <Form.Label>Brand</Form.Label>
-                        <Form.Control type="text" name="Brand" 
+                        <Form.Control type="text" name="Brand" required
                         defaultValue={this.props.carbrand}
                         placeholder="Brand"/>
                     </Form.Group>
 
                     <Form.Group controlId="Model">
                         <Form.Label>Model</Form.Label>
-                        <Form.Control type="text" name="Model" 
+                        <Form.Control type="text" name="Model" required
                         defaultValue={this.props.carmodel}
                         placeholder="Model"/>
                     </Form.Group>
 
                     <Form.Group controlId="HorsePower">
                         <Form.Label>HorsePower</Form.Label>
-                        <Form.Control type="text" name="HorsePower" 
+                        <Form.Control type="number" min={0} required name="HorsePower" 
                         defaultValue={this.props.carhorsePower}
                         placeholder="HorsePower"/>
                     </Form.Group>

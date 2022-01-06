@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Rent_a_Car.Data;
+using Rent_a_Car.MessegeForCustomer;
 using Rent_a_Car.Models;
 
 namespace Rent_a_Car.Controllers
@@ -28,51 +29,34 @@ namespace Rent_a_Car.Controllers
             return  new JsonResult(dbContext);
         }
 
-        //// GET: Cars/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
+        // GET: Cars/Details/5
+        public async Task<JsonResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return new JsonResult("Server otrzymał pustą wiadomość");
+            }
 
-        //    var car = await _context.Car
-        //        .FirstOrDefaultAsync(m => m.CarID == id);
-        //    if (car == null)
-        //    {
-        //        return NotFound();
-        //    }
+            MessengeCompaniesWithRequariedCar requestInfo =  new MessengeCompaniesWithRequariedCar();
+            await requestInfo.InitializeAsync(_context, (int) id);
 
-        //    return RedirectToAction("ShowAllCars", "CarDetails", new { id = id });
-        //}
+            return new JsonResult(requestInfo);
+        }
 
-        //// GET: Cars/Edit/5
-        //public async Task<IActionResult> Edit(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var car = await _context.Car.FindAsync(id);
-        //    if (car == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return View(car);
-        //}
+        
 
         // POST: Cars/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public async Task<JsonResult> Edit(Car jsoncar)
+        public async Task<JsonResult> Edit([FromBody] Car car)
         {
-            return new JsonResult(jsoncar);
-            Car car = Newtonsoft.Json.JsonConvert.DeserializeObject<Car>("rgrt");
+            if (car == null)
+                throw new Exception("server recived empty messange");
+
             if (!CarExists(car.CarID))
             {
-                return new JsonResult($"Nie znaleziono auta które chcesz zmienić {car.CarID} {car.HorsePower}");
+                return new JsonResult($"Nie znaleziono auta o id: {car.CarID} które chcesz zmienić ");
             }
 
             if (ModelState.IsValid)
@@ -86,7 +70,7 @@ namespace Rent_a_Car.Controllers
                 {
                     if (!CarExists(car.CarID))
                     {
-                        return new JsonResult("Nie znaleziono auta które chcesz zmienić");
+                        return new JsonResult($"Nie znaleziono auta o id: {car.CarID} które chcesz zmienić");
                     }
                     else
                     {
