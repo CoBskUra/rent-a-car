@@ -12,7 +12,7 @@ namespace Rent_a_Car.MessegeForCustomer
 
     public class MessengeCompaniesWithRequariedCar
     {
-        public Car car { get; set; }
+        public Car Car { get; set; }
         public List<Company> Companies;
 
         public async Task InitializeAsync(ApplicationDbContext dbContext, int CarID)
@@ -27,7 +27,7 @@ namespace Rent_a_Car.MessegeForCustomer
             var cardetalis = dbContext.CarDetails.Where(cd => cd.CarID == CarID);
             var companies = await cardetalis.Select(cd => cd.Company).Distinct().ToListAsync();
 
-            this.car = car.Result;
+            this.Car = car.Result;
             this.Companies = companies;
         }
 
