@@ -3,6 +3,8 @@ import {Table} from 'react-bootstrap';
 
 import {Button,ButtonToolbar} from 'react-bootstrap';
 import {EditCar} from './EditCar';
+import {CarDetalisWindow} from './CarDetalisWindow';
+import {Route, Router, Switch, Redirect} from 'react-router-dom';
 
 export class Cars extends Component{
 
@@ -67,15 +69,16 @@ export class Cars extends Component{
                                             })}>
                                                 Edytuj
                                             </Button>
-
                                             <Button className="mr-2" variant="info"
-                                        onClick={()=>this.setState(
+                                            onClick={()=>this.setState(
                                             {
                                                 carDetalisModalShow:true,
-                                                carid:car.CarID,
+                                                carid:car.CarID
                                             })}>
-                                                detalis
+                                                szczegóły
                                             </Button>
+
+                                            
                                             
                                             <EditCar show={this.state.editModalShow}
                                             onHide={editModalClose}
@@ -85,11 +88,21 @@ export class Cars extends Component{
                                             carhorsePower={carhorsePower}
                                             />
 
+                                            <CarDetalisWindow show={this.state.carDetalisModalShow}
+                                            onHide={CarDetalisModalClose}
+                                            id={carid}
+                                            />
+
+
 
                                     </ButtonToolbar>
+                                    
+
                                 </td>
 
-                            </tr>)}
+                            </tr>
+                            
+                        )}
                     </tbody>
 
                 </Table>

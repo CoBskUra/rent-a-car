@@ -1,20 +1,20 @@
-import { waitFor } from '@testing-library/react';
 import React,{Component} from 'react';
 import {Table} from 'react-bootstrap';
-
+import { CompanysCars } from './CompanysCars';
+import {Button} from 'react-bootstrap';
 
 export class CarDetalis extends Component{
 
     constructor(props){
         super(props);
-        this.state={detalis:null, wait:true}
+        this.state={detalis:null, wait:true, shower:[], value:null}
     }
 
     async refreshList(){
-        await fetch(process.env.REACT_APP_API +'/JsonCars/Details/'+1)
+        await fetch(process.env.REACT_APP_API +'/JsonCars/Details/'+this.props.id)
         .then(response=>response.json())
         .then(data=>{
-            this.setState({detalis:data, wait:false});
+            this.setState({detalis:data, wait:false });
         });
     }
 
@@ -26,11 +26,54 @@ export class CarDetalis extends Component{
         this.refreshList();
     }
 
+    onRemoveItem = i => {
+        this.setState(state => {
+            const shower = state.shower.filter(j => i !== j);
+      
+            return {
+                shower,
+            };
+          });
+        };
+
+        onAddItem = () => {
+          this.setState(state => {
+            const shower = state.shower.concat(state.value);
+      
+            return {
+              shower,
+              value: -1,
+            };
+          });
+        };
+
+      should_be_show = i =>{
+        var should_be_show = false;
+        this.state.shower.map( s =>{
+            if(s==i)
+            {
+                should_be_show = true;
+            }
+        });
+        return should_be_show;
+      };
+
+    show_or_hide = i =>{
+        console.log(this.state.shower);
+        if(this.should_be_show(i))
+            this.onRemoveItem(i);
+        else
+            this.setState({value:i},()=>this.onAddItem());
+    };
+
     render(){
+        
         if(this.state.wait)
             return(<div></div>);
+
         const {detalis} = this.state;
-        
+        var show = false;
+
         return(
             <div>
                 <div>
@@ -41,7 +84,6 @@ export class CarDetalis extends Component{
                                 <th>Brand</th>
                                 <th>Model</th>
                                 <th>HorsePower</th>
-                                <th>option</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -58,22 +100,31 @@ export class CarDetalis extends Component{
                     </div>
                     <div>
                         <Table className="mt-4" striped bordered hover size="sm">
+                            
                             <thead>
                                 <tr>
                                     <th>Nazwa firmy</th>
                                     <th></th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                {detalis.Companies.map(company => <tr key={company.CompanyID}>
+                                
+                                {detalis.Companies.map(company =>
+                                <Table>
+                                <tr key={company.CompanyID}>
                                     <td>{company.Name}</td>
-                                    <td>pokaż auta firmy</td>
-
-                                </tr>)}
-                            </tbody>
+                                    <td><Button className="mr-2" variant="info"
+                                            onClick={()=> this.show_or_hide(company.CompanyID)}>
+                                                Wyświetl auta firmy
+                                            </Button>
+                                    </td>
+                                    
+                                </tr>
+                                <tr><CompanysCars show={this.should_be_show(company.CompanyID)} companyID={company.CompanyID} carID={detalis.Car.CarID}></CompanysCars></tr>
+                                </Table>
+                            )}
 
                     </Table>
-
+                        
                     </div>
                 </div>
         );

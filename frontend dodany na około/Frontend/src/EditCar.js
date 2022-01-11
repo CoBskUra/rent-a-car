@@ -10,7 +10,7 @@ export class EditCar extends Component{
 
     handleSubmit(event){
         event.preventDefault();
-        fetch('http://localhost:27116/JsonCars/Edit',{
+        fetch(process.env.REACT_APP_API +'/JsonCars/Edit',{
             method:'POST',
             headers:{
                 'Accept':'application/json',

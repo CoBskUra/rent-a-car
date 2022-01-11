@@ -86,6 +86,20 @@ namespace Rent_a_Car.Controllers
         {
             return _context.Car.Any(e => e.CarID == id);
         }
+        [HttpGet]
+        public async Task<JsonResult> GetCompanysCars(int CompanyID, int CarID)
+        {
+            if(CompanyID==0 || CarID==0)
+            {
+                return new JsonResult($"Server otrzymał pustą wiadomość Company:{CompanyID} Car:{CarID}");
+            }
+
+            var dbcontext = _context;
+            var CompanysCars = await dbcontext.CarDetails.Where(cd => cd.CarID == CarID && cd.CompanyID == CompanyID && cd.IsAvailable==true).ToListAsync();
+
+            return new JsonResult(CompanysCars);
+
+        }
 
         //// GET: Cars/ShowSearchResult
         //public async Task<IActionResult> ShowSearchResult(String Brand, String Model)

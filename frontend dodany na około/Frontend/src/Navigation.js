@@ -11,10 +11,10 @@ export class Navigation extends Component{
                 <Navbar.Collapse id="basic-navbar-nav">
                 <Nav>
                 <NavLink className="d-inline p-2 bg-dark text-white" to="/">
-                    Home
+                    Strona główna
                 </NavLink>
-                <NavLink className="d-inline p-2 bg-dark text-white" to="/CarDetalis">
-                CarDetalis
+                <NavLink className="d-inline p-2 bg-dark text-white" to="/Cars">
+                Auta
                 </NavLink>
                 </Nav>
                 </Navbar.Collapse>
