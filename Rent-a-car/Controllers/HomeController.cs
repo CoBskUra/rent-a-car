@@ -12,10 +12,12 @@ namespace Rent_a_Car.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IMailService _mailService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IMailService mailService)
         {
             _logger = logger;
+            _mailService = mailService;
         }
 
         public IActionResult Index()
@@ -23,8 +25,9 @@ namespace Rent_a_Car.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public async Task<IActionResult> PrivacyAsync()
         {
+            await _mailService.SendEmailAsync("01151606@pw.edu.pl", "sendgrid2 class", "<h1>hejka naklejka</h1>"); // sent according to sendgrid page, not delivered in mail
             return View();
         }
 

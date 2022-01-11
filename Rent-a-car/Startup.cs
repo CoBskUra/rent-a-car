@@ -27,6 +27,7 @@ namespace Rent_a_Car
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
             );
+            services.AddTransient<IMailService, SendGridMailService>();
             services.AddControllersWithViews();
         }
 
