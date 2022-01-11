@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Rent_a_Car
 {
-    public static class Configuration
+    public static class Config
     {
         // add email here
         public static IEnumerable<IdentityResource> GetIdentityResources() =>
@@ -38,5 +38,13 @@ namespace Rent_a_Car
                     IdentityServer4.IdentityServerConstants.StandardScopes.Profile},
                 RequireConsent = false
             } };
+
+        public static IEnumerable<ApiResource> GetApiResources()
+        {
+            return new List<ApiResource>
+                {
+                    new ApiResource("api1", "My API")
+                };
+        }
     }
 }

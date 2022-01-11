@@ -1,20 +1,7 @@
 ﻿################################################################################
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
-
-/Rent-a-car/obj
-/Rent-a-car/bin/
-/Rent-a-car/.vs/Rent-a-Car
-/Rent-a-car-UnitTests/obj
-/Rent-a-car-UnitTests/bin/
-/Rent-a-car-UnitTests/.vs/Rent-a-Car-UnitTests
-/ApiOne/obj
-/ApiOne/bin/
-/ApiOne/.vs/ApiOne
-/ApiTwo/obj
-/ApiTwo/bin/
-/ApiTwo/.vs/ApiTwo
-/MvcClient/obj
-/MvcClient/bin/
-/MvcClient/.vs/MvcClient
 /.vs
+/*/.vs
+/*/bin/
+/*/obj/
