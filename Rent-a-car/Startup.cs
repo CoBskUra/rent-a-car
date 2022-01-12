@@ -16,7 +16,7 @@ using System.Reflection;
 using System.IO;
 using Microsoft.OpenApi.Models;
 using Rent_a_Car.Models;
-
+using System.IdentityModel.Tokens.Jwt;
 namespace Rent_a_Car
 {
     public class Startup
@@ -32,15 +32,15 @@ namespace Rent_a_Car
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddRazorPages();
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
+            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddSwaggerGen(c =>
             {
@@ -86,13 +86,29 @@ namespace Rent_a_Car
                 c.IncludeXmlComments(xmlPath);
             });
 
-            services.AddIdentityServer()
-                .AddDeveloperSigningCredential()
-            .AddInMemoryPersistedGrants()
-            .AddInMemoryIdentityResources(Config.GetIdentityResources())
-            .AddInMemoryApiResources(Config.GetApiResources())
-            .AddInMemoryClients(Config.GetClients())
-            .AddAspNetIdentity<ApplicationUser>();
+            JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = "Cookies";
+                options.DefaultChallengeScheme = "oidc";
+            })
+            .AddCookie("Cookies")
+            .AddOpenIdConnect("oidc", options =>
+            {
+                options.Authority = "https://localhost:5001";
+
+                options.ClientId = "mvc";
+                options.ClientSecret = "secret";
+                options.ResponseType = "code";
+
+                options.Scope.Add("api1");
+
+                options.SaveTokens = true;
+            });
+
+            
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -116,7 +132,7 @@ namespace Rent_a_Car
 
             app.UseRouting();
 
-            app.UseIdentityServer();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
