@@ -7,7 +7,7 @@ export class CarDetalis extends Component{
 
     constructor(props){
         super(props);
-        this.state={detalis:null, wait:true, shower:[], value:null}
+        this.state={detalis:undefined, wait:true, shower:[]}
     }
 
     async refreshList(){
@@ -23,7 +23,6 @@ export class CarDetalis extends Component{
     }
 
     componentDidUpdate(){
-        this.refreshList();
     }
 
     onRemoveItem = i => {
@@ -36,13 +35,12 @@ export class CarDetalis extends Component{
           });
         };
 
-        onAddItem = () => {
+        onAddItem = i => {
           this.setState(state => {
-            const shower = state.shower.concat(state.value);
+            const shower = state.shower.concat(i);
       
             return {
-              shower,
-              value: -1,
+              shower
             };
           });
         };
@@ -50,7 +48,7 @@ export class CarDetalis extends Component{
       should_be_show = i =>{
         var should_be_show = false;
         this.state.shower.map( s =>{
-            if(s==i)
+            if(s===i)
             {
                 should_be_show = true;
             }
@@ -59,11 +57,10 @@ export class CarDetalis extends Component{
       };
 
     show_or_hide = i =>{
-        console.log(this.state.shower);
         if(this.should_be_show(i))
             this.onRemoveItem(i);
         else
-            this.setState({value:i},()=>this.onAddItem());
+            this.onAddItem(i);
     };
 
     render(){
@@ -72,7 +69,6 @@ export class CarDetalis extends Component{
             return(<div></div>);
 
         const {detalis} = this.state;
-        var show = false;
 
         return(
             <div>
