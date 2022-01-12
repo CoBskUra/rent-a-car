@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rent-a-Car", "Rent-a-Car.cs
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rent-a-car-UnitTests", "..\Rent-a-car-UnitTests\Rent-a-car-UnitTests.csproj", "{C98DE2E1-2E71-4549-AD6D-BD1BB5AE8812}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServerAspNetIdentity", "..\IdentityServerAspNetIdentity\IdentityServerAspNetIdentity.csproj", "{48289601-BBC5-4033-9489-3A404630404D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServerAspNetIdentity", "..\IdentityServerAspNetIdentity\IdentityServerAspNetIdentity.csproj", "{53943CD1-9B8B-4E55-88BC-EA1ECEBAB8C8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{C98DE2E1-2E71-4549-AD6D-BD1BB5AE8812}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C98DE2E1-2E71-4549-AD6D-BD1BB5AE8812}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C98DE2E1-2E71-4549-AD6D-BD1BB5AE8812}.Release|Any CPU.Build.0 = Release|Any CPU
-		{48289601-BBC5-4033-9489-3A404630404D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{48289601-BBC5-4033-9489-3A404630404D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{48289601-BBC5-4033-9489-3A404630404D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{48289601-BBC5-4033-9489-3A404630404D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53943CD1-9B8B-4E55-88BC-EA1ECEBAB8C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53943CD1-9B8B-4E55-88BC-EA1ECEBAB8C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53943CD1-9B8B-4E55-88BC-EA1ECEBAB8C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53943CD1-9B8B-4E55-88BC-EA1ECEBAB8C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
