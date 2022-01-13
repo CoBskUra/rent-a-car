@@ -32,12 +32,34 @@ export class ReturnForm extends Component{
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-
                         <Row>
                             <Col sm={6}>
                                 <Form onSubmit={this.handleSubmit}>
                                 
+                                    <Form.Group controlId="CarConditon">
+                                        <Form.Label>Stan auta</Form.Label>
+                                        <Form.Control type="text" name="CarConditon" required/>
+                                    </Form.Group>
 
+                                    <Form.Group controlId="OdometerReading">
+                                        <Form.Label>Przebieg</Form.Label>
+                                        <Form.Control type="number" min={0} name="OdometerReading" required/>
+                                    </Form.Group>
+
+                                    <Form.Group controlId="CarConditon">
+                                        <Form.Label>Stan auta</Form.Label>
+                                        <Form.Control type="text" name="CarConditon" required/>
+                                    </Form.Group>
+
+                                    <Form.Group controlId="Photo">
+                                        <Form.Label>Zaraz się ogarnie</Form.Label>
+                                        <Form.Control type="text" name="Photo"/>
+                                    </Form.Group>
+
+                                    <Form.Group controlId="Protocol">
+                                        <Form.Label>Zaraz się ogarnie</Form.Label>
+                                        <Form.Control type="text" name="Protocol"/>
+                                    </Form.Group>
                                     
 
                                     <Form.Group>
