@@ -11,22 +11,21 @@ using Rent_a_Car.ApiClasses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-
 using static IdentityServer4.IdentityServerConstants;
 
 namespace Rent_a_Car.Controllers
 {
     [ApiController]
-    [Authorize(LocalApi.PolicyName)]
+    [Authorize]
     [Route("[controller]")]
-    public class CarApiController : ControllerBase
+    public class CarApiPrivateController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public CarApiController(ApplicationDbContext context,
-            SignInManager<ApplicationUser> signInManager, 
+        public CarApiPrivateController(ApplicationDbContext context,
+            SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager)
         {
             _context = context;
@@ -48,7 +47,7 @@ namespace Rent_a_Car.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("Login")]
-        public async Task<IActionResult> Login([FromForm]string email, [FromForm] string password)
+        public async Task<IActionResult> Login([FromForm] string email, [FromForm] string password)
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -64,7 +63,7 @@ namespace Rent_a_Car.Controllers
             }
             return StatusCode(401);
         }
-        
+
 
         /// <summary>
         /// Zwraca listę wszystkich marek samochodów
@@ -93,7 +92,7 @@ namespace Rent_a_Car.Controllers
         {
             try
             {
-                return new JsonResult(_context.CarDetails.Select(c => c).Where(c=> c.CarID == carModelID));
+                return new JsonResult(_context.CarDetails.Select(c => c).Where(c => c.CarID == carModelID));
             }
             catch
             {
@@ -174,7 +173,7 @@ namespace Rent_a_Car.Controllers
         public ActionResult CheckRentedCar()
         {
             int ClientID = 1;
-            return new JsonResult(_context.RentCar.Where(r => r.CustomerID == ClientID && r.IsReturned == false).Select((c)=> new {carDetailsID = c.CarDetailsID , rentToken = c.RentCarEventID}));
+            return new JsonResult(_context.RentCar.Where(r => r.CustomerID == ClientID && r.IsReturned == false).Select((c) => new { carDetailsID = c.CarDetailsID, rentToken = c.RentCarEventID }));
         }
 
     }

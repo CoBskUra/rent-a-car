@@ -33,6 +33,7 @@ namespace Rent_a_Car
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+         
             services.AddControllersWithViews();
             services.AddRazorPages();
 
@@ -41,14 +42,15 @@ namespace Rent_a_Car
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-            //     .AddEntityFrameworkStores<ApplicationDbContext>();
-            .AddDefaultTokenProviders();
+             services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Rent-a-car", Version = "v1" });
                 
-                c.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
+                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.OAuth2,
                    
@@ -56,8 +58,8 @@ namespace Rent_a_Car
                     {
                         Password = new OpenApiOAuthFlow()
                         {
-                            AuthorizationUrl = new Uri("https://localhost:5001/connect/authorize"),
-                            TokenUrl = new Uri("https://localhost:5001/connect/token"),
+                            AuthorizationUrl = new Uri("https://localhost:44378/connect/authorize"),
+                            TokenUrl = new Uri("https://localhost:44378/connect/token"),
                             Scopes = new Dictionary<string, string>
                                 {
                                     {"api1", "Rent-a-car - full access"}
@@ -89,19 +91,39 @@ namespace Rent_a_Car
                 c.IncludeXmlComments(xmlPath);
             });
 
-            services.AddAuthentication()
-                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options => 
-                { options.Authority = "http://localhost:5001"; 
-                    options.RequireHttpsMetadata = false; 
-                    options.Audience = "api1"; 
-                    options.SaveToken = true; 
-                });
+            var builder = services.AddIdentityServer(options =>
+            {
+                options.Events.RaiseErrorEvents = true;
+                options.Events.RaiseInformationEvents = true;
+                options.Events.RaiseFailureEvents = true;
+                options.Events.RaiseSuccessEvents = true;
+
+                // see https://identityserver4.readthedocs.io/en/latest/topics/resources.html
+                options.EmitStaticAudienceClaim = true;
+            })
+                .AddInMemoryIdentityResources(Config.IdentityResources)
+                .AddInMemoryApiScopes(Config.ApiScopes)
+                .AddInMemoryClients(Config.Clients)
+                .AddInMemoryApiResources(Config.Apis)
+                .AddAspNetIdentity<ApplicationUser>();
+                
+            // not recommended for production - you need to store your key material somewhere secure
+            builder.AddDeveloperSigningCredential();
+
+            services.AddLocalApiAuthentication();
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            
+            app.UseCors(x => x
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .SetIsOriginAllowed(origin => true) // allow any origin
+                .AllowCredentials()); // allow credentials
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -127,7 +149,7 @@ namespace Rent_a_Car
 
             app.UseRouting();
 
-            app.UseAuthentication();
+            app.UseIdentityServer();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
