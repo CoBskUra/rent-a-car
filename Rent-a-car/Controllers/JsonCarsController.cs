@@ -23,11 +23,33 @@ namespace Rent_a_Car.Controllers
         }
 
         // GET: Cars
-        public async Task<JsonResult> Index(string sortOrder)
+        [HttpPost]
+        public async Task<JsonResult> Index([FromBody]SerchOption option)
         {
-            var dbContext = _context.Car.OrderBy(c => c.Brand).ThenBy(c => c.Model);
+            var dbContext = await _context.Car.ToListAsync();
+            if (option == null)
+                return  new JsonResult(dbContext.OrderBy(c => c.Brand).ThenBy(c => c.Model));
+            else
+            {
+                if(option.Mark != null)
+                {
+                    dbContext = dbContext.Where(a => a.Model == option.Mark).ToList();
+                }
 
-            return  new JsonResult(dbContext);
+                if(option.Brand != null)
+                {
+                    dbContext = dbContext.Where(a => a.Brand == option.Brand).ToList();
+                }
+
+                if(option.order == order.Brand)
+                {
+                    return new JsonResult(dbContext.OrderBy(c => c.Brand).ThenBy(c => c.Model));
+                }
+                else
+                {
+                    return new JsonResult(dbContext.OrderBy(c => c.Model).ThenBy(c => c.Brand));
+                }
+            }
         }
 
         // GET: Cars/Details/5

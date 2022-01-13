@@ -135,7 +135,8 @@ namespace Rent_a_Car.Controllers
         public ActionResult CheckRentedCar()
         {
             int ClientID = 1;
-            return new JsonResult(_context.RentCar.Where(r => r.CustomerID == ClientID && r.IsReturned == false).Select((c)=> new {carDetailsID = c.CarDetailsID , rentToken = c.RentCarEventID}));
+            return new JsonResult(_context.RentCar.Where(r => r.CustomerID == ClientID && r.IsReturned == false).
+                                    Select((c)=> new {carDetailsID = c.CarDetailsID , rentToken = c.RentCarEventID}));
         }
 
         /// <summary>
@@ -152,7 +153,8 @@ namespace Rent_a_Car.Controllers
         public ActionResult CheckReturnetCar()
         {
             int ClientID = 1;
-            return new JsonResult(_context.RentCar.Where(r => r.CustomerID == ClientID && r.IsReturned == true).Select((c) => new { carDetailsID = c.CarDetailsID, rentToken = c.RentCarEventID }));
+            return new JsonResult(_context.RentCar.Where(r => r.CustomerID == ClientID && r.IsReturned == true).
+                                    Select((c) => new { carDetailsID = c.CarDetailsID, rentToken = c.RentCarEventID }));
         }
 
 
@@ -176,6 +178,61 @@ namespace Rent_a_Car.Controllers
                 return new JsonResult(null);
 
         }
+
+        /// <summary>
+        /// Zwraca listę wszystkich marek samochodów
+        /// </summary>
+        [HttpGet]
+        [Route("ReadyToReturn")]
+        public async Task<JsonResult> ReadyToReturn()
+        {
+            var dbcontext = _context.RentCar.Where(a => a.IsReturned == false && a.ReturnFile!=null)
+                .Select( a=> new
+                {
+                    RentID = a.RentCarEventID,
+                    Brand = a.CarDetails.Car.Brand,
+                    Model = a.CarDetails.Car.Model,
+                    CustomerID = a.CustomerID
+                });
+            return new JsonResult(dbcontext);
+        }
+
+        /// <summary>
+        /// Zwraca listę wszystkich aut gotowych do zwrotu
+        /// </summary>
+        [HttpGet]
+        [Route("NotReadyToReturn")]
+        public async Task<JsonResult> NotReadyToReturn()
+        {
+            var dbcontext = _context.RentCar.Where(a => a.IsReturned == false && a.ReturnFile == null).Select(a => new
+            {
+                RentCarEventID = a.RentCarEventID,
+                Brand = a.CarDetails.Car.Brand,
+                Model = a.CarDetails.Car.Model,
+                CustomerID = a.CustomerID
+            });
+            return new JsonResult(dbcontext);
+        }
+
+
+        /// <summary>
+        /// Zwraca listę wyporzyczonych przez klientów ale nie zwróconych
+        /// </summary>
+        [HttpGet]
+        [Route("NotReadyToReturn")]
+        public async Task<JsonResult> NotReadyToReturn()
+        {
+            var dbcontext = _context.RentCar.Where(a => a.IsReturned == false && a.ReturnFile == null).Select(a => new
+            {
+                RentCarEventID = a.RentCarEventID,
+                Brand = a.CarDetails.Car.Brand,
+                Model = a.CarDetails.Car.Model,
+                CustomerID = a.CustomerID
+            });
+            return new JsonResult(dbcontext);
+        }
+
+
 
     }
 }

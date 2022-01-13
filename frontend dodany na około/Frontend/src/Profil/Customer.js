@@ -1,8 +1,5 @@
-import { queryAllByLabelText } from '@testing-library/react';
 import React,{Component} from 'react';
-import { Button, ButtonToolbar } from 'react-bootstrap';
-import {Table} from 'react-bootstrap';
-import {CustomerReturnForm} from '../Forms/CustomerReturnForm'
+import { Button, ButtonToolbar, Table } from 'react-bootstrap';
 
 export class Customer extends Component{
     constructor(props)
@@ -14,7 +11,6 @@ export class Customer extends Component{
             ReturnedCars:[], 
             showCurrentrent:false, 
             currentRented:[],
-            ShowReturnForm:false
         }
     }
 
@@ -40,33 +36,45 @@ export class Customer extends Component{
         }
     }
 
-    refresh1(){
+    refresh(){
         this.dowlandReturnetCars();
         this.dowlandCurentRentedCars();
     }
-    refresh2(){
-        this.dowlandCurentRentedCars();
-        this.dowlandReturnetCars();
-        
+    
+
+    return(rentID){
+        fetch(process.env.REACT_APP_API +'/Api/Return/' + rentID)
+            .then(response=>response.json())
+            .then(data=>{
+                alert(data);
+            });
+    }
+
+
+    componentDidMount(){
+        this.refresh();
+    }
+
+    componentDidUpdate(){
+        this.refresh();
     }
 
 
     render(){
         const {currentRented, ReturnedCars} = this.state;
-        let ModalReturnFormClose = ()=> this.setState({ShowReturnForm:false});
         return(
         <div>
             <ButtonToolbar>
                 <Button className="history" variant="info" 
                 onClick={()=>{
-                    this.setState({showReturned:!this.state.showReturned}, ()=>this.refresh1());
+                    this.setState({showReturned:!this.state.showReturned});
                     
                 }}>
                     Wyświetl historie wyporzyczeń aut
                 </Button>
                 <Button className="current" variant="info" 
                 onClick={()=>{
-                    this.setState({showCurrentrent:!this.state.showCurrentrent}, ()=>this.refresh1());
+                    this.setState({showCurrentrent:!this.state.showCurrentrent});
                     
                     }}>
                     Wyświetl obecnie wyporzyczone aura
@@ -91,16 +99,10 @@ export class Customer extends Component{
                                 <td>
                                 <ButtonToolbar>
                                     <Button className="mr-2" variant="dark" 
-                                    onClick={()=>{
-                                        this.setState({
-                                            ShowReturnForm:true
-                                        })
-                                    }}>
+                                    onClick={()=>this.return(cr.rentToken)}>
                                         Zwróć
                                     </Button>
                                     
-                                    <CustomerReturnForm show={this.state.ShowReturnForm}
-                                    onHide={ModalReturnFormClose}/>
                                     
                                 </ButtonToolbar>
                                 </td>

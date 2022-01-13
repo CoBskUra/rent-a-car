@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import {Table} from 'react-bootstrap';
+import {Form, Table} from 'react-bootstrap';
 
 import {Button,ButtonToolbar} from 'react-bootstrap';
 import {EditCar} from './Forms/EditCar';
@@ -9,11 +9,31 @@ export class Cars extends Component{
 
     constructor(props){
         super(props);
-        this.state={cars:[], editModalShow:false, carDetalisModalShow:false}
+        this.state={
+            cars:[],
+            editModalShow:false,
+            carDetalisModalShow:false,
+            Brand:null,
+            Mark:null,
+            order:0
+        }
+
+        this.handleSubmit=this.handleSubmit.bind(this);
     }
 
     refreshList(){
-        fetch(process.env.REACT_APP_API +'/JsonCars')
+        fetch(process.env.REACT_APP_API +'/JsonCars',{
+            method:'Post',
+            headers:{
+                'Accept':'application/json',
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({
+                Mark: this.state.Mark,
+                Brand: this.state.Brand,
+                order: this.state.order
+            })
+        })
         .then(response=>response.json())
         .then(data=>{
            
@@ -21,6 +41,22 @@ export class Cars extends Component{
         });
     }
 
+
+    handleSubmit(event){
+        event.preventDefault();
+        var m = event.target.Mark.value;
+        if(m==='')
+            m = null;
+        var b = event.target.Brand.value;
+        if(b === '')
+            b = null;
+        
+        this.setState(
+        {
+            Mark:m,
+            Brand:b
+        });
+    }
 
 
     componentDidMount(){
@@ -38,6 +74,40 @@ export class Cars extends Component{
         let CarDetalisModalClose=()=>this.setState({carDetalisModalShow:false});
         return(
             <div >
+                <div>
+                <Form onSubmit={this.handleSubmit}>
+                <Form.Group controlId="Brand">
+                    <Form.Label>Firma</Form.Label>
+                        <Form.Control type="text" name="Brand"
+                        placeholder="Firma"/>
+                </Form.Group>   
+
+                <Form.Group controlId="Mark">
+                    <Form.Label>Marka</Form.Label>
+                        <Form.Control type="text" name="Mark"
+                        placeholder="Marka"/>
+                </Form.Group>   
+
+
+                    <Form.Group>
+                        <Button variant="primary" type="submit">
+                            Szukaj
+                        </Button>
+                    </Form.Group>
+
+                    <Button variant="secondary" 
+                    onClick={()=>{
+                        if(this.state.order === 0)
+                            this.setState({ order: 1})
+                        else
+                            this.setState({ order: 0})
+                    }
+                        
+                    }>
+                        Zmień kolejność wyświetlania
+                    </Button>
+                </Form>
+                </div>
                 <Table className="mt-4" striped bordered hover size="sm">
                     <thead>
                         <tr>
