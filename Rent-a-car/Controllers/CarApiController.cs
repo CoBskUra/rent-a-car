@@ -14,6 +14,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 using static IdentityServer4.IdentityServerConstants;
 
+using Rent_a_Car.MessegeForCustomer;
+using Rent_a_Car.Messenge.FromCustomer;
+
 namespace Rent_a_Car.Controllers
 {
     [ApiController]
@@ -256,23 +259,6 @@ namespace Rent_a_Car.Controllers
             return new JsonResult(dbcontext);
         }
 
-
-        /// <summary>
-        /// Zwraca listę wyporzyczonych przez klientów ale nie zwróconych
-        /// </summary>
-        [HttpGet]
-        [Route("NotReadyToReturn")]
-        public async Task<JsonResult> NotReadyToReturn()
-        {
-            var dbcontext = _context.RentCar.Where(a => a.IsReturned == false && a.ReturnFile == null).Select(a => new
-            {
-                RentCarEventID = a.RentCarEventID,
-                Brand = a.CarDetails.Car.Brand,
-                Model = a.CarDetails.Car.Model,
-                CustomerID = a.CustomerID
-            });
-            return new JsonResult(dbcontext);
-        }
 
 
 
