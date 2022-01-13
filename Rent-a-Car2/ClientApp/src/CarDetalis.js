@@ -116,7 +116,7 @@ export class CarDetalis extends Component{
                                     </td>
                                     
                                 </tr>
-                                <tr><CompanysCars show={this.should_be_show(company.companyID)} companyID={company.companyID} carID={detalis.Car.carID}></CompanysCars></tr>
+                                <tr><CompanysCars show={this.should_be_show(company.companyID)} companyID={company.companyID} carID={detalis.car.carID}></CompanysCars></tr>
                                 </Table>
                             )}
 

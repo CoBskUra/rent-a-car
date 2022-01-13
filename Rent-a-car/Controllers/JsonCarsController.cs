@@ -12,7 +12,7 @@ using Rent_a_Car.Models;
 
 namespace Rent_a_Car.Controllers
 {
-    public class JsonCarsController : Controller
+    public class JsonCarsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
@@ -61,9 +61,9 @@ namespace Rent_a_Car.Controllers
             }
 
             MessengeCompaniesWithRequariedCar requestInfo =  new MessengeCompaniesWithRequariedCar();
-            await requestInfo.InitializeAsync(_context, (int) id);
-
-            return new JsonResult(requestInfo);
+            requestInfo.InitializeSync(_context, (int) id);
+            var response = new JsonResult(requestInfo);
+            return response;
         }
 
         
