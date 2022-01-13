@@ -8,13 +8,11 @@ using System.Threading.Tasks;
 
 namespace Rent_a_Car.Data
 {
-    public class ApplicationDbContext: IdentityDbContext // IdentityDbContext?
+    public class ApplicationDbContext: IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext( DbContextOptions<ApplicationDbContext> options):base(options)
         {
-
         }
-
         public DbSet<Car> Car { get; set; }
         public DbSet<CarDetails> CarDetails { get; set; }
         public DbSet<Company> Company { get; set; }
@@ -22,6 +20,8 @@ namespace Rent_a_Car.Data
         public DbSet<Employer> Employer { get; set; }
         public DbSet<RentCarEvent> RentCar { get; set; }
         public DbSet<ReturnFile> ReturnFile { get; set; }
+
+
 
     }
 }

@@ -1,25 +1,23 @@
-using IdentityServer4.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-//using NETCore.MailKit.Extensions;
-//using NETCore.MailKit.Infrastructure.Internal;
-using Rent_a_Car.Data;
-using Rent_a_Car.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.OpenApi.Models;
-using Microsoft.IdentityModel.Tokens;
+using Rent_a_Car.Data;
 using System.Reflection;
 using System.IO;
-using Newtonsoft.Json.Serialization;
+using Microsoft.OpenApi.Models;
+using Rent_a_Car.Models;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Rent_a_Car
 {
@@ -27,147 +25,140 @@ namespace Rent_a_Car
     {
         public Startup(IConfiguration configuration)
         {
-            _Configuration = configuration;
+            Configuration = configuration;
         }
 
-        public IConfiguration _Configuration { get; }
+        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            //Enable CORS
-            services.AddCors(c =>
-            {
-                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod()
-                 .AllowAnyHeader());
-            });
-
-            //JSON Serializer
-            services.AddControllersWithViews()
-                .AddNewtonsoftJson(options =>
-                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft
-                .Json.ReferenceLoopHandling.Ignore)
-                .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver
-                = new DefaultContractResolver());
+         
+            services.AddControllersWithViews();
+            services.AddRazorPages();
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(_Configuration.GetConnectionString("DefaultConnection"))
-            );
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDatabaseDeveloperPageExceptionFilter();
 
+             services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
-
-            // registers the services
-            // identityUser is default, we will have Customer/Employer
-            services.AddIdentity<IdentityUser, IdentityRole>(config =>
-            {
-                config.Password.RequiredLength = 4;
-                config.Password.RequireDigit = false;
-                config.Password.RequireNonAlphanumeric = false;
-                config.Password.RequireUppercase = false;
-                config.SignIn.RequireConfirmedAccount = true;
-            }).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
-
-            services.ConfigureApplicationCookie(config =>
-            {
-                config.Cookie.Name = "Identity.Cookie";
-                config.LoginPath = "/Auth/Login";
-            });
-
-            services.AddIdentityServer().AddAspNetIdentity<IdentityUser>()
-                .AddInMemoryApiResources(Configuration.GetApis())
-                .AddInMemoryIdentityResources(Configuration.GetIdentityResources())
-                .AddInMemoryClients(Configuration.GetClients())
-                .AddDeveloperSigningCredential(); // adds tempkey.jwk
-
-            //var mailKitOptions = Configuration.GetSection("Email").Get<MailKitOptions>();
-            //services.AddMailKit(config => config.UseMailKit(mailKitOptions));
-
-            services.AddControllersWithViews();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Rent-a-car", Version = "v1" });
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                
+                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
                 {
-                    Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
-                      Enter 'Bearer' [space] and then your token in the text input below.
-                      \r\n\r\nExample: 'Bearer 12345abcdef'",
-                    Name = "Authorization",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer"
-                });
-
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
-                {
-                  {
-                    new OpenApiSecurityScheme
+                    Type = SecuritySchemeType.OAuth2,
+                   
+                    Flows = new OpenApiOAuthFlows()
                     {
-                      Reference = new OpenApiReference
+                        Password = new OpenApiOAuthFlow()
                         {
-                          Type = ReferenceType.SecurityScheme,
-                          Id = "Bearer"
-                        },
-                        Scheme = "oauth2",
-                        Name = "Bearer",
-                        In = ParameterLocation.Header,
-
-                      },
-                      new List<string>()
+                            AuthorizationUrl = new Uri("https://localhost:44378/connect/authorize"),
+                            TokenUrl = new Uri("https://localhost:44378/connect/token"),
+                            Scopes = new Dictionary<string, string>
+                                {
+                                    {"api1", "Rent-a-car - full access"}
+                                }
+                        }
                     }
-                  });
+
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                    {
+                        {
+                            new OpenApiSecurityScheme
+                            {
+                                Reference = new OpenApiReference
+                                {
+                                    Type = ReferenceType.SecurityScheme,
+                                    Id = "oauth2"
+                                },
+                                Scheme = "oauth2",
+                                Name = "oauth2",
+                                In = ParameterLocation.Header
+                            },
+                            new List<string>()
+                        }
+                    });
+                
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
 
+            var builder = services.AddIdentityServer(options =>
+            {
+                options.Events.RaiseErrorEvents = true;
+                options.Events.RaiseInformationEvents = true;
+                options.Events.RaiseFailureEvents = true;
+                options.Events.RaiseSuccessEvents = true;
 
-            services.AddAuthentication("Bearer")
-                .AddJwtBearer("Bearer", options =>
-                {
-                    options.Authority = "https://localhost:5001";
-
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateAudience = false
-                    };
-                });
-
+                // see https://identityserver4.readthedocs.io/en/latest/topics/resources.html
+                options.EmitStaticAudienceClaim = true;
+            })
+                .AddInMemoryIdentityResources(Config.IdentityResources)
+                .AddInMemoryApiScopes(Config.ApiScopes)
+                .AddInMemoryClients(Config.Clients)
+                .AddInMemoryApiResources(Config.Apis)
+                .AddAspNetIdentity<ApplicationUser>();
+                
             // not recommended for production - you need to store your key material somewhere secure
-            // builder.AddDeveloperSigningCredential();
+            builder.AddDeveloperSigningCredential();
+
+            services.AddLocalApiAuthentication();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            
+            app.UseCors(x => x
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .SetIsOriginAllowed(origin => true) // allow any origin
+                .AllowCredentials()); // allow credentials
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseMigrationsEndPoint();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Rent-a-car v1"));
-
-                app.UseDeveloperExceptionPage();
+                app.UseSwaggerUI(c => {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Rent-a-car v1");
+                    c.OAuthClientId("rent-api-swagger");
+                    c.OAuthScopes("api1");
+                    c.OAuthClientSecret("secret");
+                    c.OAuthUsePkce();
+                });
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
             }
+
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
+
             app.UseRouting();
 
-            app.UseAuthentication();
-            app.UseAuthorization();
             app.UseIdentityServer();
+            app.UseAuthorization();
 
-            /*app.UseEndpoints(endpoints =>
+            app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-            });*/
-            app.UseEndpoints(endpoints => endpoints.MapDefaultControllerRoute());
+                endpoints.MapRazorPages();
+            });
         }
     }
 }
