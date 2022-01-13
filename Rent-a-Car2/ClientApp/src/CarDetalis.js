@@ -14,7 +14,6 @@ export class CarDetalis extends Component{
         await fetch(process.env.REACT_APP_API +'/JsonCars/Details/'+this.props.id)
         .then(response=>response.json())
             .then(data => {
-                console.log(data);
             this.setState({detalis:data, wait:false });
         });
     }
@@ -71,7 +70,6 @@ export class CarDetalis extends Component{
             return(<div></div>);
 
         const {detalis} = this.state;
-        console.log(detalis);
         return(
             <div>
                 <div>

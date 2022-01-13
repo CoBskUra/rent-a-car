@@ -20,7 +20,7 @@ using Rent_a_Car.Messenge.FromCustomer;
 namespace Rent_a_Car.Controllers
 {
     [ApiController]
-    [Authorize(LocalApi.PolicyName)]
+    //[Authorize(LocalApi.PolicyName)]
     [Route("[controller]")]
     public class CarApiController : ControllerBase
     {
@@ -211,12 +211,13 @@ namespace Rent_a_Car.Controllers
         ///
         [HttpPost]
         [Route("GetPrice")]
-        public async Task<JsonResult> GetPrice([FromBody] QuestionAboutPrice question)
+        public JsonResult GetPrice([FromBody] QuestionAboutPrice question)
         {
             if (question == null)
                 return new JsonResult(null);
             var dbcontext = _context;
-            var detail = await dbcontext.CarDetails.Where(cd => cd.CarDetailsID == question.carDetalisID).ToListAsync();
+            var detail =  dbcontext.CarDetails.Where(cd => cd.CarDetailsID == question.carDetalisID).ToList();
+
             if (detail.Count == 1)
                 return new JsonResult(Math.Round(((double)detail[0].Price + (double)(question.NumberOfOverallRentedCars) / ((double)question.NumberOfCurrentlyRentedCars + 1) + (double)detail[0].CarDetailsID/10),2));
             else

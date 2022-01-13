@@ -9,7 +9,7 @@ export class CheckPriceForm extends Component{
 
 
     GetPrice(event){
-        fetch(process.env.REACT_APP_API +'/Api/GetPrice',{
+        fetch(process.env.REACT_APP_API +'/CarApi/GetPrice',{
             method:'Post',
             headers:{
                 'Accept':'application/json',
@@ -27,11 +27,12 @@ export class CheckPriceForm extends Component{
             })
         })
         .then(res=>res.json())
-        .then((result)=>{
+            .then((result) => {
+                console.log(result);
             this.props.savePrice(this.props.carDetalisID, result);
         },
         (error)=>{
-            alert('Failed');
+            alert('Failed');q
         })
     }
     

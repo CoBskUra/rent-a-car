@@ -177,7 +177,7 @@ export class CompanysCars extends Component{
 
                                         <CheckPriceForm show={this.state.checkPrice}
                                         onHide={ModalCheckPriceClose}
-                                        carDetalisID={detal.CarDetailsID}
+                                        carDetalisID={detal.carDetailsID}
                                         exsist={exsist}
                                         onRemoveItem={onRemoveItem}
                                         onAddItem={onAddItem}
