@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import {Form, Table} from 'react-bootstrap';
+import {Form, Table, Col, Row} from 'react-bootstrap';
 
 import {Button,ButtonToolbar} from 'react-bootstrap';
 import {EditCar} from './Forms/EditCar';
@@ -76,6 +76,7 @@ export class Cars extends Component{
             <div >
                 <div>
                 <Form onSubmit={this.handleSubmit}>
+                    <Col sm={4}>
                 <Form.Group controlId="Brand">
                     <Form.Label>Firma</Form.Label>
                         <Form.Control type="text" name="Brand"
@@ -86,16 +87,17 @@ export class Cars extends Component{
                     <Form.Label>Marka</Form.Label>
                         <Form.Control type="text" name="Mark"
                         placeholder="Marka"/>
-                </Form.Group>   
+                </Form.Group>  
+                </Col> 
 
+                <Row>
 
                     <Form.Group>
                         <Button variant="primary" type="submit">
                             Szukaj
                         </Button>
-                    </Form.Group>
 
-                    <Button variant="secondary" 
+                        <Button variant="secondary" 
                     onClick={()=>{
                         if(this.state.order === 0)
                             this.setState({ order: 1})
@@ -106,6 +108,13 @@ export class Cars extends Component{
                     }>
                         Zmień kolejność wyświetlania
                     </Button>
+
+                    </Form.Group>
+
+                    
+
+                    
+                    </Row>
                 </Form>
                 </div>
                 <Table className="mt-4" striped bordered hover size="sm">
