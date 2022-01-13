@@ -17,7 +17,7 @@ export class EditCar extends Component{
                 'Content-Type':'application/json'
             },
             body:JSON.stringify({
-                CarID:event.target.CarID.value,
+                carID:event.target.carID.value,
                 Brand:event.target.Brand.value,
                 Model:event.target.Model.value,
                 HorsePower:event.target.HorsePower.value
@@ -51,12 +51,12 @@ centered
         <Row>
             <Col sm={6}>
                 <Form onSubmit={this.handleSubmit}>
-                <Form.Group controlId="CarID">
+                <Form.Group controlId="carID">
                         <Form.Label>carID</Form.Label>
-                        <Form.Control type="text" name="CarID" required
+                        <Form.Control type="text" name="carID" required
                         disabled
-                        defaultValue={this.props.carid} 
-                        placeholder="CarID"/>
+                        defaultValue={this.props.carID} 
+                        placeholder="carID"/>
                     </Form.Group>
 
                     <Form.Group controlId="Brand">

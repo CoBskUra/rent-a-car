@@ -20,7 +20,7 @@ export class CompanysCars extends Component{
     {
         if(this.props.show)
         {
-            fetch(process.env.REACT_APP_API +'/JsonCars/GetCompanysCars/'+this.props.companyID +'?CarID='+this.props.carID)
+            fetch(process.env.REACT_APP_API +'/JsonCars/GetCompanysCars/'+this.props.companyID +'?carID='+this.props.carID)
             .then(response=>response.json())
             .then(data=>{
                 this.setState({details:data});

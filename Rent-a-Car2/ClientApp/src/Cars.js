@@ -69,7 +69,7 @@ export class Cars extends Component{
 
 
     render(){
-        const {cars, carid, carbrand, carmodel, carhorsePower}=this.state;
+        const {cars, carID, carbrand, carmodel, carhorsePower}=this.state;
         let editModalClose=()=>this.setState({editModalShow:false});
         let CarDetalisModalClose=()=>this.setState({carDetalisModalShow:false});
         return(
@@ -120,7 +120,7 @@ export class Cars extends Component{
                 <Table className="mt-4" striped bordered hover size="sm">
                     <thead>
                         <tr>
-                            <th>CarID</th>
+                            <th>carID</th>
                             <th>Brand</th>
                             <th>Model</th>
                             <th>HorsePower</th>
@@ -139,7 +139,7 @@ export class Cars extends Component{
                                         onClick={()=>this.setState(
                                             {
                                                 editModalShow:true,
-                                                carid:car.carID,
+                                                carID:car.carID,
                                                 carbrand:car.brand,
                                                 carmodel:car.model,
                                                 carhorsePower:car.horsePower
@@ -150,7 +150,7 @@ export class Cars extends Component{
                                             onClick={()=>this.setState(
                                             {
                                                 carDetalisModalShow:true,
-                                                carid:car.carID
+                                                carID:car.carID
                                             })}>
                                                 szczegóły
                                             </Button>
@@ -159,7 +159,7 @@ export class Cars extends Component{
                                             
                                             <EditCar show={this.state.editModalShow}
                                             onHide={editModalClose}
-                                            carid={carid}
+                                            carID={carID}
                                             carbrand={carbrand}
                                             carmodel={carmodel}
                                             carhorsePower={carhorsePower}
@@ -167,7 +167,7 @@ export class Cars extends Component{
 
                                             <CarDetalisWindow show={this.state.carDetalisModalShow}
                                             onHide={CarDetalisModalClose}
-                                            id={carid}
+                                            id={carID}
                                             />
 
 
