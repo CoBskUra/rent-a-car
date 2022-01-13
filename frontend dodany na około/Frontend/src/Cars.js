@@ -2,9 +2,8 @@ import React,{Component} from 'react';
 import {Table} from 'react-bootstrap';
 
 import {Button,ButtonToolbar} from 'react-bootstrap';
-import {EditCar} from './EditCar';
+import {EditCar} from './Forms/EditCar';
 import {CarDetalisWindow} from './CarDetalisWindow';
-import {Route, Router, Switch, Redirect} from 'react-router-dom';
 
 export class Cars extends Component{
 
@@ -46,7 +45,6 @@ export class Cars extends Component{
                             <th>Brand</th>
                             <th>Model</th>
                             <th>HorsePower</th>
-                            <th>option</th>
                         </tr>
                     </thead>
                     <tbody>

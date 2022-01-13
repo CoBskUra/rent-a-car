@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Rent_a_Car.Data;
 using Rent_a_Car.MessegeForCustomer;
+using Rent_a_Car.Messenge.FromCustomer;
 using Rent_a_Car.Models;
 
 namespace Rent_a_Car.Controllers
@@ -100,6 +101,22 @@ namespace Rent_a_Car.Controllers
             return new JsonResult(CompanysCars);
 
         }
+
+        [HttpPost]
+        public async Task<JsonResult> GetPrice([FromBody] QuestionAboutPrice question)
+        {
+            if (question == null)
+                return new JsonResult(null);
+            var dbcontext = _context;
+            var detail = await dbcontext.CarDetails.Where(cd => cd.CarDetailsID == question.carDetalisID).ToListAsync();
+            if (detail.Count == 1)
+                return new JsonResult(((double)detail[0].Price + (double)(question.NumberOfOverallRentedCars) / ((double)question.NumberOfCurrentlyRentedCars + 1) + (double)detail[0].CarDetailsID / 10));
+            else
+                return new JsonResult(null);
+
+        }
+
+
 
         //// GET: Cars/ShowSearchResult
         //public async Task<IActionResult> ShowSearchResult(String Brand, String Model)

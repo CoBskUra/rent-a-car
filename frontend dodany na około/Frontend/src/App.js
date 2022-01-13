@@ -4,7 +4,8 @@ import './App.css';
 
 import {Home} from './Home';
 import {Cars} from './Cars';
-import {CarDetalis} from './CarDetalis';
+import { Customer } from './Profil/Customer';
+import { Worker } from './Profil/Worker';
 import {Navigation} from './Navigation';
 
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
@@ -21,8 +22,9 @@ function App() {
 
      <Switch>
        <Route path='/' component={Home} exact/>
-       <Route path='/' component={Cars}/>
-       <Route path='/' component={CarDetalis}/>
+       <Route path='/Cars' component={Cars}/>
+       <Route path='/Profil/Customer' component={Customer}/>
+       <Route path='/Profil/Worker' component={Worker}/>
      </Switch>
     </div>
     </BrowserRouter>

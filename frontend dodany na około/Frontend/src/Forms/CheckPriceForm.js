@@ -8,14 +8,38 @@ export class CheckPriceForm extends Component{
     }
 
 
-    savePrice(Price){
-        this.props.onAddItem(1, Price);
+    GetPrice(event){
+        fetch(process.env.REACT_APP_API +'/Api/GetPrice',{
+            method:'Post',
+            headers:{
+                'Accept':'application/json',
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({
+                DateofBecomingDriver:event.target.DateofBecomingDriver.value,
+                Birthday:event.target.Birthday.value,
+                City:event.target.City.value,
+                Street:event.target.Street.value,
+                StreetNumber:event.target.StreetNumber.value,
+                NumberOfCurrentlyRentedCars:event.target.NumberOfCurrentlyRentedCars.value,
+                NumberOfOverallRentedCars:event.target.NumberOfOverallRentedCars.value,
+                carDetalisID: this.props.carDetalisID
+            })
+        })
+        .then(res=>res.json())
+        .then((result)=>{
+            this.props.savePrice(this.props.carDetalisID, result);
+        },
+        (error)=>{
+            alert('Failed');
+        })
     }
+    
+
 
     handleSubmit(event){
         event.preventDefault();
-        alert("Asdad");
-        this.props.savePrice(12.10);
+        this.GetPrice(event);
 
     }
     
@@ -59,8 +83,11 @@ export class CheckPriceForm extends Component{
                                         <Form.Label>Ulica</Form.Label>
                                         <Form.Control type="text" name="Street" required
                                         placeholder="Ulica"/>
+                                    </Form.Group>
+
+                                    <Form.Group controlId="StreetNumber">
                                         <Form.Control type="number" min={0} name="StreetNumber" required
-                                        placeholder="Numer"/>
+                                            placeholder="Numer"/>
                                     </Form.Group>
 
                                     <Form.Group controlId="NumberOfCurrentlyRentedCars">
@@ -70,7 +97,7 @@ export class CheckPriceForm extends Component{
                                     </Form.Group>
 
                                     <Form.Group controlId="NumberOfOverallRentedCars">
-                                        <Form.Label>Ilość obecnie wyporzyczonych aut</Form.Label>
+                                        <Form.Label>Ilość przetrzymanych aut</Form.Label>
                                         <Form.Control type="number" min={0} name="NumberOfOverallRentedCars"
                                         required />
                                     </Form.Group>

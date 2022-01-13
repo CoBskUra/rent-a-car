@@ -23,6 +23,7 @@ export class CarDetalis extends Component{
     }
 
     componentDidUpdate(){
+        this.refreshList();
     }
 
     onRemoveItem = i => {
@@ -100,7 +101,6 @@ export class CarDetalis extends Component{
                             <thead>
                                 <tr>
                                     <th>Nazwa firmy</th>
-                                    <th></th>
                                 </tr>
                             </thead>
                                 

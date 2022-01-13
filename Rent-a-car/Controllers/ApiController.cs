@@ -9,6 +9,8 @@ using Rent_a_Car.Data;
 using Rent_a_Car.Models;
 using Rent_a_Car.ApiClasses;
 using Microsoft.AspNetCore.Authorization;
+using Rent_a_Car.Messenge.FromCustomer;
+
 namespace Rent_a_Car.Controllers
 {
     [ApiController]
@@ -72,11 +74,11 @@ namespace Rent_a_Car.Controllers
         /// <response code="400">Jeśli samochód już jest wypożyczony</response>  
         /// <response code="404">Jeśli nie ma takiego ID samochodu</response>
         [HttpPost]
-        [Authorize]
+        //[Authorize]
         [Route("Rent")]
-        public ActionResult Rent([FromForm] int carDetailsID, [FromForm] DateTime expectedReturnDate)
+        public ActionResult Rent([FromBody] ReturnDate returnday)
         {
-            var carToRent = _context.CarDetails.SingleOrDefault(c => c.CarDetailsID == carDetailsID);
+            var carToRent = _context.CarDetails.SingleOrDefault(c => c.CarDetailsID == returnday.carDetailsID);
             if (carToRent == null)
             {
                 return NotFound();
@@ -85,12 +87,15 @@ namespace Rent_a_Car.Controllers
             {
                 return BadRequest();
             }
-            var rentedCarData = RentController.RentACar(_context, carDetailsID, 1, expectedReturnDate);
+            var rentedCarData = RentController.RentACar(_context, returnday.carDetailsID, 1, returnday.expectedReturnDate);
             if (rentedCarData == null) return NotFound();
 
-            var result = new JsonResult(rentedCarData);
-            result.StatusCode = 200;
-            return result;
+            //var result = new JsonResult(rentedCarData);
+            //result.StatusCode = 200;
+            //return result;
+
+            // zwraca sukses
+            return new JsonResult("Sukces");
         }
 
         /// <summary>
@@ -102,7 +107,7 @@ namespace Rent_a_Car.Controllers
         /// <response code="200">Zwrot został wykonany prawidłowo</response>
         /// <response code="400">Zwrot się nie powiódł</response>  
         [HttpPost]
-        [Authorize]
+        //[Authorize]
         [Route("Return/{rentalID}")]
         public ActionResult ReturnCar([FromRoute] string rentalID)
         {
@@ -125,12 +130,51 @@ namespace Rent_a_Car.Controllers
         /// <returns>Listę wypożyczonych samochodów, oraz tokeny wymagane do ich zwrotu</returns>
         /// <response code="200">Jeżeli jest się autoryzowanym</response> 
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         [Route("GetRentedCars")]
         public ActionResult CheckRentedCar()
         {
             int ClientID = 1;
             return new JsonResult(_context.RentCar.Where(r => r.CustomerID == ClientID && r.IsReturned == false).Select((c)=> new {carDetailsID = c.CarDetailsID , rentToken = c.RentCarEventID}));
+        }
+
+        /// <summary>
+        /// Pobierz samochody które zwróciłeć
+        /// </summary>
+        /// <remarks>
+        /// Trzeba być zalogowanym
+        /// </remarks>
+        /// <returns>Listę wypożyczonych samochodów, oraz tokeny wymagane do ich zwrotu</returns>
+        /// <response code="200">Jeżeli jest się autoryzowanym</response> 
+        [HttpGet]
+        //[Authorize]
+        [Route("GetReturnetCar")]
+        public ActionResult CheckReturnetCar()
+        {
+            int ClientID = 1;
+            return new JsonResult(_context.RentCar.Where(r => r.CustomerID == ClientID && r.IsReturned == true).Select((c) => new { carDetailsID = c.CarDetailsID, rentToken = c.RentCarEventID }));
+        }
+
+
+
+        /// <summary>
+        /// Pobierz cenne za dzien za samochud danej firmy
+        /// <remarks>
+        /// Body: QuestionAboutPrice
+        ///
+        [HttpPost]
+        [Route("GetPrice")]
+        public async Task<JsonResult> GetPrice([FromBody] QuestionAboutPrice question)
+        {
+            if (question == null)
+                return new JsonResult(null);
+            var dbcontext = _context;
+            var detail = await dbcontext.CarDetails.Where(cd => cd.CarDetailsID == question.carDetalisID).ToListAsync();
+            if (detail.Count == 1)
+                return new JsonResult(Math.Round(((double)detail[0].Price + (double)(question.NumberOfOverallRentedCars) / ((double)question.NumberOfCurrentlyRentedCars + 1) + (double)detail[0].CarDetailsID/10),2));
+            else
+                return new JsonResult(null);
+
         }
 
     }

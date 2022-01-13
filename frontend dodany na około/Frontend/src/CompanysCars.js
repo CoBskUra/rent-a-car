@@ -1,13 +1,17 @@
 import React,{Component} from 'react';
 import {Table, Button, ButtonToolbar} from 'react-bootstrap';
-import { CheckPriceForm } from './CheckPriceForm';
+import { CheckPriceForm } from './Forms/CheckPriceForm';
+import { RentMeForm } from './RentMeForm';
 
 export class CompanysCars extends Component{
 
     constructor(props){
         super(props);
         this.state={
-            details:[], checkPrice:false, PriceShower:[]
+            details:[],
+            checkPrice:false,
+            PriceShower:[],
+            Rent:false
 
         };
     }
@@ -21,7 +25,6 @@ export class CompanysCars extends Component{
             .then(data=>{
                 this.setState({details:data});
             });
-            console.log(this.state);
         }
     }
 
@@ -35,7 +38,7 @@ export class CompanysCars extends Component{
 
     onRemoveItem = i => {
         this.setState(state => {
-            const PriceShower = state.PriceShower.filter(item => item[0] !== i);
+            const PriceShower = state.PriceShower.filter(item => item.Key !== i);
       
             return {
                 PriceShower,
@@ -45,7 +48,9 @@ export class CompanysCars extends Component{
 
         onAddItem (id, price) {
           this.setState(state => {
-            var item = [id, price];
+            
+            var item = { Key: id, Price:price};
+            console.log(item);
             const PriceShower = state.PriceShower.concat(item);
       
             return {
@@ -57,7 +62,7 @@ export class CompanysCars extends Component{
         exsist (i){
         var should_be_show = false;
         this.state.PriceShower.map( s =>{
-            if(s[0]===i)
+            if(s.Key===i)
             {
                 should_be_show = true;
             }
@@ -66,6 +71,16 @@ export class CompanysCars extends Component{
       }
 
       show_price(i){
+          var price = -1;
+          this.state.PriceShower.map(s=>{
+            if(s.Key===i)
+            {
+                price = s.Price;
+            }});
+            if(price===-1)
+                return null;
+            else
+                return price;
       }
 
 
@@ -75,7 +90,6 @@ export class CompanysCars extends Component{
         
         this.onAddItem(CarDetalisID, Price);
         
-            console.log(this.state);
     }
 
 
@@ -85,11 +99,15 @@ export class CompanysCars extends Component{
         if(this.props.show)
         {
             const {details}=this.state;
+
             let ModalCheckPriceClose=()=>this.setState({checkPrice:false});
+            let ModalRentClose=()=>this.setState({Rent:false});
+
+
             let exsist = (i)=>{
                 var should_be_show = false;
                 this.state.PriceShower.map( s =>{
-                    if(s[0]===i)
+                    if(s.Key===i)
                     {
                         should_be_show = true;
                     }
@@ -99,8 +117,8 @@ export class CompanysCars extends Component{
 
             let onAddItem = (id, price) => {
                 this.setState(state => {
-                  var item = [id, price];
-                  const PriceShower = state.PriceShower.concat(item);
+                    var item = { Key: id, Price:price};
+                    const PriceShower = state.PriceShower.concat(item);
             
                   return {
                       PriceShower
@@ -110,13 +128,15 @@ export class CompanysCars extends Component{
 
             let onRemoveItem = i => {
                 this.setState(state => {
-                    const PriceShower = state.PriceShower.filter(item => item[0] !== i);
+                    const PriceShower = state.PriceShower.filter(item => item.Key !== i);
               
                     return {
                         PriceShower,
                     };
                   });
                 };
+            
+                
             
             return(
                 <div>
@@ -125,7 +145,7 @@ export class CompanysCars extends Component{
                         <tr>
                             <th>Rok Produkcji</th>
                             <th>Opis</th>
-                            <th>Cena</th>
+                            <th>Cena za dzień</th>
                             <th>Opcje</th>
                         </tr>
                     </thead>
@@ -134,17 +154,26 @@ export class CompanysCars extends Component{
                             <tr key={detal.CarDetailsID}>
                                 <td>{detal.YearOfProduction}</td>
                                 <td>{detal.Description}</td>
-                                <td></td>
+                                <td>{this.show_price(detal.CarDetailsID)}</td>
                                 <td> 
                                     <ButtonToolbar>
                                         <Button className="mr-2" variant="info"
                                                 onClick={()=>this.setState(
                                                 {
-                                                    checkPrice:true,
-                                                    carDetalisID:detal.CarDetailsID
+                                                    checkPrice:true
                                                 })}>
                                                     Sprawdć cene 
                                         </Button> 
+
+                                        
+                                        {
+                                            this.show_price(detal.CarDetailsID)!=null && 
+                                            <Button className="mr-2" variant="success" 
+                                                onClick={()=> this.setState({Rent:detal.CarDetailsID})}> 
+                                                Wynajmij mnie
+                                            </Button>
+                                        }
+                                        
 
                                         <CheckPriceForm show={this.state.checkPrice}
                                         onHide={ModalCheckPriceClose}
@@ -152,8 +181,11 @@ export class CompanysCars extends Component{
                                         exsist={exsist}
                                         onRemoveItem={onRemoveItem}
                                         onAddItem={onAddItem}
-                                        savePrice={this.savePrice}
-                                                />
+                                        savePrice={this.savePrice}/>
+
+                                        <RentMeForm show={this.state.Rent} 
+                                        onHide={ModalRentClose}
+                                        carDetalisID={detal.CarDetailsID}/>
                                     </ButtonToolbar>
                                 </td>
                             </tr>
@@ -167,3 +199,4 @@ export class CompanysCars extends Component{
             return(<p></p>)
     }
 }
+
