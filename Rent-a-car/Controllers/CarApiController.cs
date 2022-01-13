@@ -10,6 +10,7 @@ using Rent_a_Car.Models;
 using Rent_a_Car.ApiClasses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Rent_a_Car.Controllers
 {
@@ -18,12 +19,12 @@ namespace Rent_a_Car.Controllers
     public class CarApiController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
         public CarApiController(ApplicationDbContext context,
-            SignInManager<IdentityUser> signInManager, 
-            UserManager<IdentityUser> userManager)
+            SignInManager<ApplicationUser> signInManager, 
+            UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
@@ -66,6 +67,7 @@ namespace Rent_a_Car.Controllers
         /// Zwraca listę wszystkich marek samochodów
         /// </summary>
         [HttpGet]
+        [AllowAnonymous]
         [Route("CarModels")]
         public IEnumerable<Car> Get()
         {
@@ -82,6 +84,7 @@ namespace Rent_a_Car.Controllers
         /// <response code="200">Zwraca listę samochodów w danym modelu</response>
         /// <response code="404">Jeśli dany numer modelu jest nieprawidłowy</response>  
         [HttpGet]
+        [AllowAnonymous]
         [Route("Car/{carModelID}")]
         public ActionResult Get([FromRoute] int carModelID)
         {
@@ -112,8 +115,8 @@ namespace Rent_a_Car.Controllers
         /// <response code="400">Jeśli samochód już jest wypożyczony</response>  
         /// <response code="404">Jeśli nie ma takiego ID samochodu</response>
         [HttpPost]
-        [Authorize]
         [Route("Rent")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public ActionResult Rent([FromForm] int carDetailsID, [FromForm] DateTime expectedReturnDate)
         {
             var carToRent = _context.CarDetails.SingleOrDefault(c => c.CarDetailsID == carDetailsID);
@@ -142,8 +145,8 @@ namespace Rent_a_Car.Controllers
         /// <response code="200">Zwrot został wykonany prawidłowo</response>
         /// <response code="400">Zwrot się nie powiódł</response>  
         [HttpPost]
-        [Authorize]
         [Route("Return/{rentalID}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public ActionResult ReturnCar([FromRoute] string rentalID)
         {
             if (ReturnController.ReturnACar(_context, rentalID))
@@ -164,9 +167,10 @@ namespace Rent_a_Car.Controllers
         /// </remarks>
         /// <returns>Listę wypożyczonych samochodów, oraz tokeny wymagane do ich zwrotu</returns>
         /// <response code="200">Jeżeli jest się autoryzowanym</response> 
+        /// <response code="401">Jeżeli nei jest się autoryzowanym</response>
         [HttpGet]
-        [Authorize]
         [Route("GetRentedCars")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public ActionResult CheckRentedCar()
         {
             int ClientID = 1;

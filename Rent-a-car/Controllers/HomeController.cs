@@ -17,12 +17,12 @@ namespace Rent_a_Car.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         //private readonly IEmailService _emailService;
 
-        public HomeController(UserManager<IdentityUser> userManager, ILogger<HomeController> logger, 
-            SignInManager<IdentityUser> signInManager)//, IEmailService emailService)
+        public HomeController(UserManager<ApplicationUser> userManager, ILogger<HomeController> logger, 
+            SignInManager<ApplicationUser> signInManager)//, IEmailService emailService)
         {
             _logger = logger;
             _userManager = userManager; // it manages user information
@@ -81,7 +81,7 @@ namespace Rent_a_Car.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(string username, string password) // functionality create a user
         {
-            var user = new IdentityUser
+            var user = new ApplicationUser
             {
                 UserName = username,
                 Email = ""

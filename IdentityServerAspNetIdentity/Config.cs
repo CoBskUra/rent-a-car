@@ -58,6 +58,21 @@ namespace IdentityServerAspNetIdentity
                         IdentityServerConstants.StandardScopes.Profile,
                         "api1"
                     }
+                },
+
+                new Client
+                {
+                    ClientId = "rent-api-swagger",
+                    ClientName = "Swagger UI for demo_api",
+                    ClientSecrets = {new Secret("secret".Sha256())}, // change me!
+                
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
+                    RequirePkce = true,
+                    RequireClientSecret = false,
+                
+                    RedirectUris = {"https://localhost:44378/swagger/oauth2-redirect.html"},
+                    AllowedCorsOrigins = {"https://localhost:44378"},
+                    AllowedScopes = {"api1"}
                 }
             };
     }

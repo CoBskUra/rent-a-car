@@ -17,6 +17,8 @@ using System.IO;
 using Microsoft.OpenApi.Models;
 using Rent_a_Car.Models;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+
 namespace Rent_a_Car
 {
     public class Startup
@@ -39,25 +41,26 @@ namespace Rent_a_Car
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                 .AddEntityFrameworkStores<ApplicationDbContext>();
-
+            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            //     .AddEntityFrameworkStores<ApplicationDbContext>();
+            .AddDefaultTokenProviders();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Rent-a-car", Version = "v1" });
-                /*
-                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                
+                c.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.OAuth2,
+                   
                     Flows = new OpenApiOAuthFlows()
                     {
-                        ClientCredentials = new OpenApiOAuthFlow()
+                        Password = new OpenApiOAuthFlow()
                         {
-                            AuthorizationUrl = new Uri("https://localhost:5000/connect/authorize"),
-                            TokenUrl = new Uri("https://localhost:5000/connect/token"),
+                            AuthorizationUrl = new Uri("https://localhost:5001/connect/authorize"),
+                            TokenUrl = new Uri("https://localhost:5001/connect/token"),
                             Scopes = new Dictionary<string, string>
                                 {
-                                    {"api1", "Demo API - full access"}
+                                    {"api1", "Rent-a-car - full access"}
                                 }
                         }
                     }
@@ -80,34 +83,19 @@ namespace Rent_a_Car
                             new List<string>()
                         }
                     });
-                */
+                
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
 
-            JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
-
-            services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = "Cookies";
-                options.DefaultChallengeScheme = "oidc";
-            })
-            .AddCookie("Cookies")
-            .AddOpenIdConnect("oidc", options =>
-            {
-                options.Authority = "https://localhost:5001";
-
-                options.ClientId = "mvc";
-                options.ClientSecret = "secret";
-                options.ResponseType = "code";
-
-                options.Scope.Add("api1");
-
-                options.SaveTokens = true;
-            });
-
-            
+            services.AddAuthentication()
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options => 
+                { options.Authority = "http://localhost:5001"; 
+                    options.RequireHttpsMetadata = false; 
+                    options.Audience = "api1"; 
+                    options.SaveToken = true; 
+                });
 
         }
 
@@ -119,7 +107,13 @@ namespace Rent_a_Car
                 app.UseDeveloperExceptionPage();
                 app.UseMigrationsEndPoint();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Rent-a-car v1"));
+                app.UseSwaggerUI(c => {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Rent-a-car v1");
+                    c.OAuthClientId("rent-api-swagger");
+                    c.OAuthScopes("api1");
+                    c.OAuthClientSecret("secret");
+                    c.OAuthUsePkce();
+                });
             }
             else
             {
@@ -127,6 +121,7 @@ namespace Rent_a_Car
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
