@@ -17,6 +17,7 @@ namespace Rent_a_Car.Controllers
         public CarsController(ApplicationDbContext context)
         {
             _context = context;
+            Data.DatabaseFiller.FillDataIfEmpty(context);
         }
 
         // GET: Cars
@@ -42,7 +43,7 @@ namespace Rent_a_Car.Controllers
                 return NotFound();
             }
 
-            return RedirectToAction("ShowAllCars", "CarDetalis", new { id = id });
+            return RedirectToAction("ShowAllCars", "CarDetails", new { id = id });
         }
 
         // GET: Cars/Edit/5

@@ -9,8 +9,12 @@ namespace Rent_a_car_UnitTests
         public void TestMethod1()
         {
             Assert.AreEqual(0, 0);
+        }
 
-
+        [TestMethod]
+        public void TestMethod2()
+        {
+           
         }
     }
 }

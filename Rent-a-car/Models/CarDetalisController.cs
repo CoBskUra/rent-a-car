@@ -18,14 +18,14 @@ namespace Rent_a_Car.Models
             _context = context;
         }
 
-        // GET: CarDetalis/0
+        // GET: CarDetails/0
         public async Task<IActionResult> Index(string sortOrder)
         {
-            var applicationDbContext = _context.CarDetalis.Include(c => c.Car).Include(c => c.Company);
+            var applicationDbContext = _context.CarDetails.Include(c => c.Car).Include(c => c.Company);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: CarDetalis/Details/5
+        // GET: CarDetails/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,20 +33,20 @@ namespace Rent_a_Car.Models
                 return NotFound();
             }
 
-            var carDetalis = await _context.CarDetalis
+            var CarDetails = await _context.CarDetails
                 .Include(c => c.Car)
                 .Include(c => c.Company)
-                .FirstOrDefaultAsync(m => m.CarDetalisID == id);
-            if (carDetalis == null)
+                .FirstOrDefaultAsync(m => m.CarDetailsID == id);
+            if (CarDetails == null)
             {
                 return NotFound();
             }
 
-            return View(carDetalis);
+            return View(CarDetails);
         }
 
 
-        // GET: CarDetalis/Edit/5
+        // GET: CarDetails/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -54,24 +54,24 @@ namespace Rent_a_Car.Models
                 return NotFound();
             }
 
-            var carDetalis = await _context.CarDetalis.FindAsync(id);
-            if (carDetalis == null)
+            var CarDetails = await _context.CarDetails.FindAsync(id);
+            if (CarDetails == null)
             {
                 return NotFound();
             }
-            ViewData["CarID"] = new SelectList(_context.Car, "CarID", "CarID", carDetalis.CarID);
-            ViewData["CompanyID"] = new SelectList(_context.Company, "CompanyID", "CompanyID", carDetalis.CompanyID);
-            return View(carDetalis);
+            ViewData["CarID"] = new SelectList(_context.Car, "CarID", "CarID", CarDetails.CarID);
+            ViewData["CompanyID"] = new SelectList(_context.Company, "CompanyID", "CompanyID", CarDetails.CompanyID);
+            return View(CarDetails);
         }
 
-        // POST: CarDetalis/Edit/5
+        // POST: CarDetails/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CarDetalisID,CarID,CompanyID,Price,YearOfProduction,Description,isAvailable")] CarDetalis carDetalis)
+        public async Task<IActionResult> Edit(int id, [Bind("CarDetailsID,CarID,CompanyID,Price,YearOfProduction,Description,IsAvailable")] CarDetails CarDetails)
         {
-            if (id != carDetalis.CarDetalisID)
+            if (id != CarDetails.CarDetailsID)
             {
                 return NotFound();
             }
@@ -80,12 +80,12 @@ namespace Rent_a_Car.Models
             {
                 try
                 {
-                    _context.Update(carDetalis);
+                    _context.Update(CarDetails);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CarDetalisExists(carDetalis.CarDetalisID))
+                    if (!CarDetalisExists(CarDetails.CarDetailsID))
                     {
                         return NotFound();
                     }
@@ -96,21 +96,21 @@ namespace Rent_a_Car.Models
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CarID"] = new SelectList(_context.Car, "CarID", "CarID", carDetalis.CarID);
-            ViewData["CompanyID"] = new SelectList(_context.Company, "CompanyID", "CompanyID", carDetalis.CompanyID);
-            return View(carDetalis);
+            ViewData["CarID"] = new SelectList(_context.Car, "CarID", "CarID", CarDetails.CarID);
+            ViewData["CompanyID"] = new SelectList(_context.Company, "CompanyID", "CompanyID", CarDetails.CompanyID);
+            return View(CarDetails);
         }
 
         private bool CarDetalisExists(int id)
         {
-            return _context.CarDetalis.Any(e => e.CarDetalisID == id);
+            return _context.CarDetails.Any(e => e.CarDetailsID == id);
         }
 
-        // GET: CarDetalis/ShowAllCars
+        // GET: CarDetails/ShowAllCars
         //[HttpPost]
         public async Task<IActionResult> ShowAllCars(int? id)
         {
-            var dbContext = _context.CarDetalis.Include(c => c.Car).Include(c => c.Company);
+            var dbContext = _context.CarDetails.Include(c => c.Car).Include(c => c.Company);
 
             if (id == null)
             {

@@ -1,8 +1,7 @@
 ﻿################################################################################
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
-
-/Rent-a-car/obj
-/Rent-a-car/bin/Debug/net5.0
-/Rent-a-car/.vs/Rent-a-Car
 /.vs
+/*/.vs
+/*/bin/
+/*/obj/
