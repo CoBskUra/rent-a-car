@@ -23,30 +23,40 @@ export class CheckPriceForm extends Component{
                 StreetNumber:event.target.StreetNumber.value,
                 NumberOfCurrentlyRentedCars:event.target.NumberOfCurrentlyRentedCars.value,
                 NumberOfOverallRentedCars:event.target.NumberOfOverallRentedCars.value,
-                carDetalisID: this.props.carDetalisID
+                CarDetalisID: this.props.cardetalisid
             })
         })
         .then(res=>res.json())
             .then((result) => {
                 console.log(result);
-            this.props.savePrice(this.props.carDetalisID, result);
+                this.savePrice(this.props.cardetalisid, result);
         },
         (error)=>{
-            alert('Failed');q
+            alert('Failed');
         })
     }
     
+    savePrice(cardetalisid, Price) {
+        if (this.props.isinlist(cardetalisid))
+            this.props.removeitem(cardetalisid);
 
+        this.props.additem(cardetalisid, Price);
+
+    }
 
     handleSubmit(event){
         event.preventDefault();
+        console.log(event.target);
         this.GetPrice(event);
+    }
 
+    componentWillUnmount() {
+        console.log("martwy");
     }
     
     render(){
         return (
-            <div className="container">
+            
 
                 <Modal
                 {...this.props}
@@ -54,7 +64,7 @@ export class CheckPriceForm extends Component{
                 aria-labelledby="contained-modal-title-vcenter"
                 centered
                 >
-                    <Modal.Header clooseButton>
+                    <Modal.Header >
                         <Modal.Title id="contained-modal-title-vcenter">
                             Sprawdż cene
                         </Modal.Title>
@@ -120,7 +130,7 @@ export class CheckPriceForm extends Component{
 
                 </Modal>
 
-            </div>
+            
         )
     }
 

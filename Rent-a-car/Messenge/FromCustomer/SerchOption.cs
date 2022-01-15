@@ -9,13 +9,13 @@ namespace Rent_a_Car.Messenge.FromCustomer
     {
         
         Brand,
-        Mark
+        Model
     }
 
     public class SerchOption
     {
-        public string Mark;
-        public string Brand;
+        public string model;
+        public string brand;
         public order order;
     }
 }

@@ -17,7 +17,7 @@ export class Customer extends Component{
     dowlandCurentRentedCars(){
         if(this.state.showCurrentrent)
         {
-            fetch(process.env.REACT_APP_API +'/Api/GetRentedCars')
+            fetch(process.env.REACT_APP_API +'/CarApi/GetRentedCars')
             .then(response=>response.json())
             .then(data=>{
                 this.setState({currentRented:data});
@@ -28,7 +28,7 @@ export class Customer extends Component{
     dowlandReturnetCars(){
         if(this.state.showReturned)
         {
-            fetch(process.env.REACT_APP_API +'/Api/GetReturnetCar')
+            fetch(process.env.REACT_APP_API +'/CarApi/GetReturnetCar')
             .then(response=>response.json())
             .then(data=>{
                 this.setState({ReturnedCars:data});
@@ -53,10 +53,12 @@ export class Customer extends Component{
 
     componentDidMount(){
         this.refresh();
+        this.interval = setInterval(() => this.refresh(), 2000);
+
     }
 
-    componentDidUpdate(){
-        this.refresh();
+    componentWillUnmount() {
+        clearInterval(this.interval);
     }
 
 
@@ -96,16 +98,6 @@ export class Customer extends Component{
                             <tr key={cr.rentToken}>
                                 <td>{cr.carDetailsID}</td>
                                 <td>{cr.rentToken}</td>
-                                <td>
-                                <ButtonToolbar>
-                                    <Button className="mr-2" variant="dark" 
-                                    onClick={()=>this.return(cr.rentToken)}>
-                                        Zwróć
-                                    </Button>
-                                    
-                                    
-                                </ButtonToolbar>
-                                </td>
                             </tr>
                             )
                         }
@@ -123,7 +115,7 @@ export class Customer extends Component{
                         <tr>
                             <th>id detali auta</th>
                             <th>token</th>
-                            <th>Zatwierdzono</th>
+
                         </tr>
                         </thead>
                         <tbody>
@@ -131,7 +123,6 @@ export class Customer extends Component{
                             <tr key={rc.carDetailsID}>
                                 <td>{rc.carDetailsID}</td>
                                 <td>{rc.rentToken}</td>
-                                <td> nie/tak</td>
                                 <td>
                                     <ButtonToolbar>
                                         <Button>

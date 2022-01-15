@@ -14,7 +14,7 @@ export class Cars extends Component{
             editModalShow:false,
             carDetalisModalShow:false,
             Brand:null,
-            Mark:null,
+            Model:null,
             order:0
         }
 
@@ -29,7 +29,7 @@ export class Cars extends Component{
                 'Content-Type':'application/json'
             },
             body:JSON.stringify({
-                Mark: this.state.Mark,
+                Model: this.state.Model,
                 Brand: this.state.Brand,
                 order: this.state.order
             })
@@ -61,10 +61,12 @@ export class Cars extends Component{
 
     componentDidMount(){
         this.refreshList();
+        this.interval = setInterval(() => this.refreshList(), 2000);
+        
     }
 
-    componentDidUpdate(){
-        this.refreshList();
+    componentWillUnmount() {
+        clearInterval(this.interval);
     }
 
 

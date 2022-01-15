@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
 import {Table, Button, ButtonToolbar} from 'react-bootstrap';
 import { CheckPriceForm } from './Forms/CheckPriceForm';
-import { RentMeForm } from './RentMeForm';
+import { RentMeForm } from './Forms/RentMeForm';
 
 export class CompanysCars extends Component{
 
@@ -28,47 +28,17 @@ export class CompanysCars extends Component{
         }
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.refreshList();
+        this.interval = setInterval(() => this.refreshList(), 2000);
+        
     }
 
-    componentDidUpdate(){
-        this.refreshList();
+    componentWillUnmount() {
+        clearInterval(this.interval);
     }
 
-    onRemoveItem = i => {
-        this.setState(state => {
-            const PriceShower = state.PriceShower.filter(item => item.Key !== i);
-      
-            return {
-                PriceShower,
-            };
-          });
-        };
-
-        onAddItem (id, price) {
-          this.setState(state => {
-            
-            var item = { Key: id, Price:price};
-            console.log(item);
-            const PriceShower = state.PriceShower.concat(item);
-      
-            return {
-                PriceShower
-            };
-          });
-        }
-
-        exsist (i){
-        var should_be_show = false;
-        this.state.PriceShower.map( s =>{
-            if(s.Key===i)
-            {
-                should_be_show = true;
-            }
-        });
-        return should_be_show;
-      }
+    
 
       show_price(i){
           var price = -1;
@@ -84,13 +54,6 @@ export class CompanysCars extends Component{
       }
 
 
-    savePrice(CarDetalisID, Price){
-        if(this.exsist(CarDetalisID))
-            this.onRemoveItem(CarDetalisID);
-        
-        this.onAddItem(CarDetalisID, Price);
-        
-    }
 
 
 
@@ -104,7 +67,7 @@ export class CompanysCars extends Component{
             let ModalRentClose=()=>this.setState({Rent:false});
 
 
-            let exsist = (i)=>{
+            let isinlist = (i)=>{
                 var should_be_show = false;
                 this.state.PriceShower.map( s =>{
                     if(s.Key===i)
@@ -115,7 +78,7 @@ export class CompanysCars extends Component{
                 return should_be_show;
               };
 
-            let onAddItem = (id, price) => {
+            let additem = (id, price) => {
                 this.setState(state => {
                     var item = { Key: id, Price:price};
                     const PriceShower = state.PriceShower.concat(item);
@@ -126,7 +89,7 @@ export class CompanysCars extends Component{
                 });
               };
 
-            let onRemoveItem = i => {
+            let removeItem = i => {
                 this.setState(state => {
                     const PriceShower = state.PriceShower.filter(item => item.Key !== i);
               
@@ -139,7 +102,6 @@ export class CompanysCars extends Component{
                 
             
             return(
-                <div>
                     <Table className="mt-4" striped bordered hover size="sm">
                     <thead>
                         <tr>
@@ -151,10 +113,10 @@ export class CompanysCars extends Component{
                     </thead>
                     <tbody>
                         {details.map(detal=>
-                            <tr key={detal.CarDetailsID}>
-                                <td>{detal.YearOfProduction}</td>
-                                <td>{detal.Description}</td>
-                                <td>{this.show_price(detal.CarDetailsID)}</td>
+                            <tr key={detal.carDetailsID}>
+                                <td>{detal.yearOfProduction}</td>
+                                <td>{detal.description}</td>
+                                <td>{this.show_price(detal.carDetailsID)}</td>
                                 <td> 
                                     <ButtonToolbar>
                                         <Button className="mr-2" variant="info"
@@ -167,9 +129,9 @@ export class CompanysCars extends Component{
 
                                         
                                         {
-                                            this.show_price(detal.CarDetailsID)!=null && 
+                                            this.show_price(detal.carDetailsID)!=null && 
                                             <Button className="mr-2" variant="success" 
-                                                onClick={()=> this.setState({Rent:detal.CarDetailsID})}> 
+                                                onClick={()=> this.setState({Rent:detal.carDetailsID})}> 
                                                 Wynajmij mnie
                                             </Button>
                                         }
@@ -177,26 +139,25 @@ export class CompanysCars extends Component{
 
                                         <CheckPriceForm show={this.state.checkPrice}
                                         onHide={ModalCheckPriceClose}
-                                        carDetalisID={detal.carDetailsID}
-                                        exsist={exsist}
-                                        onRemoveItem={onRemoveItem}
-                                        onAddItem={onAddItem}
-                                        savePrice={this.savePrice}/>
+                                        cardetalisid={detal.carDetailsID}
+                                        isinlist={isinlist}
+                                        removeitem={removeItem}
+                                        additem={additem}/>
 
                                         <RentMeForm show={this.state.Rent} 
                                         onHide={ModalRentClose}
-                                        carDetalisID={detal.CarDetailsID}/>
+                                        cardetalisid={detal.carDetailsID}/>
                                     </ButtonToolbar>
                                 </td>
                             </tr>
                         ) }
                     </tbody>
                     </Table>
-                </div>
+                
             )
         }
         else
-            return(<p></p>)
+            return(null)
     }
 }
 

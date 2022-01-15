@@ -18,12 +18,14 @@ export class CarDetalis extends Component{
         });
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.refreshList();
+        this.interval = setInterval(() => this.refreshList(), 2000);
+
     }
 
-    componentDidUpdate(){
-        this.refreshList();
+    componentWillUnmount() {
+        clearInterval(this.interval);
     }
 
     onRemoveItem = i => {
@@ -93,19 +95,23 @@ export class CarDetalis extends Component{
 
                     </Table>
 
-                    </div>
+                </div>
                     <div>
-                        <Table className="mt-4" striped bordered hover size="sm">
-                            
-                            <thead>
+                    
+                    
+                    <Table>
+                        <thead>
                                 <tr>
                                     <th>Nazwa firmy</th>
-                                </tr>
+                            </tr>
                             </thead>
-                                
-                                {detalis.companies.map(company =>
-                                <Table>
-                                <tr key={company.companyID}>
+                        </Table>
+                    
+                    {detalis.companies.map(company =>
+                        <div key={company.companyID}>
+                            <Table>
+                                <tbody>
+                                        <tr >
                                     <td>{company.name}</td>
                                     <td><Button className="mr-2" variant="info"
                                             onClick={()=> this.show_or_hide(company.companyID)}>
@@ -113,15 +119,20 @@ export class CarDetalis extends Component{
                                             </Button>
                                     </td>
                                     
-                                </tr>
-                                <tr><CompanysCars show={this.should_be_show(company.companyID)} companyID={company.companyID} carID={detalis.car.carID}></CompanysCars></tr>
-                                </Table>
-                            )}
+                                    </tr>
+                                    </tbody>
+                                        </Table>
+                                    
+                            <CompanysCars key={company.companyID} show={this.should_be_show(company.companyID)} companyID={company.companyID} carID={detalis.car.carID}></CompanysCars>
 
-                    </Table>
+                                    
+                        </div>
+                            )}
+                        
+                    
                         
                     </div>
-                </div>
+            </div>
         );
     }
 }

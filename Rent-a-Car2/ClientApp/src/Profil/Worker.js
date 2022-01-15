@@ -1,5 +1,6 @@
 import React,{Component} from 'react';
 import { Button, ButtonToolbar, Table } from 'react-bootstrap';
+import { ReturnForm } from '../Forms/ReturnForm'
 
 export class Worker extends Component{
 
@@ -9,45 +10,52 @@ export class Worker extends Component{
         this.state={
             ReadyShow:false,
             ReadyToReturn:[],
-            NotReadyShow:false,
-            NotReadyToReturn:[]
+            ShowHistory:false,
+            History: [],
+            ShowReturnForm: false
         }
     }
 
     dowlandReadyToReturn(){
         if(this.state.ReadyShow)
         {
-            fetch(process.env.REACT_APP_API +'/Api/ReadyToReturn')
+            fetch(process.env.REACT_APP_API +'/CarApi/ReadyToReturn')
             .then(response=>response.json())
-            .then(data=>{
+                .then(data => {
                 this.setState({ReadyToReturn:data});
             });
         }
     }
 
-    dowlandNotReadyToReturn(){
-        if(this.state.NotReadyShow)
+    dowlandHistory(){
+        if(this.state.ShowHistory)
         {
-            fetch(process.env.REACT_APP_API +'/Api/NotReadyToReturn')
+            fetch(process.env.REACT_APP_API +'/CarApi/History')
             .then(response=>response.json())
             .then(data=>{
-                this.setState({NotReadyToReturn:data});
+                this.setState({ History:data});
             });
         }
     }
 
-    componentDidMount(){
-        this.dowlandNotReadyToReturn();
+    refreshList() {
+        this.dowlandHistory();
         this.dowlandReadyToReturn();
     }
 
-    componentDidUpdate(){
-        this.dowlandNotReadyToReturn();
-        this.dowlandReadyToReturn();
+    componentDidMount(){
+        this.refreshList();
+        this.interval = setInterval(() => this.refreshList(), 2000);
+
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
     }
 
     render(){
-        const {ReadyToReturn, NotReadyToReturn} = this.state;
+        const { ReadyToReturn, History } = this.state;
+        let CloseReturnForm = () => this.setState({ ShowReturnForm: false });
         return(
             <div>
                 <ButtonToolbar>
@@ -55,8 +63,8 @@ export class Worker extends Component{
                         Pokaż auta gotowe do zwrotu
                     </Button>
 
-                    <Button onClick={()=>this.setState({NotReadyShow:!this.state.NotReadyShow})}>
-                        Pokaż auta niegotowe do zwrotu
+                    <Button onClick={() => this.setState({ ShowHistory:!this.state.ShowHistory})}>
+                        Pokaż historie
                     </Button>
 
                 </ButtonToolbar>
@@ -75,11 +83,11 @@ export class Worker extends Component{
                             </thead>
                             <tbody>
                             {ReadyToReturn.map(r=>
-                                <tr key={r.RentID}>
-                                    <td>{r.RentID}</td>
-                                    <td>{r.Brand}</td>
-                                    <td>{r.Model}</td>
-                                    <td>{r.CustomerID}</td>
+                                <tr key={r.rentID}>
+                                    <td>{r.rentID}</td>
+                                    <td>{r.brand}</td>
+                                    <td>{r.model}</td>
+                                    <td>{r.customerID}</td>
                                     <td>
                                     <ButtonToolbar>
                                         <Button className="mr-2" variant="dark" 
@@ -90,7 +98,9 @@ export class Worker extends Component{
                                         }}>
                                             Zwróć
                                         </Button>
-                                        
+
+                                            <ReturnForm show={this.state.ShowReturnForm}
+                                                onHide={CloseReturnForm}/>
                                         
                                     </ButtonToolbar>
                                     </td>
@@ -103,28 +113,28 @@ export class Worker extends Component{
                     }
                 </div>
                 <div>
-                    { this.state.NotReadyShow &&
+                    { this.state.ShowHistory &&
                     <div>
-                        <label aria-setsize={40} color="violet"> Oczekują na wysłanie protokołu przez klijenta</label>
+                        <label aria-setsize={40} color="violet"> historia wyporzyczeń</label>
                         <Table>
                             <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Marka</th>
-                                <th>Model</th>
-                                <th>ID klienta</th>
+                                <th>Car ID</th>
+                                <th>Data zwrotu</th>
+                                <th>Stan auta</th>
                             </tr>
                             </thead>
                             <tbody>
-                            {NotReadyToReturn.map(r=>
-                                <tr key={r.RentID}>
-                                    <td>{r.RentID}</td>
-                                    <td>{r.Brand}</td>
-                                    <td>{r.Model}</td>
-                                    <td>{r.CustomerID}</td>
+                            {History.map(r=>
+                                <tr key={r.returnFileID}>
+                                    <td>{r.returnFileID}</td>
+                                    <td>{r.RentedCarID}</td>
+                                    <td>{r.ReturnDate}</td>
+                                    <td>{r.CarConditon}</td>
                                     <td>
-                                    <ButtonToolbar>
-                                        
+                                        <ButtonToolbar>
+                                            <Button> Szczegóły</Button>
                                         
                                     </ButtonToolbar>
                                     </td>

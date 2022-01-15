@@ -9,7 +9,7 @@ export class RentMeForm extends Component{
 
     handleSubmit(event){
         event.preventDefault();
-        fetch(process.env.REACT_APP_API +'/Api/Rent',{
+        fetch(process.env.REACT_APP_API +'/CarApi/Rent',{
             method:'Post',
             headers:{
                 'Accept':'application/json',
