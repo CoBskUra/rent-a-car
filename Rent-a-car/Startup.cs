@@ -44,8 +44,7 @@ namespace Rent_a_Car
 
              services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders()
-                .AddDefaultUI();
+                .AddDefaultTokenProviders();
 
             services.AddSwaggerGen(c =>
             {
@@ -112,14 +111,6 @@ namespace Rent_a_Car
             builder.AddDeveloperSigningCredential();
 
             services.AddLocalApiAuthentication();
-            builder.Services.AddAuthentication()
-            .AddGoogle(options =>
-            {
-                IConfigurationSection googleAuthNSection =
-                Configuration.GetSection("Authentication:Google");
-                options.ClientId = googleAuthNSection["ClientId"];
-                options.ClientSecret = googleAuthNSection["ClientSecret"];
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
