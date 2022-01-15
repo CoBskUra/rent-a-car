@@ -1,5 +1,7 @@
 import React,{Component} from 'react';
-import {Modal,Button, Row, Col, Form} from 'reactstrap';
+import {
+    Modal, ModalFooter, Label,
+    ModalHeader, ModalBody, Button, Row, Col, Form, FormGroup, Input} from 'reactstrap';
 
 export default class CheckPriceForm extends Component{
     constructor(props){
@@ -64,69 +66,69 @@ export default class CheckPriceForm extends Component{
                 aria-labelledby="contained-modal-title-vcenter"
                 centered
                 >
-                    <Modal.Header >
-                        <Modal.Title id="contained-modal-title-vcenter">
+                    <ModalHeader >
+                        <p id="contained-modal-title-vcenter">
                             Sprawdż cene
-                        </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
+                        </p>
+                    </ModalHeader>
+                <ModalBody>
 
                         <Row>
                             <Col sm={6}>
                                 <Form onSubmit={this.handleSubmit}>
-                                <Form.Group controlId="DateofBecomingDriver">
-                                        <Form.Label>Data otrzymanai prawa jazdy</Form.Label>
-                                        <Form.Control type="date" name="DateofBecomingDriver" required/>
-                                    </Form.Group>
+                                <FormGroup controlId="DateofBecomingDriver">
+                                        <Label>Data otrzymanai prawa jazdy</Label>
+                                    <Input type="date" name="DateofBecomingDriver" required/>
+                                    </FormGroup>
 
-                                    <Form.Group controlId="Birthday">
-                                        <Form.Label>Data urodziny</Form.Label>
-                                        <Form.Control type="date" name="Birthday" required/>
-                                    </Form.Group>
+                                    <FormGroup controlId="Birthday">
+                                        <Label>Data urodziny</Label>
+                                    <Input type="date" name="Birthday" required/>
+                                    </FormGroup>
 
-                                    <Form.Group controlId="City">
-                                        <Form.Label>Miasto</Form.Label>
-                                        <Form.Control type="text"  required name="City" 
+                                    <FormGroup controlId="City">
+                                        <Label>Miasto</Label>
+                                        <Input type="text"  required name="City" 
                                         placeholder="Miasto"/>
-                                    </Form.Group>
+                                    </FormGroup>
 
-                                    <Form.Group controlId="Street">
-                                        <Form.Label>Ulica</Form.Label>
-                                        <Form.Control type="text" name="Street" required
+                                    <FormGroup controlId="Street">
+                                        <Label>Ulica</Label>
+                                        <Input type="text" name="Street" required
                                         placeholder="Ulica"/>
-                                    </Form.Group>
+                                    </FormGroup>
 
-                                    <Form.Group controlId="StreetNumber">
-                                        <Form.Control type="number" min={0} name="StreetNumber" required
+                                    <FormGroup controlId="StreetNumber">
+                                        <Input type="number" min={0} name="StreetNumber" required
                                             placeholder="Numer"/>
-                                    </Form.Group>
+                                    </FormGroup>
 
-                                    <Form.Group controlId="NumberOfCurrentlyRentedCars">
-                                        <Form.Label>Ilość obecnie wyporzyczonych aut</Form.Label>
-                                        <Form.Control type="number" min={0} name="NumberOfCurrentlyRentedCars"
+                                    <FormGroup controlId="NumberOfCurrentlyRentedCars">
+                                        <Label>Ilość obecnie wyporzyczonych aut</Label>
+                                        <Input type="number" min={0} name="NumberOfCurrentlyRentedCars"
                                         required />
-                                    </Form.Group>
+                                    </FormGroup>
 
-                                    <Form.Group controlId="NumberOfOverallRentedCars">
-                                        <Form.Label>Ilość przetrzymanych aut</Form.Label>
-                                        <Form.Control type="number" min={0} name="NumberOfOverallRentedCars"
+                                    <FormGroup controlId="NumberOfOverallRentedCars">
+                                        <Label>Ilość przetrzymanych aut</Label>
+                                        <Input type="number" min={0} name="NumberOfOverallRentedCars"
                                         required />
-                                    </Form.Group>
+                                    </FormGroup>
                                     
 
-                                    <Form.Group>
+                                    <FormGroup>
                                         <Button variant="primary" type="submit">
                                             Wyślij 
                                         </Button>
-                                    </Form.Group>
+                                    </FormGroup>
                                 </Form>
                             </Col>
                         </Row>
-                    </Modal.Body>
+                    </ModalBody>
                     
-                    <Modal.Footer>
+                    <ModalFooter>
                     <Button variant="danger" onClick={this.props.onHide}>Zamnkij</Button>
-                    </Modal.Footer>
+                    </ModalFooter>
 
                 </Modal>
 

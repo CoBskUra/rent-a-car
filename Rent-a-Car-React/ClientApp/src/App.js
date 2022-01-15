@@ -10,7 +10,9 @@ import { ApplicationPaths } from './components/api-authorization/ApiAuthorizatio
 
 import './custom.css'
 
-import Cars from './Cars';
+import  Cars  from './Cars';
+import { Customer } from './Profil/Customer'
+import { Worker } from './Profil/Worker'
 export default class App extends Component {
   static displayName = App.name;
 
@@ -18,7 +20,9 @@ export default class App extends Component {
     return (
       <Layout>
             <Route exact path='/' component={Home} />
-            <Route path='/Cars' component={Cars} />
+            <Route path='/Cars' component={Cars}/>
+            <Route path='/Profil/Customer' component={Customer} />
+            <Route path='/Profil/Worker' component={Worker} />
             <Route path='/counter' component={Counter} />
             <AuthorizeRoute path='/fetch-data' component={FetchData} />
             <Route path={ApplicationPaths.ApiAuthorizationPrefix} component={ApiAuthorizationRoutes} />

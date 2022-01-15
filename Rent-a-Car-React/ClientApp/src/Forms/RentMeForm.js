@@ -1,5 +1,8 @@
 import React,{Component} from 'react';
-import {Modal,Button, Row, Col, Form} from 'reactstrap';
+import {
+    Modal, ModalFooter, Label,
+    ModalHeader, ModalBody, Button, Row, Col, Form, FormGroup, Input
+} from 'reactstrap';
 
 export default class RentMeForm extends Component{
     constructor(props){
@@ -45,37 +48,37 @@ size="sm"
 aria-labelledby="contained-modal-title-vcenter"
 centered
 >
-    <Modal.Header clooseButton>
-        <Modal.Title id="contained-modal-title-vcenter">
+    <ModalHeader clooseButton>
+        <p id="contained-modal-title-vcenter">
             Wynajmij Auto
-        </Modal.Title>
-    </Modal.Header>
-    <Modal.Body>
+        </p>
+    </ModalHeader>
+    <ModalBody>
 
         <Row>
             <Col sm={6}>
                 <Form onSubmit={this.handleSubmit}>
-                <Form.Group controlId="DaysNumber">
-                        <Form.Label>Wprowadź na ile dni chcesz wynająć auto</Form.Label>
-                        <Form.Control type="number" min={1} name="DaysNumber" required
+                <FormGroup controlId="DaysNumber">
+                        <Label>Wprowadź na ile dni chcesz wynająć auto</Label>
+                        <Input type="number" min={1} name="DaysNumber" required
                         placeholder="liczba dni"/>
-                    </Form.Group>
+                    </FormGroup>
 
                     
 
-                    <Form.Group>
+                    <FormGroup>
                         <Button variant="primary" type="submit">
                             Potwierdź Wynajem
                         </Button>
-                    </Form.Group>
+                    </FormGroup>
                 </Form>
             </Col>
         </Row>
-    </Modal.Body>
+    </ModalBody>
     
-    <Modal.Footer>
+    <ModalFooter>
         <Button variant="danger" onClick={this.props.onHide}>Zamknij</Button>
-    </Modal.Footer>
+    </ModalFooter>
 
 </Modal>
 

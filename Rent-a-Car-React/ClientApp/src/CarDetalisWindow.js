@@ -1,5 +1,7 @@
 import React,{Component} from 'react';
-import {Modal,Button} from 'reactstrap';
+import {
+    Button, Modal, ModalFooter,
+    ModalHeader, ModalBody} from 'reactstrap';
 
 import CarDetalis from './CarDetalis';
 
@@ -19,19 +21,19 @@ export default class CarDetalisWindow extends Component{
                 aria-labelledby="contained-modal-title-vcenter"
                 centered
                 >
-                <Modal.Header >
-                    <Modal.Title id="contained-modal-title-vcenter">
+                <ModalHeader >
+                    <p id="contained-modal-title-vcenter">
                         Firmy które posiadają rządane auto
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
+                    </p>
+                </ModalHeader>
+                <ModalBody>
                         <CarDetalis id={this.props.id} ></CarDetalis>
         
-                </Modal.Body>
+                </ModalBody>
 
-                <Modal.Footer>
+                <ModalFooter>
                     <Button variant="danger" onClick={this.props.onHide}>Close</Button>
-                </Modal.Footer>
+                </ModalFooter>
 
                 </Modal>
 

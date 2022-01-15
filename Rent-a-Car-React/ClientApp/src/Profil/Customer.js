@@ -1,26 +1,28 @@
 import React,{Component} from 'react';
-import { Button, ButtonToolbar, Table } from 'react-bootstrap';
+import { Button, ButtonToolbar, Table } from 'reactstrap';
 
 export class Customer extends Component{
     constructor(props)
     {
         super(props);
         this.state={
-            CustomerID:1,
-            showReturned:false,
-            ReturnedCars:[], 
-            showCurrentrent:false, 
-            currentRented:[],
+            CustomerID: 1,
+            showReturned: false,
+            ReturnedCars: [], 
+            showCurrentrent:  false, 
+            currentRented: [],
         }
     }
 
-    dowlandCurentRentedCars(){
+    dowlandCurentRentedCars() {
+        console.log(process.env.REACT_APP_API);
         if(this.state.showCurrentrent)
         {
             fetch(process.env.REACT_APP_API +'/CarApi/GetRentedCars')
             .then(response=>response.json())
             .then(data=>{
-                this.setState({currentRented:data});
+                this.setState({ currentRented: data });
+                console.log(data);
             });
         }
     }

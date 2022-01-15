@@ -137,15 +137,15 @@ export default class CompanysCars extends Component{
                                         }
                                         
 
-                                        <CheckPriceForm show={this.state.checkPrice}
-                                        onHide={ModalCheckPriceClose}
+                                        <CheckPriceForm isOpen={this.state.checkPrice}
+                                            onHide={ModalCheckPriceClose}
                                         cardetalisid={detal.carDetailsID}
                                         isinlist={isinlist}
                                         removeitem={removeItem}
                                         additem={additem}/>
 
-                                        <RentMeForm show={this.state.Rent} 
-                                        onHide={ModalRentClose}
+                                        <RentMeForm isOpen={this.state.Rent}
+                                            onHide={ModalRentClose}
                                         cardetalisid={detal.carDetailsID}/>
                                     </ButtonToolbar>
                                 </td>

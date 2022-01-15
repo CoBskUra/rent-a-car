@@ -1,11 +1,11 @@
 import React,{Component} from 'react';
-import {Form, Table, Col, Row} from 'reactstrap';
+import { Form, Table, Col, Row, FormGroup, Label, Input} from 'reactstrap';
 
 import {Button,ButtonToolbar} from 'reactstrap';
-import { EditCar } from './Forms/EditCar';
+import  EditCar  from './Forms/EditCar';
 import CarDetalisWindow from './CarDetalisWindow';
 
-export class Cars extends Component{
+export default class Cars extends Component{
 
     constructor(props){
         super(props);
@@ -77,47 +77,48 @@ export class Cars extends Component{
         return(
             <div >
                 <div>
-                <Form onSubmit={this.handleSubmit}>
-                    <Col sm={4}>
-                <Form.Group controlId="Brand">
-                    <Form.Label>Firma</Form.Label>
-                        <Form.Control type="text" name="Brand"
-                        placeholder="Firma"/>
-                </Form.Group>   
+                    <Form >
+                        <Col sm={4}>
+                            <FormGroup controlId="Brand">
+                                <Label>Firma</Label>
+                                <Input type="text" name="Brand"
+                                    placeholder="Firma" />
+                            </FormGroup>
 
-                <Form.Group controlId="Mark">
-                    <Form.Label>Marka</Form.Label>
-                        <Form.Control type="text" name="Mark"
-                        placeholder="Marka"/>
-                </Form.Group>  
-                </Col> 
+                            <FormGroup controlId="Mark">
+                                <Label>Marka</Label>
+                                <Input type="text" name="Mark"
+                                    placeholder="Marka" />
+                            </FormGroup>
+                        </Col>
 
-                <Row>
+                        <Row>
 
-                    <Form.Group>
-                        <Button variant="primary" type="submit">
-                            Szukaj
-                        </Button>
+                            <FormGroup>
+                                <Button variant="primary" type="submit">
+                                    Szukaj
+                                </Button>
 
-                        <Button variant="secondary" 
-                    onClick={()=>{
-                        if(this.state.order === 0)
-                            this.setState({ order: 1})
-                        else
-                            this.setState({ order: 0})
-                    }
-                        
-                    }>
-                        Zmień kolejność wyświetlania
-                    </Button>
+                                <Button variant="secondary"
+                                    onClick={() => {
+                                        if (this.state.order === 0)
+                                            this.setState({ order: 1 })
+                                        else
+                                            this.setState({ order: 0 })
+                                    }
 
-                    </Form.Group>
+                                    }>
+                                    Zmień kolejność wyświetlania
+                                </Button>
 
-                    
+                            </FormGroup>
 
-                    
-                    </Row>
-                </Form>
+
+
+
+                        </Row>
+
+                    </Form>
                 </div>
                 <Table className="mt-4" striped bordered hover size="sm">
                     <thead>
@@ -159,7 +160,7 @@ export class Cars extends Component{
 
                                             
                                             
-                                            <EditCar show={this.state.editModalShow}
+                                        <EditCar isOpen={this.state.editModalShow}
                                             onHide={editModalClose}
                                             carID={carID}
                                             carbrand={carbrand}
@@ -167,7 +168,7 @@ export class Cars extends Component{
                                             carhorsePower={carhorsePower}
                                             />
 
-                                            <CarDetalisWindow show={this.state.carDetalisModalShow}
+                                        <CarDetalisWindow isOpen={this.state.carDetalisModalShow}
                                             onHide={CarDetalisModalClose}
                                             id={carID}
                                             />

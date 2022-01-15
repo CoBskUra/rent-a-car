@@ -1,6 +1,8 @@
 import React,{Component} from 'react';
-import {Modal,Button, Row, Col, Form} from 'reactstrap';
-
+import {
+    Modal, ModalFooter, Label,
+    ModalHeader, ModalBody, Button, Row, Col, Form, FormGroup, Input
+} from 'reactstrap';
 
 export default class EditCar extends Component{
     constructor(props){
@@ -41,58 +43,58 @@ size="lg"
 aria-labelledby="contained-modal-title-vcenter"
 centered
 >
-    <Modal.Header >
-        <Modal.Title id="contained-modal-title-vcenter">
+    <ModalHeader >
+        <p id="contained-modal-title-vcenter">
             Edit Car
-        </Modal.Title>
-    </Modal.Header>
-    <Modal.Body>
+        </p>
+    </ModalHeader>
+    <ModalBody>
 
         <Row>
             <Col sm={6}>
                 <Form onSubmit={this.handleSubmit}>
-                <Form.Group controlId="carID">
-                        <Form.Label>carID</Form.Label>
-                        <Form.Control type="text" name="carID" required
+                <FormGroup controlId="carID">
+                        <Label>carID</Label>
+                        <Input type="text" name="carID" required
                         disabled
                         defaultValue={this.props.carID} 
                         placeholder="carID"/>
-                    </Form.Group>
+                    </FormGroup>
 
-                    <Form.Group controlId="Brand">
-                        <Form.Label>Brand</Form.Label>
-                        <Form.Control type="text" name="Brand" required
+                    <FormGroup controlId="Brand">
+                        <Label>Brand</Label>
+                        <Input type="text" name="Brand" required
                         defaultValue={this.props.carbrand}
                         placeholder="Brand"/>
-                    </Form.Group>
+                    </FormGroup>
 
-                    <Form.Group controlId="Model">
-                        <Form.Label>Model</Form.Label>
-                        <Form.Control type="text" name="Model" required
+                    <FormGroup controlId="Model">
+                        <Label>Model</Label>
+                        <Input type="text" name="Model" required
                         defaultValue={this.props.carmodel}
                         placeholder="Model"/>
-                    </Form.Group>
+                    </FormGroup>
 
-                    <Form.Group controlId="HorsePower">
-                        <Form.Label>HorsePower</Form.Label>
-                        <Form.Control type="number" min={0} required name="HorsePower" 
+                    <FormGroup controlId="HorsePower">
+                        <Label>HorsePower</Label>
+                        <Input type="number" min={0} required name="HorsePower" 
                         defaultValue={this.props.carhorsePower}
                         placeholder="HorsePower"/>
-                    </Form.Group>
+                    </FormGroup>
 
-                    <Form.Group>
+                    <FormGroup>
                         <Button variant="primary" type="submit">
                             Zapisz zmiany
                         </Button>
-                    </Form.Group>
+                    </FormGroup>
                 </Form>
             </Col>
         </Row>
-    </Modal.Body>
+    </ModalBody>
     
-    <Modal.Footer>
+    <ModalFooter>
         <Button variant="danger" onClick={this.props.onHide}>Close</Button>
-    </Modal.Footer>
+    </ModalFooter>
 
 </Modal>
 
