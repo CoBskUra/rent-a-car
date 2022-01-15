@@ -238,6 +238,7 @@ namespace Rent_a_Car.Controllers
                     RentID = a.RentCarEventID,
                     Brand = a.CarDetails.Car.Brand,
                     Model = a.CarDetails.Car.Model,
+                    carID = a.CarDetails.CarID,
                     CustomerID = a.CustomerID
                 });
             return new JsonResult(dbcontext);
@@ -252,6 +253,21 @@ namespace Rent_a_Car.Controllers
         {
             var dbcontext = _context.ReturnFile;
             return new JsonResult(dbcontext);
+        }
+
+        /// <summary>
+        /// Przyjmuje dokument zwrotu
+        /// </summary>
+        [HttpPost]
+        [Route("AddReturnFile")]
+        public  JsonResult AddReturnFile([FromBody] ReturnFile fille)
+        {
+            
+            _context.ReturnFile.Add(fille);
+            _context.SaveChanges();
+
+
+            return new JsonResult("Dodano");
         }
 
 

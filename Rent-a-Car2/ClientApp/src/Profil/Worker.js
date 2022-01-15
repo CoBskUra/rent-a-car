@@ -12,7 +12,8 @@ export class Worker extends Component{
             ReadyToReturn:[],
             ShowHistory:false,
             History: [],
-            ShowReturnForm: false
+            ShowReturnForm: false,
+            EmployerID:1
         }
     }
 
@@ -100,7 +101,11 @@ export class Worker extends Component{
                                         </Button>
 
                                             <ReturnForm show={this.state.ShowReturnForm}
-                                                onHide={CloseReturnForm}/>
+                                                onHide={CloseReturnForm}
+                                                rentedcarid={r.carID}
+                                                employerid={this.state.EmployerID}
+                                                returnfileid={r.rentID}
+                                                />
                                         
                                     </ButtonToolbar>
                                     </td>

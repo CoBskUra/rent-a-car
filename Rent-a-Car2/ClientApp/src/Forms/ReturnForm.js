@@ -1,45 +1,55 @@
 import React,{Component} from 'react';
-import { Modal, Button, Row, Col, Form, Image} from 'react-bootstrap';
+import { Modal, Button, Row, Col, Form} from 'react-bootstrap';
+import pic from "./returnForm.jpg";
 
 export class ReturnForm extends Component{
     constructor(props){
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleFileSelected = this.handleFileSelected.bind(this);
+        this.uplodeProtocol = this.uplodeProtocol.bind(this);
     }
 
-    photofilename = "returnForm.jpg";
-    imagesrc = "../../public/returnForm.jpg";
+    image = pic;
+    photo = null;
+    protocol = null;
 
     handleFileSelected(event) {
         event.preventDefault();
-        this.photofilename = event.target.files[0].name;
-        const formData = new FormData();
-        formData.append(
-            "myFile",
-            event.target.files[0],
-            event.target.files[0].name
-        );
+        this.image = URL.createObjectURL(event.target.files[0]);
+        this.photo = event.target.files[0];
+    }
 
-        fetch(process.env.REACT_APP_API + 'Employee/SaveFile', {
-            method: 'POST',
-            body: formData
-        })
-            .then(res => res.json())
-            .then((result) => {
-                this.imagesrc = process.env.REACT_APP_PHOTOPATH + result;
-            },
-                (error) => {
-                    alert('Failed');
-                })
-
+    uplodeProtocol(event) {
+        event.preventDefault();
+        this.protocol = event.target.files[0];
     }
     
 
 
     handleSubmit(event) {
         event.preventDefault();
-        console.log(this.imagesrc);
+        const form = new FormData();
+        form.append("ReturnFileID", this.props.returnfileid);
+        form.append("RentedCarID", this.props.rentedcarid);
+        form.append("ReturnDate", event.target.SubmitDate.value);
+        form.append("CarConditon", event.target.CarConditon.value);
+        form.append("OdometerReading", event.target.OdometerReading.value);
+        form.append("Photo", this.photo);
+        form.append("ReturnProocol", this.protocol);
+        form.append("EmployerID", this.props.employerid);
+        fetch(process.env.REACT_APP_API + '/CarApi/AddReturnFile', {
+            method: 'Post',
+            body: form
+        })
+            .then(res => res.json())
+            .then((result) => {
+                alert(result);
+            },
+                (error) => {
+                    alert('Failed');
+                })
+
     }
     
     render(){
@@ -81,7 +91,7 @@ export class ReturnForm extends Component{
 
                                     <Form.Group controlId="Protocol">
                                         <Form.Label>Protokół</Form.Label>
-                                        <Form.Control type="File" name="Protocol" required />
+                                        <Form.Control type="File" name="Protocol" onChange={this.uplodeProtocol } required />
                                     </Form.Group>
                                </Col>
                                    
@@ -91,11 +101,11 @@ export class ReturnForm extends Component{
                                         <Col>
                                             <Form.Group controlId="Photo">
                                                 <Form.Label>Zdjęcie auta</Form.Label>
-                                                <Form.Control  type="File" name="Photo" required />
+                                                <Form.Control type="File" name="Photo" onChange={this.handleFileSelected} required />
                                             </Form.Group>
                                         </Col>
                                         
-                                        <Image width="256px" height="256px" src={this.imagesrc} />
+                                        <img width="256px" height="256px" src={this.image} />
                                         
                                     </Row>
                                     

@@ -28,7 +28,6 @@ export class CheckPriceForm extends Component{
         })
         .then(res=>res.json())
             .then((result) => {
-                console.log(result);
                 this.savePrice(this.props.cardetalisid, result);
         },
         (error)=>{
@@ -46,7 +45,6 @@ export class CheckPriceForm extends Component{
 
     handleSubmit(event){
         event.preventDefault();
-        console.log(event.target);
         this.GetPrice(event);
     }
 
