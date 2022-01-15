@@ -14,7 +14,7 @@ namespace Rent_a_car_UnitTests
         [TestMethod]
         public void TestMethod2()
         {
-            Assert.AreEqual(0.1+0.2, 0.3);
+           
         }
     }
 }
