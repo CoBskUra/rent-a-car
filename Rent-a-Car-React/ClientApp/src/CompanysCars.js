@@ -124,7 +124,7 @@ export default class CompanysCars extends Component{
                                                 {
                                                     checkPrice:true
                                                 })}>
-                                                    Sprawdć cene 
+                                                    Sprawdź cene 
                                         </Button> 
 
                                         

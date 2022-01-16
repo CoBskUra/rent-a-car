@@ -23,7 +23,7 @@ export default class CarDetalisWindow extends Component{
                 >
                 <ModalHeader >
                     <p id="contained-modal-title-vcenter">
-                        Firmy które posiadają rządane auto
+                        Firmy które posiadają żądane auto
                     </p>
                 </ModalHeader>
                 <ModalBody>

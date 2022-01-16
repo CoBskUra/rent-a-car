@@ -10,7 +10,8 @@ export class LoginMenu extends Component {
 
         this.state = {
             isAuthenticated: false,
-            userName: null
+            userName: null,
+            accountType: null
         };
     }
 
@@ -24,10 +25,11 @@ export class LoginMenu extends Component {
     }
 
     async populateState() {
-        const [isAuthenticated, user] = await Promise.all([authService.isAuthenticated(), authService.getUser()])
+        const [isAuthenticated, user, account] = await Promise.all([authService.isAuthenticated(), authService.getUser(), authService.getAccountType()])
         this.setState({
             isAuthenticated,
-            userName: user && user.name
+            userName: user && user.name,
+            accountType: account
         });
     }
 
@@ -45,24 +47,40 @@ export class LoginMenu extends Component {
     }
 
     authenticatedView(userName, profilePath, logoutPath) {
-        return (<Fragment>
-            <NavItem>
-                <NavLink tag={Link} className="text-dark" to={profilePath}>Hello {userName}</NavLink>
-            </NavItem>
-            <NavItem>
-                <NavLink tag={Link} className="text-dark" to={logoutPath}>Logout</NavLink>
-            </NavItem>
-        </Fragment>);
-
+        if (!!this.state.accountType && this.state.accountType === 1) {
+            return (<Fragment>
+                <NavItem>
+                    <NavLink tag={Link} className="text-dark" to="/Profil/Worker">Profil Pracownika</NavLink>
+                </NavItem>
+                <NavItem>
+                    <NavLink tag={Link} className="text-dark" to={profilePath}>Witaj {userName}</NavLink>
+                </NavItem>
+                <NavItem>
+                    <NavLink tag={Link} className="text-dark" to={logoutPath}>Wyloguj</NavLink>
+                </NavItem>
+            </Fragment>);
+        } else {
+            return (<Fragment>
+                <NavItem>
+                    <NavLink tag={Link} className="text-dark" to="/Profil/Customer">Profil Klienta</NavLink>
+                </NavItem>
+                <NavItem>
+                    <NavLink tag={Link} className="text-dark" to={profilePath}>Witaj {userName}</NavLink>
+                </NavItem>
+                <NavItem>
+                    <NavLink tag={Link} className="text-dark" to={logoutPath}>Wyloguj</NavLink>
+                </NavItem>
+            </Fragment>);
+        }
     }
 
     anonymousView(registerPath, loginPath) {
         return (<Fragment>
             <NavItem>
-                <NavLink tag={Link} className="text-dark" to={registerPath}>Register</NavLink>
+                <NavLink tag={Link} className="text-dark" to={registerPath}>Zarejestruj sie</NavLink>
             </NavItem>
             <NavItem>
-                <NavLink tag={Link} className="text-dark" to={loginPath}>Login</NavLink>
+                <NavLink tag={Link} className="text-primary" to={loginPath}>Zaloguj</NavLink>
             </NavItem>
         </Fragment>);
     }

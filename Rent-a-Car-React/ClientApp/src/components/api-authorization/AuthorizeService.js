@@ -6,7 +6,7 @@ export class AuthorizeService {
     _nextSubscriptionId = 0;
     _user = null;
     _isAuthenticated = false;
-
+    _accountType = null;
     // By default pop ups are disabled because they don't work properly on Edge.
     // If you want to enable pop up authentication simply set this flag to false.
     _popUpDisabled = true;
@@ -20,12 +20,33 @@ export class AuthorizeService {
         if (this._user && this._user.profile) {
             return this._user.profile;
         }
-
         await this.ensureUserManagerInitialized();
         const user = await this.userManager.getUser();
         return user && user.profile;
     }
 
+    async getAccountType() {
+        const user = await this.getUser();
+        if (!!user) {               
+            try {
+                const token = await authService.getAccessToken();
+                const response = await fetch(process.env.REACT_APP_API + '/CarApiPrivate/GetAccountType/' + user.name, {
+                    headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
+                });
+                const responseJson = await response.json();
+                this._accountType = responseJson[0].accountType;
+            } catch {
+                this._accountType = null;
+            }
+   
+            return this._accountType;
+
+        } else {
+            this._accountType = null;
+            console.log(this._accountType);
+            return null;
+        }
+    }
     async getAccessToken() {
         await this.ensureUserManagerInitialized();
         const user = await this.userManager.getUser();

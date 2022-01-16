@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Rent_a_Car_React.Models
 {
+    
     public class ApplicationUser : IdentityUser
     {
+        public int AccountType { get; set; } = 0;
     }
 }

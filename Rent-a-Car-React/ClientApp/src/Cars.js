@@ -123,7 +123,6 @@ export default class Cars extends Component{
                 <Table className="mt-4" striped bordered hover size="sm">
                     <thead>
                         <tr>
-                            <th>carID</th>
                             <th>Brand</th>
                             <th>Model</th>
                             <th>HorsePower</th>
@@ -132,41 +131,24 @@ export default class Cars extends Component{
                     <tbody>
                         {cars.map(car=>
                             <tr key={car.carID}>
-                                <td>{car.carID}</td>
                                 <td>{car.brand}</td>
                                 <td>{car.model}</td>
                                 <td>{car.horsePower}</td>
                                 <td> 
                                     <ButtonToolbar>
-                                        <Button className="mr-2" variant="info"
-                                        onClick={()=>this.setState(
-                                            {
-                                                editModalShow:true,
-                                                carID:car.carID,
-                                                carbrand:car.brand,
-                                                carmodel:car.model,
-                                                carhorsePower:car.horsePower
-                                            })}>
-                                                Edytuj
-                                            </Button>
+                                      
                                             <Button className="mr-2" variant="info"
                                             onClick={()=>this.setState(
                                             {
                                                 carDetalisModalShow:true,
                                                 carID:car.carID
                                             })}>
-                                                szczegóły
+                                                Szczegóły
                                             </Button>
 
                                             
                                             
-                                        <EditCar isOpen={this.state.editModalShow}
-                                            onHide={editModalClose}
-                                            carID={carID}
-                                            carbrand={carbrand}
-                                            carmodel={carmodel}
-                                            carhorsePower={carhorsePower}
-                                            />
+
 
                                         <CarDetalisWindow isOpen={this.state.carDetalisModalShow}
                                             onHide={CarDetalisModalClose}

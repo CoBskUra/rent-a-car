@@ -68,7 +68,7 @@ export default class CheckPriceForm extends Component{
                 >
                     <ModalHeader >
                         <p id="contained-modal-title-vcenter">
-                            Sprawdż cene
+                            Sprawdź cene
                         </p>
                     </ModalHeader>
                 <ModalBody>
@@ -77,12 +77,12 @@ export default class CheckPriceForm extends Component{
                             <Col sm={6}>
                                 <Form onSubmit={this.handleSubmit}>
                                 <FormGroup controlId="DateofBecomingDriver">
-                                        <Label>Data otrzymanai prawa jazdy</Label>
+                                        <Label>Data otrzymania prawa jazdy</Label>
                                     <Input type="date" name="DateofBecomingDriver" required/>
                                     </FormGroup>
 
                                     <FormGroup controlId="Birthday">
-                                        <Label>Data urodziny</Label>
+                                        <Label>Data urodzenia</Label>
                                     <Input type="date" name="Birthday" required/>
                                     </FormGroup>
 
@@ -104,7 +104,7 @@ export default class CheckPriceForm extends Component{
                                     </FormGroup>
 
                                     <FormGroup controlId="NumberOfCurrentlyRentedCars">
-                                        <Label>Ilość obecnie wyporzyczonych aut</Label>
+                                        <Label>Ilość obecnie wypożyczonych aut</Label>
                                         <Input type="number" min={0} name="NumberOfCurrentlyRentedCars"
                                         required />
                                     </FormGroup>
@@ -127,7 +127,7 @@ export default class CheckPriceForm extends Component{
                     </ModalBody>
                     
                     <ModalFooter>
-                    <Button variant="danger" onClick={this.props.onHide}>Zamnkij</Button>
+                    <Button variant="danger" onClick={this.props.onHide}>Zamknij</Button>
                     </ModalFooter>
 
                 </Modal>
