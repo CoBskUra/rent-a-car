@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 //using NETCore.MailKit.Core;
-using Rent_a_Car_React.Models;
+using Rent_a_Car.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

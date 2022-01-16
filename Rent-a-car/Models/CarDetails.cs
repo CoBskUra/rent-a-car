@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Rent_a_Car_React.Models
+namespace Rent_a_Car.Models
 {
 
     [Index(nameof(CarDetails.CarID), IsUnique = true)]

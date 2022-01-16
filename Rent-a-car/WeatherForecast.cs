@@ -1,6 +1,6 @@
 using System;
 
-namespace Rent_a_Car_React
+namespace Rent_a_Car
 {
     public class WeatherForecast
     {

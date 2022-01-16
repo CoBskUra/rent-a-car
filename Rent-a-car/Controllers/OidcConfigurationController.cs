@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace Rent_a_Car_React.Controllers
+namespace Rent_a_Car.Controllers
 {
     public class OidcConfigurationController : Controller
     {

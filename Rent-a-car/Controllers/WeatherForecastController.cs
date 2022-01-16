@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Rent_a_Car_React.Controllers
+namespace Rent_a_Car.Controllers
 {
     [Authorize]
     [ApiController]
