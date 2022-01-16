@@ -1,6 +1,6 @@
 using System;
 
-namespace Rent_a_Car.Models
+namespace Rent_a_Car_React.Models
 {
     public class ErrorViewModel
     {

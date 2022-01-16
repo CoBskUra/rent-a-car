@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Rent_a_Car.Data;
-using Rent_a_Car.Models;
+using Rent_a_Car_React.Data;
+using Rent_a_Car_React.Models;
 using Rent_a_Car.ApiClasses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -176,5 +176,15 @@ namespace Rent_a_Car.Controllers
             return new JsonResult(_context.RentCar.Where(r => r.CustomerID == ClientID && r.IsReturned == false).Select((c) => new { carDetailsID = c.CarDetailsID, rentToken = c.RentCarEventID }));
         }
 
+        [HttpGet]
+        [Route("GetAccountType/{userName}")]
+        public JsonResult GetAccountType([FromRoute] string userName)
+        {
+            var user = _context.Users.FirstOrDefault(c => c.UserName == userName);
+            return new JsonResult(_context.Users.Where(c => c.UserName == userName).Select(c => new
+            {
+                accountType = c.AccountType
+            }));
+        }
     }
 }

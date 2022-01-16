@@ -1,18 +1,23 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using IdentityServer4.EntityFramework.Options;
+using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
-using Rent_a_Car.Models;
+using Microsoft.Extensions.Options;
+using Rent_a_Car_React.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Rent_a_Car.Data
+namespace Rent_a_Car_React.Data
 {
-    public class ApplicationDbContext: IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>
     {
-        public ApplicationDbContext( DbContextOptions<ApplicationDbContext> options):base(options)
+        public ApplicationDbContext(
+            DbContextOptions options,
+            IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
         }
+
         public DbSet<Car> Car { get; set; }
         public DbSet<CarDetails> CarDetails { get; set; }
         public DbSet<Company> Company { get; set; }
@@ -20,8 +25,5 @@ namespace Rent_a_Car.Data
         public DbSet<Employer> Employer { get; set; }
         public DbSet<RentCarEvent> RentCar { get; set; }
         public DbSet<ReturnFile> ReturnFile { get; set; }
-
-
-
     }
 }

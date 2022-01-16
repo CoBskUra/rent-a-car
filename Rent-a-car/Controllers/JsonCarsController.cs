@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Rent_a_Car.Data;
+using Rent_a_Car_React.Data;
 using Rent_a_Car.MessegeForCustomer;
 using Rent_a_Car.Messenge.FromCustomer;
-using Rent_a_Car.Models;
+using Rent_a_Car_React.Models;
 
 namespace Rent_a_Car.Controllers
 {
@@ -19,7 +19,7 @@ namespace Rent_a_Car.Controllers
         public JsonCarsController(ApplicationDbContext context)
         {
             _context = context;
-            Data.DatabaseFiller.FillDataIfEmpty(context);
+            DatabaseFiller.FillDataIfEmpty(context);
         }
 
         // GET: Cars
@@ -31,14 +31,14 @@ namespace Rent_a_Car.Controllers
                 return  new JsonResult(dbContext.OrderBy(c => c.Brand).ThenBy(c => c.Model));
             else
             {
-                if(option.Mark != null)
+                if(option.model != null)
                 {
-                    dbContext = dbContext.Where(a => a.Model == option.Mark).ToList();
+                    dbContext = dbContext.Where(a => a.Model == option.model).ToList();
                 }
 
-                if(option.Brand != null)
+                if(option.brand != null)
                 {
-                    dbContext = dbContext.Where(a => a.Brand == option.Brand).ToList();
+                    dbContext = dbContext.Where(a => a.Brand == option.brand).ToList();
                 }
 
                 if(option.order == order.Brand)

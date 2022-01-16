@@ -14,7 +14,7 @@ namespace Rent_a_car_UnitTests
         [TestMethod]
         public void TestMethod2()
         {
-           
+
         }
     }
 }

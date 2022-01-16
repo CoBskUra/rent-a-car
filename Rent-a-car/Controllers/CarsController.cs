@@ -5,11 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Rent_a_Car.Data;
-using Rent_a_Car.Models;
+using Rent_a_Car_React.Data;
+using Rent_a_Car_React.Models;
 
 namespace Rent_a_Car.Controllers
 {
+    [Route("carsOld")]
     public class CarsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -17,7 +18,7 @@ namespace Rent_a_Car.Controllers
         public CarsController(ApplicationDbContext context)
         {
             _context = context;
-            Data.DatabaseFiller.FillDataIfEmpty(context);
+            DatabaseFiller.FillDataIfEmpty(context);
         }
 
         // GET: Cars

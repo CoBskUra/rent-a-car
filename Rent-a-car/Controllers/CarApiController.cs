@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Rent_a_Car.Data;
-using Rent_a_Car.Models;
+using Rent_a_Car_React.Data;
+using Rent_a_Car_React.Models;
 using Rent_a_Car.ApiClasses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -16,7 +16,7 @@ using static IdentityServer4.IdentityServerConstants;
 
 using Rent_a_Car.MessegeForCustomer;
 using Rent_a_Car.Messenge.FromCustomer;
-
+using Rent_a_Car_React.Models;
 namespace Rent_a_Car.Controllers
 {
     [ApiController]
@@ -226,38 +226,48 @@ namespace Rent_a_Car.Controllers
         }
 
         /// <summary>
-        /// Zwraca listę wszystkich marek samochodów
+        /// Zwraca listę wszystkich aut gotowych do zwrotu
         /// </summary>
         [HttpGet]
         [Route("ReadyToReturn")]
-        public async Task<JsonResult> ReadyToReturn()
+        public JsonResult ReadyToReturn()
         {
-            var dbcontext = _context.RentCar.Where(a => a.IsReturned == false && a.ReturnFile!=null)
+            var dbcontext = _context.RentCar.Where(a => a.IsReturned == false)
                 .Select( a=> new
                 {
                     RentID = a.RentCarEventID,
                     Brand = a.CarDetails.Car.Brand,
                     Model = a.CarDetails.Car.Model,
+                    carID = a.CarDetails.CarID,
                     CustomerID = a.CustomerID
                 });
             return new JsonResult(dbcontext);
         }
 
         /// <summary>
-        /// Zwraca listę wszystkich aut gotowych do zwrotu
+        /// Zwraca Historie wyporzyczeń
         /// </summary>
         [HttpGet]
-        [Route("NotReadyToReturn")]
-        public async Task<JsonResult> NotReadyToReturn()
+        [Route("History")]
+        public async Task<JsonResult> History()
         {
-            var dbcontext = _context.RentCar.Where(a => a.IsReturned == false && a.ReturnFile == null).Select(a => new
-            {
-                RentCarEventID = a.RentCarEventID,
-                Brand = a.CarDetails.Car.Brand,
-                Model = a.CarDetails.Car.Model,
-                CustomerID = a.CustomerID
-            });
+            var dbcontext = _context.ReturnFile;
             return new JsonResult(dbcontext);
+        }
+
+        /// <summary>
+        /// Przyjmuje dokument zwrotu
+        /// </summary>
+        [HttpPost]
+        [Route("AddReturnFile")]
+        public  JsonResult AddReturnFile([FromBody] ReturnFile fille)
+        {
+            
+            _context.ReturnFile.Add(fille);
+            _context.SaveChanges();
+
+
+            return new JsonResult("Dodano");
         }
 
 
