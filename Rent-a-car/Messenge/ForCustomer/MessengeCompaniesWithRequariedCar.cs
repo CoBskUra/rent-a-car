@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Rent_a_Car_React.Data;
-using Rent_a_Car_React.Models;
+using Rent_a_Car.Data;
+using Rent_a_Car.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

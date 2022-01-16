@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Rent_a_Car_React.Data;
-using Rent_a_Car_React.Models;
+using Rent_a_Car.Data;
+using Rent_a_Car.Models;
 
 namespace Rent_a_Car.Controllers
 {

@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Rent_a_Car_React.Models
+namespace Rent_a_Car.Models
 {
     [Index(nameof(RentCarEvent.CustomerID))]
     [Index(nameof(RentCarEvent.CarDetailsID))]

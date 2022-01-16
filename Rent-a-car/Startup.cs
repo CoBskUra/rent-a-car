@@ -10,14 +10,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Rent_a_Car_React.Data;
-using Rent_a_Car_React.Models;
+using Rent_a_Car.Data;
+using Rent_a_Car.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
-namespace Rent_a_Car_React
+namespace Rent_a_Car
 {
     public class Startup
     {
