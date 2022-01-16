@@ -17,7 +17,10 @@ variables:
 
 steps:
 - task: NuGetToolInstaller@1
-
+- task: Npm@1
+  inputs:
+    command: 'install'
+    workingDir: 'ClientApp'
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '$(solution)'
