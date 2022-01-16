@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Rent_a_Car.Data;
-using Rent_a_Car.Models;
+using Rent_a_Car_React.Data;
+using Rent_a_Car_React.Models;
 using Rent_a_Car.ApiClasses;
 namespace Rent_a_Car.ApiClasses
 {

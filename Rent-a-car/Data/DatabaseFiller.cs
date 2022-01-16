@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Rent_a_Car.Data
+namespace Rent_a_Car_React.Data
 {
     public class DatabaseFiller
     {
@@ -90,8 +90,6 @@ namespace Rent_a_Car.Data
             customer.City = city;
             customer.Poste_Code = postalCode;
             customer.BecoamingDriverDate = driversLicenseDate;
-            customer.Login = login;
-            customer.Password = password;
             customer.NumberOfRentedCar = numberOfRentedCars;
             return customer;
         }
