@@ -66,8 +66,8 @@ namespace Rent_a_Car_React
                     {
                         Password = new OpenApiOAuthFlow()
                         {
-                            AuthorizationUrl = new Uri("https://localhost:44373/connect/authorize"),
-                            TokenUrl = new Uri("https://localhost:44373/connect/token"),
+                            AuthorizationUrl = new Uri("https://localhost:48851/connect/authorize"),
+                            TokenUrl = new Uri("https://localhost:48851/connect/token"),
                             Scopes = new Dictionary<string, string>
                                 {
                                     {"api1", "Rent-a-car - full access"}
