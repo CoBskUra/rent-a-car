@@ -14,7 +14,7 @@ export default class DetailWorker extends Component {
         super(props);
     }
 
-    
+
 
     render() {
 
@@ -24,7 +24,7 @@ export default class DetailWorker extends Component {
                 "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
                 "protocol.pdf"
             );
-        return (
+            return (
                 <Modal
                     {...this.props}
                     aria-labelledby="contained-modal-title-vcenter"
@@ -57,6 +57,7 @@ export default class DetailWorker extends Component {
                     </ModalFooter>
 
                 </Modal>
-        )
+            )
+        }
     }
 }
