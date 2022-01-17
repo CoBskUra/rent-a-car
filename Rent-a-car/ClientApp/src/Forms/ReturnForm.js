@@ -4,7 +4,7 @@ import {
     ModalHeader, ModalBody, Button, Row, Col, Form, FormGroup, Input, Image
 } from 'reactstrap';
 import pic from "./returnForm.jpg";
-
+import authService from '../components/api-authorization/AuthorizeService';
 export class ReturnForm extends Component {
     constructor(props) {
         super(props);
@@ -30,8 +30,11 @@ export class ReturnForm extends Component {
 
 
 
-    handleSubmit(event) {
-        event.preventDefault();
+    async handleSubmit(event) {
+        event.persist();
+        const token = await authService.getAccessToken();
+        const user = await authService.getUser();
+        console.log(this.props)
         const form = new FormData();
         form.append("ReturnFileID", this.props.returnfileid);
         form.append("RentedCarID", this.props.rentedcarid);
@@ -41,7 +44,11 @@ export class ReturnForm extends Component {
         form.append("Photo", this.photo);
         form.append("ReturnProocol", this.protocol);
         form.append("EmployerID", this.props.employerid);
-        fetch(process.env.REACT_APP_API + '/CarApi/AddReturnFile', {
+
+        fetch(process.env.REACT_APP_API + '/CarApiPrivate/AddReturnFile', {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
             method: 'Post',
             body: form
         })
@@ -52,6 +59,7 @@ export class ReturnForm extends Component {
                 (error) => {
                     alert('Failed');
                 })
+
 
     }
 

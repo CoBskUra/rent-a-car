@@ -32,7 +32,7 @@ export default class CarDetalisWindow extends Component{
                 </ModalBody>
 
                 <ModalFooter>
-                    <Button variant="danger" onClick={this.props.onHide}>Close</Button>
+                    <Button variant="danger" onClick={this.props.onHide}>Zamknij</Button>
                 </ModalFooter>
 
                 </Modal>

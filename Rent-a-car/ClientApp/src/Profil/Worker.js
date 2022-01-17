@@ -1,7 +1,8 @@
 import React,{Component} from 'react';
 import { Button, ButtonToolbar, Table } from 'reactstrap';
 import { ReturnForm } from '../Forms/ReturnForm'
-
+import authService from '../components/api-authorization/AuthorizeService';
+import DetailWorker from './DetailForWorker';
 export class Worker extends Component {
 
     constructor(props) {
@@ -12,13 +13,18 @@ export class Worker extends Component {
             ShowHistory: false,
             History: [],
             ShowReturnForm: false,
-            EmployerID: 1
+            EmployerID: 1,
+            ShowDetail: false
         }
     }
 
-    dowlandReadyToReturn() {
+    async dowlandReadyToReturn() {
+        const token = await authService.getAccessToken();
+        const user = await authService.getUser();
         if (this.state.ReadyShow) {
-            fetch(process.env.REACT_APP_API + '/CarApi/ReadyToReturn')
+            fetch(process.env.REACT_APP_API + '/CarApiPrivate/ReadyToReturn', {
+                headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
+            })
                 .then(response => response.json())
                 .then(data => {
                     this.setState({ ReadyToReturn: data });
@@ -26,9 +32,13 @@ export class Worker extends Component {
         }
     }
 
-    dowlandHistory() {
+    async dowlandHistory() {
+        const token = await authService.getAccessToken();
+        const user = await authService.getUser();
         if (this.state.ShowHistory) {
-            fetch(process.env.REACT_APP_API + '/CarApi/History')
+            fetch(process.env.REACT_APP_API + '/CarApiPrivate/History', {
+                headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
+            })
                 .then(response => response.json())
                 .then(data => {
                     this.setState({ History: data });
@@ -54,6 +64,7 @@ export class Worker extends Component {
     render() {
         const { ReadyToReturn, History } = this.state;
         let CloseReturnForm = () => this.setState({ ShowReturnForm: false });
+        let CloseDetails = () => this.setState({ ShowDetail: false });
         return (
             <div>
                 <ButtonToolbar>
@@ -76,7 +87,7 @@ export class Worker extends Component {
                                         <th>ID</th>
                                         <th>Marka</th>
                                         <th>Model</th>
-                                        <th>ID klienta</th>
+                                        <th>Email klienta</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -85,7 +96,7 @@ export class Worker extends Component {
                                             <td>{r.rentID}</td>
                                             <td>{r.brand}</td>
                                             <td>{r.model}</td>
-                                            <td>{r.customerID}</td>
+                                            <td>{r.customerEmail}</td>
                                             <td>
                                                 <ButtonToolbar>
                                                     <Button className="mr-2" variant="dark"
@@ -117,27 +128,35 @@ export class Worker extends Component {
                 <div>
                     {this.state.ShowHistory &&
                         <div>
-                            <label aria-setsize={40} color="violet"> historia wyporzyczeń</label>
+                            <label aria-setsize={40} color="violet"> Historia wypożyczeń</label>
                             <Table>
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
-                                        <th>Car ID</th>
+                                        <th>Marka</th>
+                                        <th> Model</th>
+                                        <th> Mail klienta </th>
                                         <th>Data zwrotu</th>
-                                        <th>Stan auta</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {History.map(r =>
                                         <tr key={r.returnFileID}>
-                                            <td>{r.returnFileID}</td>
-                                            <td>{r.RentedCarID}</td>
-                                            <td>{r.ReturnDate}</td>
-                                            <td>{r.CarConditon}</td>
+                                            <td>{r.car.brand}</td>
+                                            <td>{r.car.model}</td>
+                                            <td>{r.clientMail}</td>
+                                            <td>{r.returnDate}</td>
                                             <td>
                                                 <ButtonToolbar>
-                                                    <Button> Szczegóły</Button>
+                                                    <Button onClick={() => this.setState({ ShowDetail: true })} >
+                                                        Szczegóły
+                                                    </Button>
 
+                                                    <DetailWorker
+                                                        onHide={CloseDetails}
+                                                        workername={r.employer.name}
+                                                        carcondition={r.carcondition}
+                                                        id={r.returnFileID}
+                                                    />
                                                 </ButtonToolbar>
                                             </td>
                                         </tr>

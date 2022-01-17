@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Rent_a_Car.Models
 {
@@ -21,5 +23,7 @@ namespace Rent_a_Car.Models
         public Nullable<int> EmployerID { get; set; }
 
         public virtual Employer Employer { get; set; }
+        [ForeignKey("ReturnFileID")]
+        public virtual RentCarEvent RentCarEvent { get; set; }
     }
 }

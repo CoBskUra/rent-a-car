@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using static IdentityServer4.IdentityServerConstants;
+using Rent_a_Car.Messenge.FromCustomer;
+using System.IO;
 
 namespace Rent_a_Car.Controllers
 {
@@ -118,9 +120,14 @@ namespace Rent_a_Car.Controllers
         /// <response code="404">Jeśli nie ma takiego ID samochodu</response>
         [HttpPost]
         [Route("Rent")]
-        public ActionResult Rent([FromForm] int carDetailsID, [FromForm] DateTime expectedReturnDate)
+        public async Task<ActionResult> Rent([FromBody] ReturnData returnData)
         {
+            int carDetailsID = returnData.carDetailsID;
+            var expectedReturnDate = returnData.expectedReturnDate;
             var carToRent = _context.CarDetails.SingleOrDefault(c => c.CarDetailsID == carDetailsID);
+
+            string clientStringID = _context.Users.Where(c => c.UserName == returnData.email).Select(c => c.Id).FirstOrDefault();
+            int clientID = _context.Customer.Where(c => c.AspNetUserID == clientStringID).Select(c => c.CustomerID).FirstOrDefault();
             if (carToRent == null)
             {
                 return NotFound();
@@ -129,7 +136,7 @@ namespace Rent_a_Car.Controllers
             {
                 return BadRequest();
             }
-            var rentedCarData = RentController.RentACar(_context, carDetailsID, 1, expectedReturnDate);
+            var rentedCarData = RentController.RentACar(_context, carDetailsID, clientID, expectedReturnDate);
             if (rentedCarData == null) return NotFound();
 
             var result = new JsonResult(rentedCarData);
@@ -169,11 +176,13 @@ namespace Rent_a_Car.Controllers
         /// <response code="200">Jeżeli jest się autoryzowanym</response> 
         /// <response code="401">Jeżeli nei jest się autoryzowanym</response>
         [HttpGet]
-        [Route("GetRentedCars")]
-        public ActionResult CheckRentedCar()
+        [Route("GetRentedCars/{email}")]
+        public ActionResult CheckRentedCar([FromRoute] string email)
         {
-            int ClientID = 1;
-            return new JsonResult(_context.RentCar.Where(r => r.CustomerID == ClientID && r.IsReturned == false).Select((c) => new { carDetailsID = c.CarDetailsID, rentToken = c.RentCarEventID }));
+            string clientStringID = _context.Users.Where(c => c.UserName == email).Select(c => c.Id).FirstOrDefault();
+            int clientID = _context.Customer.Where(c => c.AspNetUserID == clientStringID).Select(c => c.CustomerID).FirstOrDefault();
+            return new JsonResult(_context.RentCar.Where(r => r.CustomerID == clientID && r.IsReturned == false).Select((c) => new {carBrand = c.CarDetails.Car.Brand, carModel = c.CarDetails.Car.Model, carDetailsID = c.CarDetailsID, rentToken = c.RentCarEventID }));
+            
         }
 
         [HttpGet]
@@ -186,5 +195,105 @@ namespace Rent_a_Car.Controllers
                 accountType = c.AccountType
             }));
         }
+
+        [HttpPost]
+        [Route("AddReturnFile")]
+        public JsonResult AddReturnFile([FromForm] ReturnFormMessege fille)
+        {
+            ReturnFile returnFile = new ReturnFile();
+            returnFile.ReturnFileID = fille.ReturnFileID;
+            returnFile.RentedCarID = fille.RentedCarID;
+            returnFile.ReturnDate = fille.ReturnDate;
+            returnFile.CarConditon = fille.CarConditon;
+            returnFile.OdometerReading = fille.OdometerReading;
+            using (var ms = new MemoryStream())
+            {
+                fille.Photo.CopyTo(ms);
+                returnFile.Photo = ms.ToArray();
+            }
+            using (var ms = new MemoryStream())
+            {
+                fille.ReturnProocol.CopyTo(ms);
+                returnFile.ReturnProocol = ms.ToArray();
+            }
+
+            _context.ReturnFile.Add(returnFile);
+            _context.SaveChanges();
+
+            if (ReturnController.ReturnACar(_context, fille.ReturnFileID))
+            {
+                return new JsonResult("Pomyślnie zwrócono samochód");
+            }
+            else
+            {
+                return new JsonResult("Bład przy zwrocie");
+            }
+
+        }
+
+        /// <summary>
+        /// Zwraca listę wszystkich aut gotowych do zwrotu
+        /// </summary>
+        [HttpGet]
+        [Route("ReadyToReturn")]
+        public JsonResult ReadyToReturn()
+        {
+            var dbcontext = _context.RentCar.Where(a => a.IsReturned == false)
+                .Select(a => new
+                {
+                    RentID = a.RentCarEventID,
+                    Brand = a.CarDetails.Car.Brand,
+                    Model = a.CarDetails.Car.Model,
+                    carID = a.CarDetails.CarID,
+                    CustomerEmail = a.Customer.Email
+                });
+            return new JsonResult(dbcontext);
+        }
+
+        /// <summary>
+        /// Zwraca Historie wyporzyczeń
+        /// </summary>
+        [HttpGet]
+        [Route("History")]
+        public async Task<JsonResult> History()
+        {
+
+            var returnFiles = _context.ReturnFile.Select(a => new
+            {
+                returnFileID = a.ReturnFileID,
+                rentedCarModel = _context.RentCar.Where(c => c.RentCarEventID == a.ReturnFileID).FirstOrDefault().CarDetails.Car.Model,
+                rentedCarBrand = _context.RentCar.Where(c => c.RentCarEventID == a.ReturnFileID).FirstOrDefault().CarDetails.Car.Brand,
+                rentedCarID = a.RentedCarID,
+                clientMail = (from returnFile in _context.ReturnFile
+                              join ren in _context.RentCar on returnFile.ReturnFileID equals ren.RentCarEventID
+                              join customer in _context.Customer on ren.CustomerID equals customer.CustomerID
+                              join asp in _context.Users on customer.AspNetUserID equals asp.Id
+                              where a.ReturnFileID == returnFile.ReturnFileID
+                              select asp.Email).FirstOrDefault(),
+                returnDate = a.ReturnDate,
+                carConditon = a.CarConditon
+            }); ;
+            return new JsonResult(returnFiles);
+        }
+        /// <summary>
+        /// Pobierz samochody które zwróciłeć
+        /// </summary>
+        /// <remarks>
+        /// Trzeba być zalogowanym
+        /// </remarks>
+        /// <returns>Listę wypożyczonych samochodów, oraz tokeny wymagane do ich zwrotu</returns>
+        /// <response code="200">Jeżeli jest się autoryzowanym</response> 
+
+
+        [HttpGet]
+        [Route("GetReturnedCar/{email}")]
+        public ActionResult CheckReturnedCar([FromRoute] string email)
+        {
+            string clientStringID = _context.Users.Where(c => c.UserName == email).Select(c => c.Id).FirstOrDefault();
+            int clientID = _context.Customer.Where(c => c.AspNetUserID == clientStringID).Select(c => c.CustomerID).FirstOrDefault();
+            return new JsonResult(_context.RentCar.Where(r => r.CustomerID == clientID && r.IsReturned == true).
+                                    Select((c) => new { carDetailsID = c.CarDetailsID, rentToken = c.RentCarEventID }));
+        }
+
     }
 }
