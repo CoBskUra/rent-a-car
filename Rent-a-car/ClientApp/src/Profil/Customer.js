@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import { Button, ButtonToolbar, Table } from 'reactstrap';
-
+import authService from '../components/api-authorization/AuthorizeService';
 export class Customer extends Component{
     constructor(props)
     {
@@ -14,23 +14,30 @@ export class Customer extends Component{
         }
     }
 
-    dowlandCurentRentedCars() {
+    async dowlandCurentRentedCars() {
         console.log(process.env.REACT_APP_API);
+        const token = await authService.getAccessToken();
+        const user = await authService.getUser();
         if(this.state.showCurrentrent)
         {
-            fetch(process.env.REACT_APP_API +'/CarApi/GetRentedCars')
+            fetch(process.env.REACT_APP_API + '/CarApiPrivate/GetRentedCars/'+user.name, {
+                headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
+            })
             .then(response=>response.json())
             .then(data=>{
                 this.setState({ currentRented: data });
-                console.log(data);
             });
         }
     }
 
-    dowlandReturnetCars(){
+    async dowlandReturnetCars(){
         if(this.state.showReturned)
         {
-            fetch(process.env.REACT_APP_API +'/CarApi/GetReturnetCar')
+            const token = await authService.getAccessToken();
+            const user = await authService.getUser();
+            fetch(process.env.REACT_APP_API + '/CarApiPrivate/GetReturnedCar/'+user.name, {
+                headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
+            })
             .then(response=>response.json())
             .then(data=>{
                 this.setState({ReturnedCars:data});
@@ -44,8 +51,12 @@ export class Customer extends Component{
     }
     
 
-    return(rentID){
-        fetch(process.env.REACT_APP_API +'/Api/Return/' + rentID)
+    async return(rentID) {
+        const token = await authService.getAccessToken();
+        const user = await authService.getUser();
+        fetch(process.env.REACT_APP_API + '/CarApiPrivate/Return/' + rentID, {
+            headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
+        })
             .then(response=>response.json())
             .then(data=>{
                 alert(data);
@@ -74,14 +85,14 @@ export class Customer extends Component{
                     this.setState({showReturned:!this.state.showReturned});
                     
                 }}>
-                    Wyświetl historie wyporzyczeń aut
+                    Wyświetl historię wypożyczeń aut
                 </Button>
                 <Button className="current" variant="info" 
                 onClick={()=>{
                     this.setState({showCurrentrent:!this.state.showCurrentrent});
                     
                     }}>
-                    Wyświetl obecnie wyporzyczone aura
+                    Wyświetl obecnie wypożyczone auta
                 </Button>
             </ButtonToolbar>
             <div>
@@ -91,13 +102,17 @@ export class Customer extends Component{
                     <Table>
                         <thead>
                         <tr>
-                            <th>id detali auta</th>
-                            <th>token</th>
+                            <th>Marka auta</th>
+                            <th>Model auta</th>
+                            <th>Id auta</th>
+                            <th>Token</th>
                         </tr>
                         </thead>
                         <tbody>
                         {currentRented.map(cr=>
                             <tr key={cr.rentToken}>
+                                <td>{cr.carBrand}</td>
+                                <td>{cr.carModel}</td>
                                 <td>{cr.carDetailsID}</td>
                                 <td>{cr.rentToken}</td>
                             </tr>
@@ -115,8 +130,8 @@ export class Customer extends Component{
                     <Table>
                         <thead>
                         <tr>
-                            <th>id detali auta</th>
-                            <th>token</th>
+                            <th>Id auta</th>
+                            <th>Token</th>
 
                         </tr>
                         </thead>

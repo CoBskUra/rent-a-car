@@ -1,4 +1,5 @@
-import React,{Component} from 'react';
+import React, { Component } from 'react';
+import authService from '../components/api-authorization/AuthorizeService';
 import {
     Modal, ModalFooter, Label,
     ModalHeader, ModalBody, Button, Row, Col, Form, FormGroup, Input
@@ -10,26 +11,29 @@ export default class RentMeForm extends Component{
         this.handleSubmit=this.handleSubmit.bind(this);
     }
 
-    handleSubmit(event){
-        event.preventDefault();
-        fetch(process.env.REACT_APP_API +'/CarApiPrivate/Rent',{
-            method:'Post',
-            headers:{
-                'Accept':'application/json',
-                'Content-Type':'application/json'
+    async handleSubmit(event) {
+        event.persist();
+
+        const token = await authService.getAccessToken();
+        const user = await authService.getUser();
+        const carDetailsID = this.props.carDetailsID;
+        const expectedDate = await this.addDays(event.target.DaysAdded.value);
+
+        const response = await fetch(process.env.REACT_APP_API + '/CarApiPrivate/Rent', {
+            method: 'Post',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
             },
-            body:JSON.stringify({
-                carDetailsID: this.props.carDetalisID,
-                expectedReturnDate: this.addDays(event.target.DaysNumber.value)
+            body: JSON.stringify({
+                carDetailsID: carDetailsID,
+                expectedReturnDate: expectedDate,
+                email: user.name
             })
-        })
-        .then(res=>res.json())
-        .then((result)=>{
-            alert(result);
-        },
-        (error)=>{
-            alert("error");
-        })
+        });
+        console.log(response);
+        
     }
 
     addDays = function (days) {
@@ -60,11 +64,9 @@ centered
                 <Form onSubmit={this.handleSubmit}>
                 <FormGroup controlId="DaysNumber">
                         <Label>Wprowadź na ile dni chcesz wynająć auto</Label>
-                        <Input type="number" min={1} name="DaysNumber" required
+                        <Input type="number" min={1} name="DaysAdded" required
                         placeholder="liczba dni"/>
                     </FormGroup>
-
-                    
 
                     <FormGroup>
                         <Button variant="primary" type="submit">

@@ -16,7 +16,7 @@ using static IdentityServer4.IdentityServerConstants;
 
 using Rent_a_Car.MessegeForCustomer;
 using Rent_a_Car.Messenge.FromCustomer;
-using Rent_a_Car.Models;
+
 namespace Rent_a_Car.Controllers
 {
     [ApiController]
@@ -122,7 +122,7 @@ namespace Rent_a_Car.Controllers
         /// <response code="404">Jeśli nie ma takiego ID samochodu</response>
         [HttpPost]
         [Route("Rent")]
-        public ActionResult Rent([FromBody] ReturnDate returnday)
+        public ActionResult Rent([FromBody] ReturnData returnday)
         {
             var carToRent = _context.CarDetails.SingleOrDefault(c => c.CarDetailsID == returnday.carDetailsID);
             if (carToRent == null)
@@ -184,25 +184,7 @@ namespace Rent_a_Car.Controllers
                                     Select((c)=> new {carDetailsID = c.CarDetailsID , rentToken = c.RentCarEventID}));
         }
 
-        /// <summary>
-        /// Pobierz samochody które zwróciłeć
-        /// </summary>
-        /// <remarks>
-        /// Trzeba być zalogowanym
-        /// </remarks>
-        /// <returns>Listę wypożyczonych samochodów, oraz tokeny wymagane do ich zwrotu</returns>
-        /// <response code="200">Jeżeli jest się autoryzowanym</response> 
-        [HttpGet]
-        //[Authorize]
-        [Route("GetReturnetCar")]
-        public ActionResult CheckReturnetCar()
-        {
-            int ClientID = 1;
-            return new JsonResult(_context.RentCar.Where(r => r.CustomerID == ClientID && r.IsReturned == true).
-                                    Select((c) => new { carDetailsID = c.CarDetailsID, rentToken = c.RentCarEventID }));
-        }
-
-
+        
 
         /// <summary>
         /// Pobierz cenne za dzien za samochud danej firmy
@@ -255,20 +237,6 @@ namespace Rent_a_Car.Controllers
             return new JsonResult(dbcontext);
         }
 
-        /// <summary>
-        /// Przyjmuje dokument zwrotu
-        /// </summary>
-        [HttpPost]
-        [Route("AddReturnFile")]
-        public  JsonResult AddReturnFile([FromBody] ReturnFile fille)
-        {
-            
-            _context.ReturnFile.Add(fille);
-            _context.SaveChanges();
-
-
-            return new JsonResult("Dodano");
-        }
 
 
 

@@ -146,7 +146,7 @@ export default class CompanysCars extends Component{
 
                                         <RentMeForm isOpen={this.state.Rent}
                                             onHide={ModalRentClose}
-                                        cardetalisid={detal.carDetailsID}/>
+                                        carDetailsID={detal.carDetailsID}/>
                                     </ButtonToolbar>
                                 </td>
                             </tr>
