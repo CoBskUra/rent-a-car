@@ -231,14 +231,30 @@ namespace Rent_a_Car.Controllers
         /// </summary>
         [HttpGet]
         [Route("History")]
-        public async Task<JsonResult> History()
+        public  JsonResult History()
         {
-            var dbcontext = _context.ReturnFile;
+            var dbcontext = _context.ReturnFile.Select(a=> new 
+            { 
+                ReturnFileID = a.ReturnFileID,
+                Car = a.RentCarEvent.CarDetails.Car,
+                Employer = a.Employer,
+                ReturnDate = a.ReturnDate,
+                ClientMail = a.RentCarEvent.Customer.Email,
+                CarCondition = a.CarConditon
+            });
+
             return new JsonResult(dbcontext);
         }
 
-
-
+        /// <summary>
+        /// Pobiera protokół
+        /// </summary>
+        [HttpGet]
+        [Route("DowlandProtocol")]
+        public byte[] DowlandProtocol([FromForm] string id)
+        {
+            return _context.ReturnFile.Where(a => a.ReturnFileID == id).First().ReturnProocol;
+        }
 
 
     }

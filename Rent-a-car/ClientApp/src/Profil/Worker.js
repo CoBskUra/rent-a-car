@@ -2,6 +2,7 @@ import React,{Component} from 'react';
 import { Button, ButtonToolbar, Table } from 'reactstrap';
 import { ReturnForm } from '../Forms/ReturnForm'
 import authService from '../components/api-authorization/AuthorizeService';
+import DetailWorker from './DetailForWorker';
 export class Worker extends Component {
 
     constructor(props) {
@@ -12,7 +13,8 @@ export class Worker extends Component {
             ShowHistory: false,
             History: [],
             ShowReturnForm: false,
-            EmployerID: 1
+            EmployerID: 1,
+            ShowDetail: false
         }
     }
 
@@ -62,6 +64,7 @@ export class Worker extends Component {
     render() {
         const { ReadyToReturn, History } = this.state;
         let CloseReturnForm = () => this.setState({ ShowReturnForm: false });
+        let CloseDetails = () => this.setState({ ShowDetail: false });
         return (
             <div>
                 <ButtonToolbar>
@@ -129,29 +132,31 @@ export class Worker extends Component {
                             <Table>
                                 <thead>
                                     <tr>
-                                        <th>ID transakcji</th>
                                         <th>Marka</th>
                                         <th> Model</th>
-                                        <th> ID Auta</th>
                                         <th> Mail klienta </th>
                                         <th>Data zwrotu</th>
-                                        <th>Stan auta</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {History.map(r =>
                                         <tr key={r.returnFileID}>
-                                            <td>{r.returnFileID}</td>
-                                            <td>{r.rentedCarBrand}</td>
-                                            <td>{r.rentedCarModel}</td>
-                                            <td>{r.rentedCarID}</td>
+                                            <td>{r.car.brand}</td>
+                                            <td>{r.car.model}</td>
                                             <td>{r.clientMail}</td>
                                             <td>{r.returnDate}</td>
-                                            <td>{r.carConditon}</td>
                                             <td>
                                                 <ButtonToolbar>
-                                                    <Button> Szczegóły</Button>
+                                                    <Button onClick={() => this.setState({ ShowDetail: true })} >
+                                                        Szczegóły
+                                                    </Button>
 
+                                                    <DetailWorker
+                                                        onHide={CloseDetails}
+                                                        workername={r.employer.name}
+                                                        carcondition={r.carcondition}
+                                                        id={r.returnFileID}
+                                                    />
                                                 </ButtonToolbar>
                                             </td>
                                         </tr>
