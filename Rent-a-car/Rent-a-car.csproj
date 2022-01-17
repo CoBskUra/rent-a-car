@@ -22,12 +22,7 @@
     <EmbeddedResource Remove="Migrations\**" />
     <None Remove="Migrations\**" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <Content Remove="ClientApp\package-lock.json" />
-    <Content Remove="ClientApp\package.json" />
-    <Content Remove="ClientApp\public\manifest.json" />
-  </ItemGroup>
+ 
   
   <ItemGroup>
     <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.0.0" />
@@ -102,12 +97,7 @@
   <ItemGroup>
     <UpToDateCheckInput Remove="Pages\Error.cshtml" />
   </ItemGroup>
-	<ItemGroup>
-		<!-- Don't publish the SPA source files, but do show them in the project files list -->
-		<Content Remove="$(SpaRoot)**" />
-		<None Remove="$(SpaRoot)**" />
-		<None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
-	</ItemGroup>
+
   <ItemGroup>
     <None Include="ClientApp\package-lock.json" />
     <None Include="ClientApp\package.json" />
