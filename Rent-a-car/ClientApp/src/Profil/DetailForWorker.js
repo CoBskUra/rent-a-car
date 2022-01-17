@@ -6,25 +6,24 @@ import {
 
 import 'antd/dist/antd.css';
 import { Comment, Avatar } from 'antd';
+import { saveAs } from "file-saver";
 
 
 export default class DetailWorker extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            protocol: null
-        }
     }
 
-    dowlandFile() {
-        fetch(process.env.REACT_APP_API + '/CarApi/DowlandProtocol/' + this.props.id)
-            .then(data => {
-
-                this.setState({ protocol: data });
-            });
-    }
+    
 
     render() {
+
+
+        const saveFile = () => {
+            saveAs(
+                "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+                "protocol.pdf"
+            );
         return (
                 <Modal
                     {...this.props}
@@ -37,19 +36,19 @@ export default class DetailWorker extends Component {
                         </p>
                     </ModalHeader>
                     <ModalBody>
-                    <Comment
-                        author={<a>{this.props.workername}</a>}
-                        avatar={<Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />}
-                        content={
-                            <p>
-                                {this.props.carcondition}
-                            </p>
-                        }
-                    />
+                        <Comment
+                            author={<a>{this.props.workername}</a>}
+                            avatar={<Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />}
+                            content={
+                                <p>
+                                    {this.props.carcondition}
+                                </p>
+                            }
+                        />
 
-                    <Button onClick={this.dowlandFile}>
-                        Pobierz protokół
-                    </Button>
+                        <Button onClick={saveFile}>
+                            Pobierz protokół
+                        </Button>
 
                     </ModalBody>
 
