@@ -18,12 +18,12 @@ export default class DetailWorker extends Component {
 
     render() {
 
-
         const saveFile = () => {
             saveAs(
                 "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
                 "protocol.pdf"
-            );
+            )
+        };
             return (
                 <Modal
                     {...this.props}
@@ -58,6 +58,6 @@ export default class DetailWorker extends Component {
 
                 </Modal>
             )
-        }
+        
     }
 }

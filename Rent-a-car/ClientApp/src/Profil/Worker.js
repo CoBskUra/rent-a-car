@@ -13,7 +13,6 @@ export class Worker extends Component {
             ShowHistory: false,
             History: [],
             ShowReturnForm: false,
-            EmployerID: 1,
             ShowDetail: false
         }
     }
@@ -65,6 +64,7 @@ export class Worker extends Component {
         const { ReadyToReturn, History } = this.state;
         let CloseReturnForm = () => this.setState({ ShowReturnForm: false });
         let CloseDetails = () => this.setState({ ShowDetail: false });
+        console.log(History);
         return (
             <div>
                 <ButtonToolbar>
@@ -110,9 +110,9 @@ export class Worker extends Component {
 
                                                     <ReturnForm isOpen={this.state.ShowReturnForm}
                                                         onHide={CloseReturnForm}
-                                                        rentedcarid={r.carID}
-                                                        employerid={this.state.EmployerID}
-                                                        returnfileid={r.rentID}
+                                                        rentedcarid={r.rentedCarID}
+                                                        employerid={r.employeeMail}
+                                                        returnfileid={r.returnFileID}
                                                     />
 
                                                 </ButtonToolbar>
@@ -133,16 +133,16 @@ export class Worker extends Component {
                                 <thead>
                                     <tr>
                                         <th>Marka</th>
-                                        <th> Model</th>
-                                        <th> Mail klienta </th>
+                                        <th>Model</th>
+                                        <th>Mail klienta</th>
                                         <th>Data zwrotu</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {History.map(r =>
                                         <tr key={r.returnFileID}>
-                                            <td>{r.car.brand}</td>
-                                            <td>{r.car.model}</td>
+                                            <td>{r.rentedCarBrand}</td>
+                                            <td>{r.rentedCarModel}</td>
                                             <td>{r.clientMail}</td>
                                             <td>{r.returnDate}</td>
                                             <td>
@@ -152,8 +152,9 @@ export class Worker extends Component {
                                                     </Button>
 
                                                     <DetailWorker
+                                                        isOpen={this.state.ShowDetail}
                                                         onHide={CloseDetails}
-                                                        workername={r.employer.name}
+                                                        workername={r.employerName}
                                                         carcondition={r.carcondition}
                                                         id={r.returnFileID}
                                                     />
