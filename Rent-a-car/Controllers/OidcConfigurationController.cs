@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Rent_a_Car.Controllers
 {
+    [Route("[controller]")]
     public class OidcConfigurationController : Controller
     {
         private readonly ILogger<OidcConfigurationController> _logger;

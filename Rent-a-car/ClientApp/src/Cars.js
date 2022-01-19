@@ -23,10 +23,10 @@ export default class Cars extends Component{
 
     refreshList(){
         fetch(process.env.REACT_APP_API +'/JsonCars',{
-            method:'Post',
-            headers:{
-                'Accept':'application/json',
-                'Content-Type':'application/json'
+            method:'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
             },
             body:JSON.stringify({
                 Model: this.state.Model,
@@ -44,7 +44,7 @@ export default class Cars extends Component{
 
     handleSubmit(event){
         event.preventDefault();
-        var m = event.target.Mark.value;
+        var m = event.target.Model.value;
         if(m==='')
             m = null;
         var b = event.target.Brand.value;
@@ -53,9 +53,10 @@ export default class Cars extends Component{
         console.log(this.state);
         this.setState(
         {
-            Mark:m,
-            Brand:b
-        });
+            Model: m,
+            Brand: b
+            }, () => this.refreshList());
+
     }
 
 
@@ -77,7 +78,7 @@ export default class Cars extends Component{
         return(
             <div >
                 <div>
-                    <Form >
+                    <Form onSubmit={this.handleSubmit}>
                         <Col sm={4}>
                             <FormGroup controlId="Brand">
                                 <Label>Firma</Label>
@@ -85,10 +86,10 @@ export default class Cars extends Component{
                                     placeholder="Firma" />
                             </FormGroup>
 
-                            <FormGroup controlId="Mark">
-                                <Label>Marka</Label>
-                                <Input type="text" name="Mark"
-                                    placeholder="Marka" />
+                            <FormGroup controlId="Model">
+                                <Label>Model</Label>
+                                <Input type="text" name="Model"
+                                    placeholder="Model" />
                             </FormGroup>
                         </Col>
 
@@ -105,6 +106,7 @@ export default class Cars extends Component{
                                             this.setState({ order: 1 })
                                         else
                                             this.setState({ order: 0 })
+                                        this.refreshList();
                                     }
 
                                     }>
@@ -130,10 +132,10 @@ export default class Cars extends Component{
                     </thead>
                     <tbody>
                         {cars.map(car=>
-                            <tr key={car.carID}>
-                                <td>{car.brand}</td>
-                                <td>{car.model}</td>
-                                <td>{car.horsePower}</td>
+                            <tr key={car.CarID}>
+                                <td>{car.Brand}</td>
+                                <td>{car.Model}</td>
+                                <td>{car.HorsePower}</td>
                                 <td> 
                                     <ButtonToolbar>
                                       
@@ -141,7 +143,7 @@ export default class Cars extends Component{
                                             onClick={()=>this.setState(
                                             {
                                                 carDetalisModalShow:true,
-                                                carID:car.carID
+                                                carID:car.CarID
                                             })}>
                                                 Szczegóły
                                             </Button>

@@ -237,7 +237,7 @@ namespace Rent_a_Car.Controllers
             { 
                 ReturnFileID = a.ReturnFileID,
                 Car = a.RentCarEvent.CarDetails.Car,
-                Employer = a.Employer,
+                employerName = a.Employer.Name,
                 ReturnDate = a.ReturnDate,
                 ClientMail = a.RentCarEvent.Customer.Email,
                 CarCondition = a.CarConditon
@@ -250,8 +250,9 @@ namespace Rent_a_Car.Controllers
         /// Pobiera protokół
         /// </summary>
         [HttpGet]
+        [AllowAnonymous]
         [Route("DowlandProtocol")]
-        public FileResult DowlandProtocol([FromForm] string id)
+        public FileResult DowlandProtocol(string id)
         {
             var rp = _context.ReturnFile.Where(a => a.ReturnFileID == id).First().ReturnProocol;
             var protocol = File(rp, "text/pdf") ;

@@ -37,10 +37,11 @@ export default class DetailWorker extends Component {
                     </ModalHeader>
                     <ModalBody>
                         <Comment
-                            author={<a>{this.props.workername}</a>}
+                    
+                            author={<a style={{ fontSize: 15 }}>{this.props.workername}</a>}
                             avatar={<Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />}
                             content={
-                                <p>
+                                <p style={{ fontSize: 15}}>
                                     {this.props.carcondition}
                                 </p>
                             }

@@ -11,14 +11,15 @@ export default class CarDetalis extends Component{
     }
 
     async refreshList(){
-        await fetch(process.env.REACT_APP_API +'/JsonCars/Details/'+this.props.id)
+        fetch(process.env.REACT_APP_API +'/JsonCars/Details/'+this.props.id)
         .then(response=>response.json())
             .then(data => {
-            this.setState({detalis:data, wait:false });
+                this.setState({ detalis: data, wait: false });
+
         });
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         this.refreshList();
         this.interval = setInterval(() => this.refreshList(), 2000);
 
@@ -71,7 +72,7 @@ export default class CarDetalis extends Component{
         if(this.state.wait)
             return(<div></div>);
 
-        const {detalis} = this.state;
+        const { detalis } = this.state;
         return(
             <div>
                 <div>
@@ -85,11 +86,11 @@ export default class CarDetalis extends Component{
                             </tr>
                         </thead>
                         <tbody>
-                        <tr key={detalis.car.carID}>
-                                    <td>{detalis.car.carID}</td>
-                                    <td>{detalis.car.brand}</td>
-                                    <td>{detalis.car.model}</td>
-                                    <td>{detalis.car.horsePower}</td>
+                        <tr key={detalis.Car.CarID}>
+                                <td>{detalis.Car.CarID}</td>
+                                <td>{detalis.Car.Brand}</td>
+                                <td>{detalis.Car.Model}</td>
+                                <td>{detalis.Car.HorsePower}</td>
                         </tr>
                         </tbody>
 
@@ -107,14 +108,14 @@ export default class CarDetalis extends Component{
                             </thead>
                         </Table>
                     
-                    {detalis.companies.map(company =>
-                        <div key={company.companyID}>
+                    {detalis.Companies.map(company =>
+                        <div key={company.CompanyID}>
                             <Table>
                                 <tbody>
                                         <tr >
-                                    <td>{company.name}</td>
+                                    <td>{company.Name}</td>
                                     <td><Button className="mr-2" variant="info"
-                                            onClick={()=> this.show_or_hide(company.companyID)}>
+                                            onClick={()=> this.show_or_hide(company.CompanyID)}>
                                                 Wyświetl auta firmy
                                             </Button>
                                     </td>
@@ -123,7 +124,7 @@ export default class CarDetalis extends Component{
                                     </tbody>
                                         </Table>
                                     
-                            <CompanysCars key={company.companyID} show={this.should_be_show(company.companyID)} companyID={company.companyID} carID={detalis.car.carID}></CompanysCars>
+                            <CompanysCars key={company.CompanyID} show={this.should_be_show(company.CompanyID)} companyID={company.CompanyID} carID={detalis.Car.CarID}></CompanysCars>
 
                                     
                         </div>

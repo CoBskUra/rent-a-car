@@ -271,6 +271,7 @@ namespace Rent_a_Car.Controllers
                               where a.ReturnFileID == returnFile.ReturnFileID
                               select asp.Email).FirstOrDefault(),
                 returnDate = a.ReturnDate,
+                employerName = a.Employer.Name,
                 carConditon = a.CarConditon
             }); ;
             return new JsonResult(returnFiles);

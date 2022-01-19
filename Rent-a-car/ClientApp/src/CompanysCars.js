@@ -113,10 +113,10 @@ export default class CompanysCars extends Component{
                     </thead>
                     <tbody>
                         {details.map(detal=>
-                            <tr key={detal.carDetailsID}>
-                                <td>{detal.yearOfProduction}</td>
-                                <td>{detal.description}</td>
-                                <td>{this.show_price(detal.carDetailsID)}</td>
+                            <tr key={detal.CarDetailsID}>
+                                <td>{detal.YearOfProduction}</td>
+                                <td>{detal.Description}</td>
+                                <td>{this.show_price(detal.CarDetailsID)}</td>
                                 <td> 
                                     <ButtonToolbar>
                                         <Button className="mr-2" variant="info"
@@ -129,9 +129,9 @@ export default class CompanysCars extends Component{
 
                                         
                                         {
-                                            this.show_price(detal.carDetailsID)!=null && 
+                                            this.show_price(detal.CarDetailsID)!=null && 
                                             <Button className="mr-2" variant="success" 
-                                                onClick={()=> this.setState({Rent:detal.carDetailsID})}> 
+                                                onClick={()=> this.setState({Rent:detal.CarDetailsID})}> 
                                                 Wynajmij mnie
                                             </Button>
                                         }
@@ -139,14 +139,14 @@ export default class CompanysCars extends Component{
 
                                         <CheckPriceForm isOpen={this.state.checkPrice}
                                             onHide={ModalCheckPriceClose}
-                                        cardetalisid={detal.carDetailsID}
+                                        cardetalisid={detal.CarDetailsID}
                                         isinlist={isinlist}
                                         removeitem={removeItem}
                                         additem={additem}/>
 
                                         <RentMeForm isOpen={this.state.Rent}
                                             onHide={ModalRentClose}
-                                        carDetailsID={detal.carDetailsID}/>
+                                        carDetailsID={detal.CarDetailsID}/>
                                     </ButtonToolbar>
                                 </td>
                             </tr>
