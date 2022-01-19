@@ -12,6 +12,7 @@ using Rent_a_Car.Models;
 
 namespace Rent_a_Car.Controllers
 {
+    [Route("[controller]")]
     public class JsonCarsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
