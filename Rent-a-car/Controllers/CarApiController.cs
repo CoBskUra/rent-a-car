@@ -237,7 +237,7 @@ namespace Rent_a_Car.Controllers
             { 
                 ReturnFileID = a.ReturnFileID,
                 Car = a.RentCarEvent.CarDetails.Car,
-                Employer = a.Employer,
+                employerName = a.Employer.Name,
                 ReturnDate = a.ReturnDate,
                 ClientMail = a.RentCarEvent.Customer.Email,
                 CarCondition = a.CarConditon

@@ -113,6 +113,7 @@ export class Worker extends Component {
                                                         rentedcarid={r.rentedCarID}
                                                         employerid={r.employeeMail}
                                                         returnfileid={r.returnFileID}
+                                                        
                                                     />
 
                                                 </ButtonToolbar>
@@ -155,7 +156,7 @@ export class Worker extends Component {
                                                         isOpen={this.state.ShowDetail}
                                                         onHide={CloseDetails}
                                                         workername={r.employerName}
-                                                        carcondition={r.carcondition}
+                                                        carcondition={r.carConditon}
                                                         id={r.returnFileID}
                                                     />
                                                 </ButtonToolbar>
