@@ -63,57 +63,12 @@ namespace Rent_a_Car
             {
                 configuration.RootPath = "ClientApp/build";
             });
-            services.AddSwaggerGen(c =>
+
+            services.AddAuthentication().AddGoogle(googleOptions =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Rent-a-car", Version = "v1" });
-
-                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-                {
-                    Type = SecuritySchemeType.OAuth2,
-
-                    Flows = new OpenApiOAuthFlows()
-                    {
-                        Password = new OpenApiOAuthFlow()
-                        {
-                            AuthorizationUrl = new Uri("https://localhost:44373/connect/authorize"),
-                            TokenUrl = new Uri("https://localhost:44373/connect/token"),
-                            Scopes = new Dictionary<string, string>
-                                {
-                                    {"api1", "Rent-a-car - full access"}
-                                }
-                        }
-                    }
-
-                });
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
-                    {
-                        {
-                            new OpenApiSecurityScheme
-                            {
-                                Reference = new OpenApiReference
-                                {
-                                    Type = ReferenceType.SecurityScheme,
-                                    Id = "oauth2"
-                                },
-                                Scheme = "oauth2",
-                                Name = "oauth2",
-                                In = ParameterLocation.Header
-                            },
-                            new List<string>()
-                        }
-                    });
-
-
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                c.IncludeXmlComments(xmlPath);
+                googleOptions.ClientId = "159121941866-0pvhc1fc7jagacmmo3o5oi01j03teogm.apps.googleusercontent.com";
+                googleOptions.ClientSecret = "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";
             });
-
-            //services.AddAuthentication().AddGoogle(googleOptions =>
-            //{
-            //    googleOptions.ClientId = Configuration["Authentication:Google:ClientId"];
-            //    googleOptions.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
-            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -129,13 +84,6 @@ namespace Rent_a_Car
                 app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
-                app.UseSwaggerUI(c => {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Rent-a-car v1");
-                    c.OAuthClientId("rent-api-swagger");
-                    c.OAuthScopes("api1");
-                    c.OAuthClientSecret("secret");
-                    c.OAuthUsePkce();
-                });
             }
 
             app.UseHttpsRedirection();
