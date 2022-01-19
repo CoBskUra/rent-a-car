@@ -250,8 +250,9 @@ namespace Rent_a_Car.Controllers
         /// Pobiera protokół
         /// </summary>
         [HttpGet]
+        [AllowAnonymous]
         [Route("DowlandProtocol")]
-        public FileResult DowlandProtocol([FromForm] string id)
+        public FileResult DowlandProtocol(string id)
         {
             var rp = _context.ReturnFile.Where(a => a.ReturnFileID == id).First().ReturnProocol;
             var protocol = File(rp, "text/pdf") ;

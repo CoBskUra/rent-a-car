@@ -31,14 +31,14 @@ namespace Rent_a_Car.Controllers
                 return  new JsonResult(dbContext.OrderBy(c => c.Brand).ThenBy(c => c.Model));
             else
             {
-                if(option.model != null)
+                if(option.Model != null)
                 {
-                    dbContext = dbContext.Where(a => a.Model == option.model).ToList();
+                    dbContext = dbContext.Where(a => a.Model == option.Model).ToList();
                 }
 
-                if(option.brand != null)
+                if(option.Brand != null)
                 {
-                    dbContext = dbContext.Where(a => a.Brand == option.brand).ToList();
+                    dbContext = dbContext.Where(a => a.Brand == option.Brand).ToList();
                 }
 
                 if(option.order == order.Brand)

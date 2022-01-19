@@ -13,7 +13,6 @@ export default class CarDetalisWindow extends Component{
 
     render(){
         return (
-            <div className="container">
 
                 <Modal
                 {...this.props}
@@ -37,7 +36,6 @@ export default class CarDetalisWindow extends Component{
 
                 </Modal>
 
-            </div>
         )
     }
 }

@@ -14,8 +14,8 @@ namespace Rent_a_Car.Messenge.FromCustomer
 
     public class SerchOption
     {
-        public string model;
-        public string brand;
+        public string Model;
+        public string Brand;
         public order order;
     }
 }

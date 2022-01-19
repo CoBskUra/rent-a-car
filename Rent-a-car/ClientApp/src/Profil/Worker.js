@@ -64,7 +64,6 @@ export class Worker extends Component {
         const { ReadyToReturn, History } = this.state;
         let CloseReturnForm = () => this.setState({ ShowReturnForm: false });
         let CloseDetails = () => this.setState({ ShowDetail: false });
-        console.log(History);
         return (
             <div>
                 <ButtonToolbar>
@@ -92,11 +91,11 @@ export class Worker extends Component {
                                 </thead>
                                 <tbody>
                                     {ReadyToReturn.map(r =>
-                                        <tr key={r.rentID}>
-                                            <td>{r.rentID}</td>
-                                            <td>{r.brand}</td>
-                                            <td>{r.model}</td>
-                                            <td>{r.customerEmail}</td>
+                                        <tr key={r.RentID}>
+                                            <td>{r.RentID}</td>
+                                            <td>{r.Brand}</td>
+                                            <td>{r.Model}</td>
+                                            <td>{r.CustomerEmail}</td>
                                             <td>
                                                 <ButtonToolbar>
                                                     <Button className="mr-2" variant="dark"
@@ -110,9 +109,9 @@ export class Worker extends Component {
 
                                                     <ReturnForm isOpen={this.state.ShowReturnForm}
                                                         onHide={CloseReturnForm}
-                                                        rentedcarid={r.rentedCarID}
-                                                        employerid={r.employeeMail}
-                                                        returnfileid={r.returnFileID}
+                                                        rentedcarid={r.RentedCarID}
+                                                        employerid={r.EmployeeMail}
+                                                        returnfileid={r.ReturnFileID}
                                                         
                                                     />
 

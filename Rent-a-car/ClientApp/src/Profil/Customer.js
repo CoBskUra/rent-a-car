@@ -137,7 +137,7 @@ export class Customer extends Component{
                         </thead>
                         <tbody>
                         {ReturnedCars.map(rc=>
-                            <tr key={rc.carDetailsID}>
+                            <tr key={rc.rentToken}>
                                 <td>{rc.carDetailsID}</td>
                                 <td>{rc.rentToken}</td>
                                 <td>
