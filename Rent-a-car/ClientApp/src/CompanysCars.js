@@ -101,7 +101,8 @@ export default class CompanysCars extends Component {
     async tryToGetDataFromUser(carDetailsID, token, user) {
         fetch(process.env.REACT_APP_API + '/CarApiPrivate/CheckUserData/'+user.name, {
             headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
-        }).then(response => response.json())
+        })
+            .then(response => response.json())
             .then(data => {
                 if (!!data) {
                     fetch(process.env.REACT_APP_API + '/CarApi/GetPrice', {
@@ -135,7 +136,7 @@ export default class CompanysCars extends Component {
                 }
                 
             
-            });
+            }).catch(error => this.setState({ checkPrice: true }));
 
 
         //if (!!profileData.json) {
