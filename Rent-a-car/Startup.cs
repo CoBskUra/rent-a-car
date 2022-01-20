@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Rent_a_Car
 {
@@ -41,11 +42,8 @@ namespace Rent_a_Car
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddIdentityServer()
-                .AddApiAuthorization<ApplicationUser, ApplicationDbContext>()
-                .AddIdentityResources()
-                .AddApiResources()
-                .AddClients()
-                .AddDeveloperSigningCredential();
+                .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();
