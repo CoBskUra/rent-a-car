@@ -41,7 +41,8 @@ namespace Rent_a_Car
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddIdentityServer()
-                .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+                .AddApiAuthorization<ApplicationUser, ApplicationDbContext>()
+                .AddDeveloperSigningCredential();
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();
