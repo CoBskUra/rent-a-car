@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
+using Rent_a_Car.ApiClasses;
 using Rent_a_Car.Data;
 using Rent_a_Car.Models;
 using System;
@@ -70,6 +71,9 @@ namespace Rent_a_Car
                 googleOptions.ClientId = "159121941866-0pvhc1fc7jagacmmo3o5oi01j03teogm.apps.googleusercontent.com";
                 googleOptions.ClientSecret = "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";
             });
+
+            // SendGrid
+            services.AddTransient<IMailService, SendGridMailService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

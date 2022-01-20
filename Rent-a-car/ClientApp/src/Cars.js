@@ -15,29 +15,41 @@ export default class Cars extends Component{
             carDetalisModalShow:false,
             Brand:null,
             Model:null,
-            order:0
+            order: 0,
+            carsToShow:[]
         }
 
         this.handleSubmit=this.handleSubmit.bind(this);
     }
 
+    filter() {
+        this.setState({
+            carsToShow: this.state.cars.filter(a =>
+                (a.Brand == this.state.Brand || this.state.Brand == null) &&
+                (a.Model == this.state.Model || this.state.Model == null)).sort((a, b) => {
+                    if (this.state.order === 0) {
+                        if (a.Brand === b.Brand)
+                            return a.Model >= b.Model ? 1 : -1;
+                        else
+                            return a.Brand >= b.Brand ? 1 : -1;
+                    }
+                    else {
+                        if (a.Model === b.Model)
+                            return a.Brand >= b.Brand ? 1 : -1;
+                        else
+                            return a.Model >= b.Model ? 1 : -1;
+                    }
+                })
+        });
+    }
+
     refreshList(){
-        fetch(process.env.REACT_APP_API +'/JsonCars',{
-            method:'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body:JSON.stringify({
-                Model: this.state.Model,
-                Brand: this.state.Brand,
-                order: this.state.order
-            })
-        })
+        fetch(process.env.REACT_APP_API +'/JsonCars')
         .then(response=>response.json())
         .then(data=>{
-           
-            this.setState({cars:data});
+
+            this.setState({ cars: data }, this.filter());
+                
         });
     }
 
@@ -55,7 +67,7 @@ export default class Cars extends Component{
         {
             Model: m,
             Brand: b
-            }, () => this.refreshList());
+            }, () => this.filter());
 
     }
 
@@ -72,7 +84,7 @@ export default class Cars extends Component{
 
 
     render(){
-        const {cars, carID, carbrand, carmodel, carhorsePower}=this.state;
+        const { carsToShow, carID, carbrand, carmodel, carhorsePower}=this.state;
         let editModalClose=()=>this.setState({editModalShow:false});
         let CarDetalisModalClose=()=>this.setState({carDetalisModalShow:false});
         return(
@@ -106,7 +118,7 @@ export default class Cars extends Component{
                                             this.setState({ order: 1 })
                                         else
                                             this.setState({ order: 0 })
-                                        this.refreshList();
+                                        this.filter();
                                     }
 
                                     }>
@@ -131,7 +143,7 @@ export default class Cars extends Component{
                         </tr>
                     </thead>
                     <tbody>
-                        {cars.map(car=>
+                        {carsToShow.map(car=>
                             <tr key={car.CarID}>
                                 <td>{car.Brand}</td>
                                 <td>{car.Model}</td>

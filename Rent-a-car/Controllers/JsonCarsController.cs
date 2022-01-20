@@ -22,34 +22,13 @@ namespace Rent_a_Car.Controllers
             DatabaseFiller.FillDataIfEmpty(context);
         }
 
-        // GET: Cars
-        [HttpPost]
-        public async Task<JsonResult> Index([FromBody]SerchOption option)
+         // GET: Cars
+        [HttpGet]
+        public async Task<JsonResult> Index()
         {
             var dbContext = await _context.Car.ToListAsync();
-            if (option == null)
-                return  new JsonResult(dbContext.OrderBy(c => c.Brand).ThenBy(c => c.Model));
-            else
-            {
-                if(option.Model != null)
-                {
-                    dbContext = dbContext.Where(a => a.Model == option.Model).ToList();
-                }
-
-                if(option.Brand != null)
-                {
-                    dbContext = dbContext.Where(a => a.Brand == option.Brand).ToList();
-                }
-
-                if(option.order == order.Brand)
-                {
-                    return new JsonResult(dbContext.OrderBy(c => c.Brand).ThenBy(c => c.Model));
-                }
-                else
-                {
-                    return new JsonResult(dbContext.OrderBy(c => c.Model).ThenBy(c => c.Brand));
-                }
-            }
+            return  new JsonResult(dbContext);
+            
         }
 
         // GET: Cars/Details/5
@@ -132,7 +111,7 @@ namespace Rent_a_Car.Controllers
             var dbcontext = _context;
             var detail = await dbcontext.CarDetails.Where(cd => cd.CarDetailsID == question.carDetalisID).ToListAsync();
             if (detail.Count == 1)
-                return new JsonResult(((double)detail[0].Price + (double)(question.NumberOfOverallRentedCars) / ((double)question.NumberOfCurrentlyRentedCars + 1) + (double)detail[0].CarDetailsID / 10));
+                return new JsonResult(((double)detail[0].Price + (double)detail[0].CarDetailsID / 10));
             else
                 return new JsonResult(null);
 

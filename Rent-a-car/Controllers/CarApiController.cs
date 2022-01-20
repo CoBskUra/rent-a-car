@@ -193,7 +193,7 @@ namespace Rent_a_Car.Controllers
         ///
         [HttpPost]
         [Route("GetPrice")]
-        public JsonResult GetPrice([FromBody] QuestionAboutPrice question)
+        public JsonResult GetPrice([FromBody] CustomerData question)
         {
             if (question == null)
                 return new JsonResult(null);
@@ -201,7 +201,7 @@ namespace Rent_a_Car.Controllers
             var detail =  dbcontext.CarDetails.Where(cd => cd.CarDetailsID == question.carDetalisID).ToList();
 
             if (detail.Count == 1)
-                return new JsonResult(Math.Round(((double)detail[0].Price + (double)(question.NumberOfOverallRentedCars) / ((double)question.NumberOfCurrentlyRentedCars + 1) + (double)detail[0].CarDetailsID/10),2));
+                return new JsonResult(Math.Round(((double)detail[0].Price +  (double)detail[0].CarDetailsID/10),2));
             else
                 return new JsonResult(null);
 

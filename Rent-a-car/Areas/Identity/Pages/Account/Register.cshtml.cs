@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Rent_a_Car.ApiClasses;
 using Rent_a_Car.Models;
 
 namespace Rent_a_Car.Areas.Identity.Pages.Account
@@ -23,18 +24,18 @@ namespace Rent_a_Car.Areas.Identity.Pages.Account
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailSender _emailSender;
+        private readonly IMailService _mailService;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IMailService mailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
-            _emailSender = emailSender;
+            _mailService = mailService;
         }
 
         [BindProperty]
@@ -89,8 +90,13 @@ namespace Rent_a_Car.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                    //$"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    await _mailService.SendMail(Input.Email, "Confirm your email",
+                        "Please confirm your account by <a href='@Model.EmailConfirmationUrl'>clicking here</a>."); // tu wstawić poprawny link!!!!!!!!!!
+
+                    // test dodania do listy poprawnie
+                    //await _mailService.AddContact();
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
