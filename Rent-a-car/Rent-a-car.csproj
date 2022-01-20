@@ -49,11 +49,11 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-	  <Content Update="tempkey.jwk">
+	  <None Update="tempkey.jwk">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 		  <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-	  </Content>
+	  </None>
   </ItemGroup>
   
   <ItemGroup>
