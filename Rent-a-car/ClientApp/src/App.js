@@ -18,8 +18,8 @@ export default class App extends Component {
 
   render () {
     return (
-      <Layout>
-            <Route exact path='/' component={Home} />
+        <Layout>
+            <Route exact path='/' component={Cars} />
             <Route path='/Cars' component={Cars}/>
             <Route path='/Profil/Customer' component={Customer} />
             <Route path='/Profil/Worker' component={Worker} />
