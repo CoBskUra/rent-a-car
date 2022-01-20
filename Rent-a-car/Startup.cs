@@ -42,7 +42,10 @@ namespace Rent_a_Car
 
             services.AddIdentityServer()
                 .AddApiAuthorization<ApplicationUser, ApplicationDbContext>()
-                .AddDeveloperSigningCredential();
+                .AddIdentityResources()
+                .AddApiResources()
+                .AddClients()
+                .AddSigningCredentials();
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();
