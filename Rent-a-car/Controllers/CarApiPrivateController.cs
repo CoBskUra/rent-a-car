@@ -23,47 +23,13 @@ namespace Rent_a_Car.Controllers
     public class CarApiPrivateController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
 
         public CarApiPrivateController(ApplicationDbContext context,
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager)
         {
             _context = context;
-            _userManager = userManager;
-            _signInManager = signInManager;
-        }
 
-        /// <summary>
-        /// Loguje sie do api
-        /// </summary>
-        /// <remarks>
-        /// Logowanie do API
-        /// </remarks>
-        /// <returns>Status zalogowania</returns>
-        /// <response code="200">Udane logowanie</response>
-        /// <response code="400">Użytkownik jest już zalogowany</response>
-        /// <response code="401">Nieudane logowanie</response>  
-        /// <response code="403">Konto bez uprawnień</response>
-        [HttpPost]
-        [AllowAnonymous]
-        [Route("Login")]
-        public async Task<IActionResult> Login([FromForm] string email, [FromForm] string password)
-        {
-            if (User.Identity.IsAuthenticated)
-            {
-                return StatusCode(400);
-            }
-            else
-            {
-                var result = await _signInManager.PasswordSignInAsync(email, password, false, lockoutOnFailure: false);
-                if (result.Succeeded)
-                {
-                    return StatusCode(200);
-                }
-            }
-            return StatusCode(401);
         }
 
 
@@ -296,5 +262,76 @@ namespace Rent_a_Car.Controllers
                                     Select((c) => new { carDetailsID = c.CarDetailsID, rentToken = c.RentCarEventID }));
         }
 
+        [HttpGet]
+        [Route("CheckUserData/{email}")]
+        public ActionResult CheckIfUserProvidedData([FromRoute] string email)
+        {
+            Customer customer = null;
+            customer = _context.Customer.Where(c => c.Email == email).FirstOrDefault();
+            
+            if (customer == null)
+            {
+                JsonResult result = new JsonResult(null);
+                result.StatusCode = 404;
+                return result;
+            }
+            else
+            {  
+                JsonResult result = new JsonResult(new CustomerData( customer));
+                result.ContentType = "application/json";
+                return result; 
+            }
+        }
+
+        [HttpPost]
+        [Route("FetchPriceAndCreateCustomerWithData")]
+        public ActionResult FetchPriceAndCreateCustomerWithData([FromBody] CustomerData customerData)
+        {
+            if (customerData == null)return new StatusCodeResult(404);
+            var aspNetUser = _context.Users.Where(c => c.Email == customerData.Email).FirstOrDefault();
+            if(aspNetUser == null)
+            {
+                return new StatusCodeResult(400);
+            }
+            var alreadyCustomer = _context.Customer.Where(c=>c.Email == customerData.Email).FirstOrDefault();
+            if(alreadyCustomer == null)
+            {
+                var customer = new Customer()
+                {
+                    Name = customerData.Name,
+                    Surname = customerData.Surname,
+                    Email = customerData.Email,
+                    BecoamingDriverDate = customerData.BecoamingDriverDate,
+                    BirtheDate = customerData.BirtheDate,
+                    City = customerData.City,
+                    Street = customerData.Street,
+                    StreetNumber = customerData.StreetNumber,
+                    Poste_Code = customerData.Poste_Code,
+                    AspNetUserID = aspNetUser.Id
+                };
+                _context.Customer.Add(customer);
+                _context.SaveChanges();
+
+            }
+
+            return GetPrice(customerData);
+            
+        }
+
+        [HttpPost]
+        [Route("GetPrice")]
+        public JsonResult GetPrice([FromBody] CustomerData question)
+        {
+            if (question == null)
+                return new JsonResult(null);
+            var dbcontext = _context;
+            var detail = dbcontext.CarDetails.Where(cd => cd.CarDetailsID == question.carDetalisID).ToList();
+
+            if (detail.Count == 1)
+                return new JsonResult(Math.Round(((double)detail[0].Price + (double)detail[0].CarDetailsID / 10), 2));
+            else
+                return new JsonResult(null);
+
+        }
     }
 }

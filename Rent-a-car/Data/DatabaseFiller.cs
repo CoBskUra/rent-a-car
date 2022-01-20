@@ -89,8 +89,6 @@ namespace Rent_a_Car.Data
             customer.BirtheDate = dateOfBirth;
             customer.City = city;
             customer.Poste_Code = postalCode;
-            customer.BecoamingDriverDate = driversLicenseDate;
-            customer.NumberOfRentedCar = numberOfRentedCars;
             return customer;
         }
         private static void FillReturnFile(ApplicationDbContext context)

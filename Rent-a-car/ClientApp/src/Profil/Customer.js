@@ -15,7 +15,6 @@ export class Customer extends Component{
     }
 
     async dowlandCurentRentedCars() {
-        console.log(process.env.REACT_APP_API);
         const token = await authService.getAccessToken();
         const user = await authService.getUser();
         if(this.state.showCurrentrent)

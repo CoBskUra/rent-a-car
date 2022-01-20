@@ -22,20 +22,20 @@ namespace Rent_a_Car.Models
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Email { get; set; }
+
+        public System.DateTime BecoamingDriverDate { get; set; }
         public System.DateTime BirtheDate { get; set; }
         public string City { get; set; }
-
+        public string Street { get; set; }
+        public int StreetNumber { get; set; }
         public string Poste_Code { get; set; }
-        public System.DateTime BecoamingDriverDate { get; set; }
-        public int NumberOfRentedCar { get; set; }
-        public int NumberOfOverallRentedCar { get; set; }
+       
 
         public string AspNetUserID { get; set; }
         
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RentCarEvent> RentCars { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ApplicationUser ApplicationUser { get; set; }
+
         
     }
 }
