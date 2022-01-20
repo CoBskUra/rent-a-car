@@ -45,7 +45,7 @@ namespace Rent_a_Car
                 .AddIdentityResources()
                 .AddApiResources()
                 .AddClients()
-                .AddSigningCredentials();
+                .AddDeveloperSigningCredential();
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();
