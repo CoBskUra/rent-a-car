@@ -2,6 +2,7 @@ import React,{Component} from 'react';
 import {
     Modal, ModalFooter, Label,
     ModalHeader, ModalBody, Button, Row, Col, Form, FormGroup, Input} from 'reactstrap';
+import authService from '../components/api-authorization/AuthorizeService';
 
 export default class CheckPriceForm extends Component{
     constructor(props){
@@ -10,21 +11,29 @@ export default class CheckPriceForm extends Component{
     }
 
 
-    GetPrice(event){
-        fetch(process.env.REACT_APP_API +'/CarApi/GetPrice',{
+    async GetPrice(event) {
+        event.persist();
+        const token = await authService.getAccessToken();
+        const user = await authService.getUser();
+        const email = !!user ? user.name : '';
+        const address = !!user ? process.env.REACT_APP_API + '/CarApiPrivate/FetchPriceAndCreateCustomerWithData' : process.env.REACT_APP_API + '/CarApi/GetPrice';
+        fetch(address,{
             method:'Post',
             headers:{
                 'Accept':'application/json',
-                'Content-Type':'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
-            body:JSON.stringify({
+            body: JSON.stringify({
+                Name: event.target.Name.value,
+                Surname: event.target.Surname.value,
+                Email: email,
                 DateofBecomingDriver:event.target.DateofBecomingDriver.value,
                 Birthday:event.target.Birthday.value,
                 City:event.target.City.value,
                 Street:event.target.Street.value,
                 StreetNumber:event.target.StreetNumber.value,
-                NumberOfCurrentlyRentedCars:event.target.NumberOfCurrentlyRentedCars.value,
-                NumberOfOverallRentedCars:event.target.NumberOfOverallRentedCars.value,
+                Poste_Code: event.target.PostalCode.value,
                 CarDetalisID: this.props.cardetalisid
             })
         })
@@ -43,7 +52,7 @@ export default class CheckPriceForm extends Component{
             this.props.removeitem(cardetalisid);
 
         this.props.additem(cardetalisid, Price);
-
+        this.props.onHide();
     }
 
     handleSubmit(event){
@@ -75,7 +84,15 @@ export default class CheckPriceForm extends Component{
 
                         <Row>
                             <Col sm={6}>
-                                <Form onSubmit={this.handleSubmit}>
+                            <Form onSubmit={this.handleSubmit}>
+                                <FormGroup controlId="name">
+                                    <Label>Imię</Label>
+                                    <Input type="text" name="Name" required />
+                                </FormGroup>
+                                <FormGroup controlId="Surname">
+                                    <Label>Nazwisko</Label>
+                                    <Input type="text" name="Surname" required />
+                                </FormGroup>
                                 <FormGroup controlId="DateofBecomingDriver">
                                         <Label>Data otrzymania prawa jazdy</Label>
                                     <Input type="date" name="DateofBecomingDriver" required/>
@@ -101,19 +118,15 @@ export default class CheckPriceForm extends Component{
                                     <FormGroup controlId="StreetNumber">
                                         <Input type="number" min={0} name="StreetNumber" required
                                             placeholder="Numer"/>
-                                    </FormGroup>
+                                </FormGroup>
 
-                                    <FormGroup controlId="NumberOfCurrentlyRentedCars">
-                                        <Label>Ilość obecnie wypożyczonych aut</Label>
-                                        <Input type="number" min={0} name="NumberOfCurrentlyRentedCars"
-                                        required />
-                                    </FormGroup>
+                                <FormGroup controlId="PostalCode">
+                                    <Label>Kod pocztowy </Label>
+                                    <Input type="text" min={0} name="PostalCode" required
+                                        placeholder="Numer" />
+                                </FormGroup>
 
-                                    <FormGroup controlId="NumberOfOverallRentedCars">
-                                        <Label>Ilość przetrzymanych aut</Label>
-                                        <Input type="number" min={0} name="NumberOfOverallRentedCars"
-                                        required />
-                                    </FormGroup>
+                                    
                                     
 
                                     <FormGroup>

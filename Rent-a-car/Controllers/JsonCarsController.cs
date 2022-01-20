@@ -111,7 +111,7 @@ namespace Rent_a_Car.Controllers
             var dbcontext = _context;
             var detail = await dbcontext.CarDetails.Where(cd => cd.CarDetailsID == question.carDetalisID).ToListAsync();
             if (detail.Count == 1)
-                return new JsonResult(((double)detail[0].Price + (double)(question.NumberOfOverallRentedCars) / ((double)question.NumberOfCurrentlyRentedCars + 1) + (double)detail[0].CarDetailsID / 10));
+                return new JsonResult(((double)detail[0].Price + (double)detail[0].CarDetailsID / 10));
             else
                 return new JsonResult(null);
 
