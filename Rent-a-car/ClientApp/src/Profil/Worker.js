@@ -109,9 +109,9 @@ export class Worker extends Component {
 
                                                     <ReturnForm isOpen={this.state.ShowReturnForm}
                                                         onHide={CloseReturnForm}
-                                                        rentedcarid={r.RentedCarID}
+                                                        rentedcarid={r.carID}
                                                         employerid={r.EmployeeMail}
-                                                        returnfileid={r.ReturnFileID}
+                                                        returnfileid={r.RentID}
                                                         
                                                     />
 

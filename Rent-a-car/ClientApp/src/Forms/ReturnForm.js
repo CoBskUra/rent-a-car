@@ -34,8 +34,8 @@ export class ReturnForm extends Component {
         event.persist();
         const token = await authService.getAccessToken();
         const user = await authService.getUser();
-        console.log(this.props)
-        const form = new FormData();
+
+        let form = new FormData();
         form.append("ReturnFileID", this.props.returnfileid);
         form.append("RentedCarID", this.props.rentedcarid);
         form.append("ReturnDate", event.target.SubmitDate.value);
@@ -43,7 +43,10 @@ export class ReturnForm extends Component {
         form.append("OdometerReading", event.target.OdometerReading.value);
         form.append("Photo", this.photo);
         form.append("ReturnProocol", this.protocol);
-        form.append("EmployerID", this.props.employerid);
+
+        for (var pair of form.entries()) {
+            console.log(pair[0] + ', ' + pair[1]);
+        }
 
         fetch(process.env.REACT_APP_API + '/CarApiPrivate/AddReturnFile', {
             headers: {
@@ -54,6 +57,7 @@ export class ReturnForm extends Component {
         })
             .then(res => res.json())
             .then((result) => {
+                console.log(result);
                 alert(result);
             },
                 (error) => {

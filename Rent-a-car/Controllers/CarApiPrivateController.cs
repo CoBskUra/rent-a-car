@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using static IdentityServer4.IdentityServerConstants;
 using Rent_a_Car.Messenge.FromCustomer;
 using System.IO;
+using Azure.Storage.Blobs;
 
 namespace Rent_a_Car.Controllers
 {
@@ -188,10 +189,25 @@ namespace Rent_a_Car.Controllers
 
             if (ReturnController.ReturnACar(_context, fille.ReturnFileID))
             {
+                FileUploadForm form1 = new FileUploadForm();
+                form1.File = fille.Photo;
+                form1.IsPhoto = true;
+                form1.RentID = returnFile.ReturnFileID;
+
+                var result1 = UploadFile(form1);
+
+                FileUploadForm form2 = new FileUploadForm();
+                form2.File = fille.ReturnProocol;
+                form2.IsProtocol = true;
+                form2.RentID = returnFile.ReturnFileID;
+                var result2 = UploadFile(form2);
+
                 return new JsonResult("Pomyślnie zwrócono samochód");
             }
             else
             {
+                _context.ReturnFile.Remove(returnFile);
+                _context.SaveChanges(true);
                 return new JsonResult("Bład przy zwrocie");
             }
 
@@ -332,6 +348,105 @@ namespace Rent_a_Car.Controllers
             else
                 return new JsonResult(null);
 
+        }
+
+        [HttpPost]
+        [Route("UploadFile")]
+        public async Task<ActionResult> UploadFile([FromBody] FileUploadForm fileUploadForm)
+        {
+            if (!fileUploadForm.isModal())
+            {
+                return new StatusCodeResult(400);
+            }
+            
+            if(!_context.RentCar.Where(c => c.RentCarEventID == fileUploadForm.RentID).Any())
+            {
+                return new StatusCodeResult(400);
+            }
+            string connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
+            
+            if (connectionString == null) return new StatusCodeResult(500);
+
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+            BlobContainerClient containerClient = null; 
+            try
+            {
+                containerClient = blobServiceClient.GetBlobContainerClient("rentacarblob1");
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            string fileName = fileUploadForm.RentID + "_"+ fileUploadForm.File.Name;
+
+            BlobClient blobClient = containerClient.GetBlobClient(fileName);
+
+            using (var ms = new MemoryStream())
+            {
+                try
+                {
+                    
+                    fileUploadForm.File.CopyTo(ms);
+                    ms.Position = 0;
+                    var response = blobClient.Upload(ms);
+                    if (fileUploadForm.IsProtocol)
+                    {
+                        _context.ReturnFile.Where(c => c.ReturnFileID == fileUploadForm.RentID).SingleOrDefault().ReturnProocolBlobName = fileName;
+                    }
+                    else
+                    {
+                        _context.ReturnFile.Where(c => c.ReturnFileID == fileUploadForm.RentID).SingleOrDefault().PhotoBlobName = fileName;
+                    }
+                    _context.SaveChanges(); 
+                    return new JsonResult(response);
+                }catch (Exception ex)
+                {
+                    return new StatusCodeResult(400);
+                }
+                
+            }
+
+        }
+
+        [HttpGet]
+        [Route("DownloadFile")]
+        public async Task<IActionResult> DownloadFile([FromBody] FileDownloadForm form)
+        {
+            if (!form.isModal())
+            {
+                return new StatusCodeResult(400);
+            }
+
+            if (!_context.RentCar.Where(c => c.RentCarEventID == form.RentID).Any())
+            {
+                return new StatusCodeResult(400);
+            }
+            string connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
+
+            if (connectionString == null) return new StatusCodeResult(500);
+
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+            BlobContainerClient containerClient = null;
+            try
+            {
+                containerClient = blobServiceClient.GetBlobContainerClient("rentacarblob1");
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            string fileName = form.IsPhoto ? _context.ReturnFile.Where(c => c.ReturnFileID == form.RentID).Select(c => c.PhotoBlobName).FirstOrDefault() :
+                _context.ReturnFile.Where(c => c.ReturnFileID == form.RentID).Select(c => c.ReturnProocolBlobName).FirstOrDefault();
+            BlobClient blobClient = containerClient.GetBlobClient(fileName);
+
+            var memoryStream = new MemoryStream();
+
+            blobClient.DownloadTo(memoryStream);
+            var length = memoryStream.Length;
+
+            return File(memoryStream, "application/octet-stream", fileName);
         }
     }
 }
