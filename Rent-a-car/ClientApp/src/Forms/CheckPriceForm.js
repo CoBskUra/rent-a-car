@@ -46,6 +46,42 @@ export default class CheckPriceForm extends Component{
             alert('Failed');
         })
     }
+
+    async GetPriceFromAlien(event) {
+        event.persist();
+        const token = await authService.getAccessToken();
+        const user = await authService.getUser();
+        const email = !!user ? user.name : '';
+        const address = !await authService.isAuthenticated() ? process.env.REACT_APP_API + '/CarApiPrivate/FetchPriceAndCreateCustomerWithData' : process.env.REACT_APP_API + '/CarApi/GetPrice';
+        fetch(address, {
+            method: 'Post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                Name: event.target.Name.value,
+                Surname: event.target.Surname.value,
+                Email: email,
+                DateofBecomingDriver: event.target.DateofBecomingDriver.value,
+                Birthday: event.target.Birthday.value,
+                City: event.target.City.value,
+                Street: event.target.Street.value,
+                StreetNumber: event.target.StreetNumber.value,
+                Poste_Code: event.target.PostalCode.value,
+                CarDetalisID: this.props.cardetalisid
+            })
+        })
+            .then(res => res.json())
+            .then((result) => {
+                console.log(result);
+                this.savePrice(this.props.cardetalisid, result);
+            },
+                (error) => {
+                    alert('Failed');
+                })
+    }
     
     savePrice(cardetalisid, Price) {
         if (this.props.isinlist(cardetalisid))
@@ -58,7 +94,10 @@ export default class CheckPriceForm extends Component{
     handleSubmit(event){
         event.preventDefault();
         console.log(event.target);
-        this.GetPrice(event);
+        if (this.props.api === "OurApi")
+            this.GetPrice(event);
+        else if (this.props.api === "Alien")
+            this.GetPriceFromAlien(event);
     }
 
     componentWillUnmount() {

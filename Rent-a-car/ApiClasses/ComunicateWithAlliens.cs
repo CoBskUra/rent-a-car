@@ -4,15 +4,19 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 namespace Rent_a_Car.ApiClasses
 {
     public static class ComunicateWithAlliens
     {
-        public static async Task<string> CallToAllien(string request)
+        public static async Task<string> CallToAllien(string request, object body = null)
         {
+            
+
             // discover endpoints from metadata
             var client = new HttpClient();
 
@@ -44,16 +48,29 @@ namespace Rent_a_Car.ApiClasses
             // call api
             var apiClient = new HttpClient();
             apiClient.SetBearerToken(tokenResponse.AccessToken);
-
-            var response = await apiClient.GetAsync(request);
-            if (!response.IsSuccessStatusCode)
+            if (body == null)
             {
-                return (response.StatusCode).ToString();
+                var response = await apiClient.GetAsync(request);
+                if (!response.IsSuccessStatusCode)
+                {
+                    return (response.StatusCode).ToString();
+                }
+                else
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    return (content);
+                }
             }
-            else
+            else if(body != null)
             {
-                var content = await response.Content.ReadAsStringAsync();
-                return (content);
+                HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, request);
+                requestMessage.Content = JsonContent.Create(body);
+
+                // Send the request to the server
+                HttpResponseMessage response = await apiClient.SendAsync(requestMessage);
+
+                // Get the response
+                return await response.Content.ReadAsStringAsync();
             }
         }
     }

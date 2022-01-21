@@ -27,7 +27,6 @@ namespace Rent_a_Car.Controllers
             string respond = ComunicateWithAlliens.CallToAllien("https://mini.rentcar.api.snet.com.pl/vehicles").Result;
             vehicles = JsonConvert.DeserializeObject<Vehicles>(respond);
             
-            
             return new JsonResult(vehicles);
         }
 

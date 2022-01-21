@@ -11,7 +11,7 @@ export default class CarDetalisWindow extends Component{
         super(props);
     }
 
-    render(){
+    render() {
         return (
 
                 <Modal
@@ -26,7 +26,10 @@ export default class CarDetalisWindow extends Component{
                     </p>
                 </ModalHeader>
                 <ModalBody>
-                        <CarDetalis id={this.props.id} ></CarDetalis>
+                    <CarDetalis
+                        id={this.props.id}
+                        messengFromAlien={this.props.messengFromAlien}
+                        api={this.props.api }/>
         
                 </ModalBody>
 

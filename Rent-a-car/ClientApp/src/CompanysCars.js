@@ -23,11 +23,22 @@ export default class CompanysCars extends Component {
 
     refreshList() {
         if (this.props.show) {
-            fetch(process.env.REACT_APP_API + '/JsonCars/GetCompanysCars/' + this.props.companyID + '?carID=' + this.props.carID)
-                .then(response => response.json())
-                .then(data => {
-                    this.setState({ details: data });
+            if (this.props.api === "OurApi") {
+                fetch(process.env.REACT_APP_API + '/JsonCars/GetCompanysCars/' + this.props.companyID + '?carID=' + this.props.carID)
+                    .then(response => response.json())
+                    .then(data => {
+                        this.setState({ details: data });
+                    });
+            }
+            if (this.props.api === "Alien") {
+                this.setState({
+                    details: [{
+                        CarDetailsID: this.props.messengFromAlien.id,
+                        YearOfProduction: this.props.messengFromAlien.year,
+                        Description: this.props.messengFromAlien.description
+                    }]
                 });
+            }
         }
     }
 
@@ -105,31 +116,34 @@ export default class CompanysCars extends Component {
             .then(response => response.json())
             .then(data => {
                 if (!!data) {
-                    fetch(process.env.REACT_APP_API + '/CarApi/GetPrice', {
-                        method: 'Post',
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            Name: data.Name,
-                            Surname: data.Surname,
-                            DateofBecomingDriver: data.BecoamingDriverDate.value,
-                            Birthday: data.BirtheDate.value,
-                            City: data.City.value,
-                            Street: data.Street.value,
-                            StreetNumber: data.StreetNumber.value,
-                            CarDetalisID: carDetailsID
-                        })
-                    }).then(response2 => response2.json())
-                        .then(data2 => {
-                            if (this.isinlist(carDetailsID)) {
-                                this.removeitem(carDetailsID);
-                            }
-                            
-                            this.additem(carDetailsID, data2);
-                            
-                        });
+                    if (this.props.api === "OurApi") {
+
+                        fetch(process.env.REACT_APP_API + '/CarApi/GetPrice', {
+                            method: 'Post',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                Name: data.Name,
+                                Surname: data.Surname,
+                                DateofBecomingDriver: data.BecoamingDriverDate.value,
+                                Birthday: data.BirtheDate.value,
+                                City: data.City.value,
+                                Street: data.Street.value,
+                                StreetNumber: data.StreetNumber.value,
+                                CarDetalisID: carDetailsID
+                            })
+                        }).then(response2 => response2.json())
+                            .then(data2 => {
+                                if (this.isinlist(carDetailsID)) {
+                                    this.removeitem(carDetailsID);
+                                }
+
+                                this.additem(carDetailsID, data2);
+
+                            });
+                    }
 
                 } else {
                     this.setState({ checkPrice: true })
@@ -175,7 +189,6 @@ export default class CompanysCars extends Component {
 
 
     render(){
-
         if(this.props.show)
         {
             const {details}=this.state;
@@ -218,10 +231,11 @@ export default class CompanysCars extends Component {
 
                                         <CheckPriceForm isOpen={this.state.checkPrice}
                                             onHide={ModalCheckPriceClose}
-                                        cardetalisid={detal.CarDetailsID}
-                                        isinlist={this.isinlist}
-                                        removeitem={this.removeItem}
-                                        additem={this.additem}/>
+                                            cardetalisid={detal.CarDetailsID}
+                                            isinlist={this.isinlist}
+                                            removeitem={this.removeItem}
+                                            additem={this.additem}
+                                            api={this.props.api }/>
                                         
                                         <RentMeForm isOpen={this.state.Rent}
                                             onHide={ModalRentClose}

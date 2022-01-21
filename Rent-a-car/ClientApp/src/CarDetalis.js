@@ -10,13 +10,33 @@ export default class CarDetalis extends Component{
         this.state={detalis:undefined, wait:true, shower:[]}
     }
 
-    async refreshList(){
-        fetch(process.env.REACT_APP_API +'/JsonCars/Details/'+this.props.id)
-        .then(response=>response.json())
-            .then(data => {
-                this.setState({ detalis: data, wait: false });
+    async refreshList() {
+        
+        if (this.props.api === "OurApi") {
+            fetch(process.env.REACT_APP_API + '/JsonCars/Details/' + this.props.id)
+                .then(response => response.json())
+                .then(data => {
+                    this.setState({ detalis: data, wait: false });
 
-        });
+                });
+        }
+        else if (this.props.api === "Alien") {
+            console.log(this.props.messengFromAlien);
+            this.setState({
+                detalis: {
+                    Car: {
+                        CarID: this.props.messengFromAlien.id,
+                        Brand: this.props.messengFromAlien.brandName,
+                        Model: this.props.messengFromAlien.modelName,
+                        HorsePower: this.props.messengFromAlien.enginePower
+                    },
+                    Companies: [{
+                        CompanyID: 0,
+                        Name: this.props.api
+                    }]
+                }, wait: false
+            });
+        }
     }
 
     async componentDidMount() {
@@ -66,11 +86,11 @@ export default class CarDetalis extends Component{
     };
 
     render(){
-        
+        console.log(this.state);
         if(this.state.wait)
             return(<div></div>);
 
-        const { detalis } = this.state;
+        const { detalis, messengFromAlien } = this.state;
         return(
             <div>
                 <div>
@@ -112,8 +132,13 @@ export default class CarDetalis extends Component{
                                 <tbody>
                                         <tr >
                                     <td>{company.Name}</td>
-                                    <td><Button className="mr-2" variant="info"
-                                            onClick={()=> this.show_or_hide(company.CompanyID)}>
+                                        <td><Button className="mr-2" variant="info"
+                                            onClick={() => {
+                                                this.show_or_hide(company.CompanyID);
+                                                this.setState({
+                                                    messengFromAlien: this.props.messengFromAlien
+                                                })
+                                            }}>
                                                 Wyświetl auta firmy
                                             </Button>
                                     </td>
@@ -121,8 +146,14 @@ export default class CarDetalis extends Component{
                                     </tr>
                                     </tbody>
                                         </Table>
-                                    
-                            <CompanysCars key={company.CompanyID} show={this.should_be_show(company.CompanyID)} companyID={company.CompanyID} carID={detalis.Car.CarID}></CompanysCars>
+
+                            <CompanysCars
+                                key={company.CompanyID}
+                                api={this.props.api}
+                                messengFromAlien={messengFromAlien}
+                                show={this.should_be_show(company.CompanyID)}
+                                companyID={company.CompanyID}
+                                carID={detalis.Car.CarID}/>
 
                                     
                         </div>
