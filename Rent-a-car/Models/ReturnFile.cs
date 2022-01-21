@@ -19,7 +19,9 @@ namespace Rent_a_Car.Models
         public string CarConditon { get; set; }
         public int OdometerReading { get; set; }
         public byte[] Photo { get; set; }
+        public string PhotoBlobName { get; set; }
         public byte[] ReturnProocol { get; set; }
+        public string ReturnProocolBlobName { get; set; }
         public Nullable<int> EmployerID { get; set; }
 
         public virtual Employer Employer { get; set; }
