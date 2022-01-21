@@ -21,12 +21,10 @@ export default class CarDetalis extends Component{
 
     async componentDidMount() {
         this.refreshList();
-        this.interval = setInterval(() => this.refreshList(), 2000);
 
     }
 
     componentWillUnmount() {
-        clearInterval(this.interval);
     }
 
     onRemoveItem = i => {

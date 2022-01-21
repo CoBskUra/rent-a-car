@@ -16,7 +16,8 @@ export default class Cars extends Component{
             Brand:null,
             Model:null,
             order: 0,
-            carsToShow:[]
+            carsToShow: [],
+            AlienCars: []
         }
 
         this.handleSubmit=this.handleSubmit.bind(this);
@@ -24,7 +25,14 @@ export default class Cars extends Component{
 
     filter() {
         this.setState({
-            carsToShow: this.state.cars.filter(a =>
+            carsToShow: this.state.cars.concat(this.state.AlienCars.map(item => {
+                return {
+                    CarID: item.id,
+                    Brand: item.brandName,
+                    Model: item.modelName,
+                    HorsePower: item.enginePower
+                }
+            })).filter(a =>
                 (a.Brand == this.state.Brand || this.state.Brand == null) &&
                 (a.Model == this.state.Model || this.state.Model == null)).sort((a, b) => {
                     if (this.state.order === 0) {
@@ -43,15 +51,23 @@ export default class Cars extends Component{
         });
     }
 
-    refreshList(){
-        fetch(process.env.REACT_APP_API +'/JsonCars')
-        .then(response=>response.json())
-        .then(data=>{
 
-            this.setState({ cars: data }, this.filter());
-                
-        });
+    refreshList() {
+        fetch(process.env.REACT_APP_API + '/JsonCars')
+            .then(response => response.json())
+            .then(data => {
+
+                this.setState({ cars: data }, this.filter());
+            });
+
+        fetch(process.env.REACT_APP_API + '/AlienApi/Get')
+            .then(response => response.json())
+            .then(data => {
+                this.setState({ AlienCars: data.vehicles }, this.filter());
+
+            });
     }
+    
 
 
     handleSubmit(event){
@@ -74,18 +90,15 @@ export default class Cars extends Component{
 
     componentDidMount(){
         this.refreshList();
-        this.interval = setInterval(() => this.refreshList(), 2000);
-        
+        this.refreshList();
     }
 
     componentWillUnmount() {
-        clearInterval(this.interval);
     }
 
 
     render(){
-        const { carsToShow, carID, carbrand, carmodel, carhorsePower}=this.state;
-        let editModalClose=()=>this.setState({editModalShow:false});
+        const { carsToShow, carID}=this.state;
         let CarDetalisModalClose=()=>this.setState({carDetalisModalShow:false});
         return(
             <div >
@@ -161,13 +174,12 @@ export default class Cars extends Component{
                                             </Button>
 
                                             
-                                            
-
-
                                         <CarDetalisWindow isOpen={this.state.carDetalisModalShow}
                                             onHide={CarDetalisModalClose}
                                             id={carID}
-                                            />
+                                        />
+
+
 
 
 

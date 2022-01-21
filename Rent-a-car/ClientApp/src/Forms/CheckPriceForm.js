@@ -16,7 +16,7 @@ export default class CheckPriceForm extends Component{
         const token = await authService.getAccessToken();
         const user = await authService.getUser();
         const email = !!user ? user.name : '';
-        const address = !!user ? process.env.REACT_APP_API + '/CarApiPrivate/FetchPriceAndCreateCustomerWithData' : process.env.REACT_APP_API + '/CarApi/GetPrice';
+        const address = !await authService.isAuthenticated() ? process.env.REACT_APP_API + '/CarApiPrivate/FetchPriceAndCreateCustomerWithData' : process.env.REACT_APP_API + '/CarApi/GetPrice';
         fetch(address,{
             method:'Post',
             headers:{
