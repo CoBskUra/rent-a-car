@@ -79,6 +79,7 @@ namespace Rent_a_Car
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            Environment.SetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING", "DefaultEndpointsProtocol=https;AccountName=rentacarstorage;AccountKey=u+dQkbBH479d5gqtIMWLJR7lpOPyodyUkz4rtlPqNNGEFnRekbwOyO9xLmKqaK8w7uWb7AS7alQ/+lLSUmVeaA==;EndpointSuffix=core.windows.net");
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
