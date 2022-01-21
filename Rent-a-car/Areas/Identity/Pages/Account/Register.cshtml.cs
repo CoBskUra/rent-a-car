@@ -93,7 +93,7 @@ namespace Rent_a_Car.Areas.Identity.Pages.Account
                     //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                     //$"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
                     await _mailService.SendMail(Input.Email, "Confirm your email",
-                        "Please confirm your account by <a href='@Model.EmailConfirmationUrl'>clicking here</a>."); // tu wstawić poprawny link!!!!!!!!!!
+                        "Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>."); // tu wstawić poprawny link!!!!!!!!!!
 
                     // test dodania do listy poprawnie
                     //await _mailService.AddContact();
