@@ -183,7 +183,7 @@ export default class Cars extends Component{
                                             {
                                                 carDetalisModalShow:true,
                                                     carID: car.CarID,
-                                                    messengFromAlien: car.Api === "Alien" ? this.state.AlienCars.find(item => item.CarID === carID) : null,
+                                                    messengFromAlien: car.Api === "Alien" ? this.state.AlienCars.find(item => item.CarID === carID) : this.state.AlienCars[0],
                                                     Api: car.Api
                                             })}>
                                                 Szczegóły

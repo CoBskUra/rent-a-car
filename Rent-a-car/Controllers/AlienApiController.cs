@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace Rent_a_Car.Controllers
 {
     [Route("[controller]")]
-    //[Authorize]
+    [Authorize]
     public class AlienApiController : ControllerBase
     {
 
@@ -38,11 +38,25 @@ namespace Rent_a_Car.Controllers
         public JsonResult GetPrice([FromRoute]string id, [FromBody] AskAlienAboutPrice ask)
         {
             ThierPrice Price = new ThierPrice();
-            string respond = ComunicateWithAlliens.CallToAllien("https://mini.rentcar.api.snet.com.pl/vehicle/a8977f29-edc4-456e-dac2-08d9a095c9fc/GetPrice", ask).Result;
+            string respond = ComunicateWithAlliens.CallToAllien("https://mini.rentcar.api.snet.com.pl/vehicle/"+ id +"/GetPrice", ask).Result;
             Price = JsonConvert.DeserializeObject<ThierPrice>(respond);
 
             return new JsonResult(Price);
         }
+
+        [HttpPost]
+        [Route("Rent/{id}")]
+        public JsonResult RentCar([FromRoute] string id)
+        {
+            AlienRentInfo RentInfo = new AlienRentInfo();
+            string respond = ComunicateWithAlliens.CallToAllien("https://mini.rentcar.api.snet.com.pl/vehicles/Rent/"+id, new { startDate = DateTime.Today }).Result;
+            RentInfo = JsonConvert.DeserializeObject<AlienRentInfo>(respond);
+            if(RentInfo.startDate != null)
+                return new JsonResult("Sukses");
+            else
+                return new JsonResult("Niepowodzenie");
+        }
+
 
     }
 }
