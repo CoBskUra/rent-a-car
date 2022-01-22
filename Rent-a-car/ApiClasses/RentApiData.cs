@@ -18,6 +18,7 @@ namespace Rent_a_Car.ApiClasses
             result.RentDate = DateTime.Now;
             result.CustomerID = rentEvent.CustomerID;
             result.RentalIdentifier = rentEvent.RentCarEventID;
+            
             return result;
 
         }

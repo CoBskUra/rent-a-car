@@ -104,7 +104,8 @@ export class Customer extends Component{
                             <th>Marka auta</th>
                             <th>Model auta</th>
                             <th>Id auta</th>
-                            <th>Token</th>
+                                    <th>Data wypozyczenia</th>
+                                    <th>Przewidywana data zwrotu</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -113,7 +114,8 @@ export class Customer extends Component{
                                 <td>{cr.carBrand}</td>
                                 <td>{cr.carModel}</td>
                                 <td>{cr.carDetailsID}</td>
-                                <td>{cr.rentToken}</td>
+                                <td>{cr.rentDate}</td>
+                                <td>{cr.expedtedReturnDate}</td>
                             </tr>
                             )
                         }
@@ -129,16 +131,17 @@ export class Customer extends Component{
                     <Table>
                         <thead>
                         <tr>
-                            <th>Id auta</th>
-                            <th>Token</th>
-
+                            <th>Marka</th>
+                            <th>Model</th>
+                            <th>Data zwrotu</th>
                         </tr>
                         </thead>
                         <tbody>
                         {ReturnedCars.map(rc=>
                             <tr key={rc.rentToken}>
-                                <td>{rc.carDetailsID}</td>
-                                <td>{rc.rentToken}</td>
+                                <td>{rc.carBrand}</td>
+                                <td>{rc.carModel}</td>
+                                <td>{rc.rentDate}</td>
                                 <td>
                                     <ButtonToolbar>
                                         <Button>

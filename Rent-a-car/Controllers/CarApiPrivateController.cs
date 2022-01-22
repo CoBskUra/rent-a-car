@@ -148,7 +148,7 @@ namespace Rent_a_Car.Controllers
         {
             string clientStringID = _context.Users.Where(c => c.UserName == email).Select(c => c.Id).FirstOrDefault();
             int clientID = _context.Customer.Where(c => c.AspNetUserID == clientStringID).Select(c => c.CustomerID).FirstOrDefault();
-            return new JsonResult(_context.RentCar.Where(r => r.CustomerID == clientID && r.IsReturned == false).Select((c) => new {carBrand = c.CarDetails.Car.Brand, carModel = c.CarDetails.Car.Model, carDetailsID = c.CarDetailsID, rentToken = c.RentCarEventID }));
+            return new JsonResult(_context.RentCar.Where(r => r.CustomerID == clientID && r.IsReturned == false).Select((c) => new {carBrand = c.CarDetails.Car.Brand, carModel = c.CarDetails.Car.Model, carDetailsID = c.CarDetailsID, rentToken = c.RentCarEventID , rentDate = c.SubmitDate, expedtedReturnDate  = c.MaximumReturnDate}));
             
         }
 
@@ -261,7 +261,7 @@ namespace Rent_a_Car.Controllers
         /// <summary>
         /// Pobierz samochody które zwróciłeć
         /// </summary>
-        /// <remarks>
+        /// <remarks>GetRentedCars
         /// Trzeba być zalogowanym
         /// </remarks>
         /// <returns>Listę wypożyczonych samochodów, oraz tokeny wymagane do ich zwrotu</returns>
@@ -275,7 +275,7 @@ namespace Rent_a_Car.Controllers
             string clientStringID = _context.Users.Where(c => c.UserName == email).Select(c => c.Id).FirstOrDefault();
             int clientID = _context.Customer.Where(c => c.AspNetUserID == clientStringID).Select(c => c.CustomerID).FirstOrDefault();
             return new JsonResult(_context.RentCar.Where(r => r.CustomerID == clientID && r.IsReturned == true).
-                                    Select((c) => new { carDetailsID = c.CarDetailsID, rentToken = c.RentCarEventID }));
+                                    Select((c) => new { carDetailsID = c.CarDetailsID, rentToken = c.RentCarEventID, rentDate = c.SubmitDate, carBrand = c.CarDetails.Car.Brand, carModel = c.CarDetails.Car.Model }));
         }
 
         [HttpGet]
