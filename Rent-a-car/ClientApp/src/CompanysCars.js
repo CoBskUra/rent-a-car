@@ -190,8 +190,33 @@ export default class CompanysCars extends Component {
                             });
                     }
 
-                } else {
-                    this.setState({ checkPrice: true })
+                } else if (this.props.api === "Alien") {
+                    console.log("kupa");
+                    fetch(process.env.REACT_APP_API + '/AlienApi/GetPrice/' + carDetailsID, {
+                        method: 'Post',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            age: new Date().getFullYear() - new Date(data.BirtheDate.value).getFullYear(),
+                            yearsOfHavingDriverLicense: new Date().getFullYear() - new Date(data.BecoamingDriverDate.value).getFullYear(),
+                            rentDuration: 1,
+                            location: data.City.value + " " + data.Street.value + " " + data.StreetNumber.value,
+                            currentlyRentedCount: 0,
+                            overallRentedCount: 0
+                        })
+                    }).then(response2 => response2.json())
+                        .then(data2 => {
+                            if (this.isinlist(carDetailsID)) {
+                                this.removeitem(carDetailsID);
+                            }
+
+                            this.additem(carDetailsID, data2);
+
+
+
+                        });
                 }
                 
             
