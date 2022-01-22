@@ -148,7 +148,7 @@ namespace Rent_a_Car.Controllers
         {
             string clientStringID = _context.Users.Where(c => c.UserName == email).Select(c => c.Id).FirstOrDefault();
             int clientID = _context.Customer.Where(c => c.AspNetUserID == clientStringID).Select(c => c.CustomerID).FirstOrDefault();
-            return new JsonResult(_context.RentCar.Where(r => r.CustomerID == clientID && r.IsReturned == false).Select((c) => new {carBrand = c.CarDetails.Car.Brand, carModel = c.CarDetails.Car.Model, carDetailsID = c.CarDetailsID, rentToken = c.RentCarEventID , rentDate = c.SubmitDate, expedtedReturnDate  = c.MaximumReturnDate}));
+            return new JsonResult(_context.RentCar.Where(r => r.CustomerID == clientID && r.IsReturned == false).Select((c) => new {carBrand = c.CarDetails.Car.Brand, carModel = c.CarDetails.Car.Model, carDetailsID = c.CarDetailsID, rentToken = c.RentCarEventID , rentDate = c.SubmitDate.ToShortDateString(), expedtedReturnDate  = c.MaximumReturnDate.ToShortDateString()}));
             
         }
 
@@ -275,7 +275,7 @@ namespace Rent_a_Car.Controllers
             string clientStringID = _context.Users.Where(c => c.UserName == email).Select(c => c.Id).FirstOrDefault();
             int clientID = _context.Customer.Where(c => c.AspNetUserID == clientStringID).Select(c => c.CustomerID).FirstOrDefault();
             return new JsonResult(_context.RentCar.Where(r => r.CustomerID == clientID && r.IsReturned == true).
-                                    Select((c) => new { carDetailsID = c.CarDetailsID, rentToken = c.RentCarEventID, rentDate = c.SubmitDate, carBrand = c.CarDetails.Car.Brand, carModel = c.CarDetails.Car.Model }));
+                                    Select((c) => new { carDetailsID = c.CarDetailsID, rentToken = c.RentCarEventID, rentDate = c.SubmitDate.ToShortDateString(), carBrand = c.CarDetails.Car.Brand, carModel = c.CarDetails.Car.Model }));
         }
 
         [HttpGet]
