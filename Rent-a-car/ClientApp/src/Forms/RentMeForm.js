@@ -18,21 +18,41 @@ export default class RentMeForm extends Component{
         const user = await authService.getUser();
         const carDetailsID = this.props.carDetailsID;
         const expectedDate = await this.addDays(event.target.DaysAdded.value);
+        if (this.props.api === "OurApi") {
 
-        const response = await fetch(process.env.REACT_APP_API + '/CarApiPrivate/Rent', {
-            method: 'Post',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                carDetailsID: carDetailsID,
-                expectedReturnDate: expectedDate,
-                email: user.name
-            })
-        });
-        console.log(response);
+
+            const response = await fetch(process.env.REACT_APP_API + '/CarApiPrivate/Rent', {
+                method: 'Post',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    carDetailsID: carDetailsID,
+                    expectedReturnDate: expectedDate,
+                    email: user.name
+                })
+            });
+            console.log(response);
+        }
+        else if (this.props.api === "Alien") {
+            const response = await fetch(process.env.REACT_APP_API + '/AlienApi/Rent/' + this.props.carDetailsID, {
+                method: 'Post',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            }).then(res => res.json())
+                .then((result) => {
+                    alert(result);
+                },
+                    (error) => {
+                        alert('Failed');
+                    });
+            console.log(response);
+        }
         
     }
 

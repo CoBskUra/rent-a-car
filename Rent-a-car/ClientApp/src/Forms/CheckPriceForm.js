@@ -41,7 +41,7 @@ export default class CheckPriceForm extends Component{
         .then(res=>res.json())
             .then((result) => {
                 console.log(result);
-                this.savePrice(this.props.cardetalisid, result + result === null?null:" PLN");
+                this.save(this.props.cardetalisid, result + result === null?null:" PLN");
         },
         (error)=>{
             alert('Failed');
@@ -75,18 +75,19 @@ export default class CheckPriceForm extends Component{
         })
             .then(res => res.json())
             .then((result) => {
-                this.savePrice(this.props.cardetalisid, result.price +' ' + result.currency);
+                this.save(this.props.cardetalisid, result.quotaId , 1);
+                this.save(this.props.cardetalisid, result.price +' ' + result.currency);
             },
                 (error) => {
                     alert('Failed');
                 })
     }
     
-    savePrice(cardetalisid, Price) {
-        if (this.props.isinlist(cardetalisid))
-            this.props.removeitem(cardetalisid);
+    save(cardetalisid, Price, option = 0) {
+        if (this.props.isinlist(cardetalisid, option))
+            this.props.removeitem(cardetalisid, option);
 
-        this.props.additem(cardetalisid, Price);
+        this.props.additem(cardetalisid, Price, option);
         this.props.onHide();
     }
 
