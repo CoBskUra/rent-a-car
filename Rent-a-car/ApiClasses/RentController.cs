@@ -17,7 +17,7 @@ namespace Rent_a_Car.ApiClasses
             rentEvent.CarDetailsID = carDetailsID;
             rentEvent.RentCarEventID = Guid.NewGuid().ToString();
             rentEvent.MaximumReturnDate = expectedTime;
-
+            rentEvent.SubmitDate = DateTime.Now;
             RentApiData result = RentApiData.FromRentEvent(rentEvent);
             //try
             //{
