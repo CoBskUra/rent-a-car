@@ -1,13 +1,17 @@
 ﻿using IdentityModel.Client;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
+using Rent_a_Car.Messenge.FromAlien;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace Rent_a_Car.ApiClasses
 {
@@ -48,6 +52,7 @@ namespace Rent_a_Car.ApiClasses
             // call api
             var apiClient = new HttpClient();
             apiClient.SetBearerToken(tokenResponse.AccessToken);
+
             if (body == null)
             {
                 var response = await apiClient.GetAsync(request);
@@ -63,14 +68,24 @@ namespace Rent_a_Car.ApiClasses
             }
             else
             {
-                HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, request);
-                requestMessage.Content = JsonContent.Create(body);
+                var objAsJson = JsonConvert.SerializeObject(body);
+                var res = await apiClient.PostAsync(request,
+                   new StringContent( JsonConvert.SerializeObject(body),Encoding.UTF8, "application/json" ));
 
-                // Send the request to the server
-                HttpResponseMessage response = await apiClient.SendAsync(requestMessage);
+                try
+                {
+                    res.EnsureSuccessStatusCode();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.ToString());
+                }
+
+                //var response = await apiClient.PostAsJsonAsync(request, objAsJson);
+
 
                 // Get the response
-                return await response.Content.ReadAsStringAsync();
+                return await res.Content.ReadAsStringAsync(); ;
             }
         }
     }

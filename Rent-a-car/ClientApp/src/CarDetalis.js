@@ -21,7 +21,6 @@ export default class CarDetalis extends Component{
                 });
         }
         else if (this.props.api === "Alien") {
-            console.log(this.props.messengFromAlien);
             this.setState({
                 detalis: {
                     Car: {
@@ -86,7 +85,6 @@ export default class CarDetalis extends Component{
     };
 
     render(){
-        console.log(this.state);
         if(this.state.wait)
             return(<div></div>);
 

@@ -34,11 +34,11 @@ namespace Rent_a_Car.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        [Route("GetPrice")]
-        public JsonResult GetPrice(int a, [FromBody] AskAlienAboutPrice ask)
+        [Route("GetPrice/{id}")]
+        public JsonResult GetPrice([FromRoute]string id, [FromBody] AskAlienAboutPrice ask)
         {
             ThierPrice Price = new ThierPrice();
-            string respond = ComunicateWithAlliens.CallToAllien("https://mini.rentcar.api.snet.com.pl/"+a+"/GetPrice", ask).Result;
+            string respond = ComunicateWithAlliens.CallToAllien("https://mini.rentcar.api.snet.com.pl/vehicle/a8977f29-edc4-456e-dac2-08d9a095c9fc/GetPrice", ask).Result;
             Price = JsonConvert.DeserializeObject<ThierPrice>(respond);
 
             return new JsonResult(Price);
