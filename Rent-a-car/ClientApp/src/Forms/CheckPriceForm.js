@@ -1,3 +1,4 @@
+import { data } from 'jquery';
 import React,{Component} from 'react';
 import {
     Modal, ModalFooter, Label,
@@ -40,25 +41,63 @@ export default class CheckPriceForm extends Component{
         .then(res=>res.json())
             .then((result) => {
                 console.log(result);
-                this.savePrice(this.props.cardetalisid, result);
+                this.save(this.props.cardetalisid, result + result === null?null:" PLN");
         },
         (error)=>{
             alert('Failed');
         })
     }
-    
-    savePrice(cardetalisid, Price) {
-        if (this.props.isinlist(cardetalisid))
-            this.props.removeitem(cardetalisid);
 
-        this.props.additem(cardetalisid, Price);
+    async GetPriceFromAlien(event) {
+        event.persist();
+        const token = await authService.getAccessToken();
+        const user = await authService.getUser();
+        const email = !!user ? user.name : '';
+        const address = !await authService.isAuthenticated() ? process.env.REACT_APP_API + '/CarApiPrivate/FetchPriceAndCreateCustomerWithData' : process.env.REACT_APP_API + '/AlienApi/GetPrice/' + this.props.cardetalisid;
+
+        
+
+        fetch(address, {
+            method: 'Post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                age: new Date().getFullYear() - new Date(event.target.Birthday.value).getFullYear() ,
+                yearsOfHavingDriverLicense: new Date().getFullYear() -  new Date(event.target.DateofBecomingDriver.value).getFullYear(),
+                rentDuration: 1,
+                location: event.target.City.value + " " + event.target.Street.value + " " + event.target.StreetNumber.value,
+                currentlyRentedCount: event.target.currentlyRentedCount.value,
+                overallRentedCount: event.target.overallRentedCount.value
+            })
+        })
+            .then(res => res.json())
+            .then((result) => {
+                this.save(this.props.cardetalisid, result.quotaId , 1);
+                this.save(this.props.cardetalisid, result.price +' ' + result.currency);
+            },
+                (error) => {
+                    alert('Failed');
+                })
+    }
+    
+    save(cardetalisid, Price, option = 0) {
+        if (this.props.isinlist(cardetalisid, option))
+            this.props.removeitem(cardetalisid, option);
+
+        this.props.additem(cardetalisid, Price, option);
         this.props.onHide();
     }
 
     handleSubmit(event){
         event.preventDefault();
         console.log(event.target);
-        this.GetPrice(event);
+        if (this.props.api === "OurApi")
+            this.GetPrice(event);
+        else if (this.props.api === "Alien")
+            this.GetPriceFromAlien(event);
     }
 
     componentWillUnmount() {
@@ -124,6 +163,18 @@ export default class CheckPriceForm extends Component{
                                     <Label>Kod pocztowy </Label>
                                     <Input type="text" min={0} name="PostalCode" required
                                         placeholder="Numer" />
+                                </FormGroup>
+
+                                <FormGroup controlId="currentlyRentedCount">
+                                    <Label>Ilość obecnie wyporzyczone auta </Label>
+                                    <Input type="number" min={0} name="currentlyRentedCount" required
+                                        placeholder="Ilość" />
+                                </FormGroup>
+
+                                <FormGroup controlId="overallRentedCount">
+                                    <Label>lość przetrzymanych aut </Label>
+                                    <Input type="number" min={0} name="overallRentedCount" required
+                                        placeholder="Ilość" />
                                 </FormGroup>
 
                                     

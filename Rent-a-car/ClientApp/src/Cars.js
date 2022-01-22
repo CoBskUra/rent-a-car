@@ -30,7 +30,8 @@ export default class Cars extends Component{
                     CarID: item.id,
                     Brand: item.brandName,
                     Model: item.modelName,
-                    HorsePower: item.enginePower
+                    HorsePower: item.enginePower,
+                    Api: "Alien"
                 }
             })).filter(a =>
                 (a.Brand == this.state.Brand || this.state.Brand == null) &&
@@ -49,6 +50,7 @@ export default class Cars extends Component{
                     }
                 })
         });
+        console.log(this.state.carsToShow);
     }
 
 
@@ -57,7 +59,17 @@ export default class Cars extends Component{
             .then(response => response.json())
             .then(data => {
 
-                this.setState({ cars: data }, this.filter());
+                this.setState({
+                    cars: data.map(item => {
+                        return {
+                            CarID: item.CarID,
+                            Brand: item.Brand,
+                            Model: item.Model,
+                            HorsePower: item.HorsePower,
+                            Api: "OurApi"
+                        }
+                    })
+                }, this.filter());
             });
 
         fetch(process.env.REACT_APP_API + '/AlienApi/Get')
@@ -85,12 +97,14 @@ export default class Cars extends Component{
             Brand: b
             }, () => this.filter());
 
+        
     }
 
 
     componentDidMount(){
         this.refreshList();
         this.refreshList();
+        
     }
 
     componentWillUnmount() {
@@ -98,7 +112,7 @@ export default class Cars extends Component{
 
 
     render(){
-        const { carsToShow, carID}=this.state;
+        const { carsToShow, carID, messengFromAlien, Api}=this.state;
         let CarDetalisModalClose=()=>this.setState({carDetalisModalShow:false});
         return(
             <div >
@@ -128,10 +142,10 @@ export default class Cars extends Component{
                                 <Button variant="secondary"
                                     onClick={() => {
                                         if (this.state.order === 0)
-                                            this.setState({ order: 1 })
+                                            this.setState({ order: 1 }, this.filter())
                                         else
-                                            this.setState({ order: 0 })
-                                        this.filter();
+                                            this.setState({ order: 0 }, this.filter())
+                                        
                                     }
 
                                     }>
@@ -168,7 +182,9 @@ export default class Cars extends Component{
                                             onClick={()=>this.setState(
                                             {
                                                 carDetalisModalShow:true,
-                                                carID:car.CarID
+                                                    carID: car.CarID,
+                                                    messengFromAlien: car.Api === "Alien" ? this.state.AlienCars.find(item => item.CarID === carID) : this.state.AlienCars[0],
+                                                    Api: car.Api
                                             })}>
                                                 Szczegóły
                                             </Button>
@@ -177,8 +193,10 @@ export default class Cars extends Component{
                                         <CarDetalisWindow isOpen={this.state.carDetalisModalShow}
                                             onHide={CarDetalisModalClose}
                                             id={carID}
+                                            api={Api}
+                                            messengFromAlien={messengFromAlien}
+                                            
                                         />
-
 
 
 
