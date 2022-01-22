@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Rent_a_Car.ApiClasses;
 using Rent_a_Car.ApiClasses.NewFolder;
+using Rent_a_Car.Messenge.ForAlien;
+using Rent_a_Car.Messenge.FromAlien;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +30,18 @@ namespace Rent_a_Car.Controllers
             vehicles = JsonConvert.DeserializeObject<Vehicles>(respond);
             
             return new JsonResult(vehicles);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("GetPrice")]
+        public JsonResult GetPrice(int a, [FromBody] AskAlienAboutPrice ask)
+        {
+            ThierPrice Price = new ThierPrice();
+            string respond = ComunicateWithAlliens.CallToAllien("https://mini.rentcar.api.snet.com.pl/"+a+"/GetPrice", ask).Result;
+            Price = JsonConvert.DeserializeObject<ThierPrice>(respond);
+
+            return new JsonResult(Price);
         }
 
     }

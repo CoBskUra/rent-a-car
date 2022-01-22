@@ -61,7 +61,7 @@ namespace Rent_a_Car.ApiClasses
                     return (content);
                 }
             }
-            else if(body != null)
+            else
             {
                 HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, request);
                 requestMessage.Content = JsonContent.Create(body);
